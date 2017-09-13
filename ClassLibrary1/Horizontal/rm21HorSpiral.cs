@@ -12,4 +12,13 @@ namespace ptsCogo.Horizontal
     {
 
     }
+
+    internal struct sprialPhantomValues
+    {
+        Double Length { get; set; }
+        Deflection Deflection { get; set; }
+        ptsPoint ZeroDcPoint { get; set; }
+        Double spiralX { get; set; }
+        Double spiralY { get; set; }
+    }
 }
