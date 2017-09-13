@@ -52,6 +52,7 @@
     <Compile Include="Horizontal\rm21HorArc.cs" />
     <Compile Include="Horizontal\rm21HorizontalAlignment.cs" />
     <Compile Include="Horizontal\rm21HorLineSegment.cs" />
+    <Compile Include="Horizontal\rm21HorSpiral.cs" />
     <Compile Include="IPersistantDrawer_Cogo.cs" />
     <Compile Include="IRM21cad2dDrawingContext.cs" />
     <Compile Include="Profile.cs" />
