@@ -14,6 +14,18 @@ namespace Tests
         private Double delta = 0.0000001;
 
         [TestMethod]
+        public void ptsVector_additonVpV_returnsCorrect()
+        {
+            ptsVector v1 = new ptsVector(0.9, 0.1, 0.0);
+            ptsVector v2 = new ptsVector(0.1, 0.9, 0.0);
+            var vResult = v1 + v2;
+            Double actualLength = vResult.Length;
+            Double expectedLength = 1.41421356237;
+            Assert.AreEqual(expected: expectedLength,
+                actual: actualLength, delta: delta);
+        }
+
+        [TestMethod]
         public void ptsDegree_sin90_returns1p0()
         {
             ptsDegree deg = 90.0;

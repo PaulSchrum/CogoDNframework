@@ -98,6 +98,16 @@ namespace ptsCogo
             return newVec;
         }
 
+        public static ptsVector operator +(ptsVector vec1, ptsVector vec2)
+        {
+            ptsVector newVec = new ptsVector();
+            newVec.x = vec1.x + vec2.x;
+            newVec.y = vec1.y + vec2.y;
+            newVec.z = vec1.z + vec2.z;
+
+            return newVec;
+        }
+
         public override String ToString()
         {
             var retStr = new StringBuilder(String.Format("L: {0:#.0000}, Az: ", this.Length));
