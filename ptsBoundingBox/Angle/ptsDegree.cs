@@ -118,6 +118,16 @@ namespace ptsCogo.Angle
             return left.degrees_ <= right.degrees_;
         }
 
+        public static bool operator !=(ptsDegree left, ptsDegree right)
+        {
+            return left.degrees_ != right.degrees_;
+        }
+
+        public static bool operator ==(ptsDegree left, ptsDegree right)
+        {
+            return left.degrees_ == right.degrees_;
+        }
+
         public static ptsDegree operator +(ptsDegree left, Double right)
         {
             return left.degrees_ + right;
