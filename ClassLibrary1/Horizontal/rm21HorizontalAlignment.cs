@@ -131,9 +131,9 @@ namespace ptsCogo.Horizontal
                     return rm21HorArc.Create(inRay, length, degreeIn);
                 }
             }
-            // else it is an Euler Spiral
+            //else it is an Euler Spiral
+            return rm21HorSpiralc.Create(inRay, length, degreeIn, degreeOut);
 
-            return null;
         }
 
         private void createAllSegments(List<IRM21fundamentalGeometry> fundamentalGeometryList)
