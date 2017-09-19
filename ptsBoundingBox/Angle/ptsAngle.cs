@@ -107,6 +107,16 @@ namespace ptsCogo
             return angl;
         }
 
+        public static bool operator >(ptsAngle left, ptsAngle right)
+        {
+            return left.angle_ > right.angle_;
+        }
+
+        public static bool operator <(ptsAngle left, ptsAngle right)
+        {
+            return left.angle_ < right.angle_;
+        }
+
         protected void normalize(double anAngle)
         {
             //angleScratchPad = anAngle / Math.PI;
