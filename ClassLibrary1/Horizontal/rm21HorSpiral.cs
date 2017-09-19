@@ -14,7 +14,9 @@ namespace ptsCogo.Horizontal
         public ptsVector spiralY { get; protected set; }
         public ptsDegree Dc1 { get; protected set; }
         public ptsDegree Dc2 { get; protected set; }
-        public Double DcChangeRate { get; protected set; }
+
+
+        public ptsDegree DcChangeRate { get; protected set; }
 
         /// <summary>
         /// The point and ahead-bearing where Dc = 0. For connecting spirals,
@@ -112,10 +114,24 @@ namespace ptsCogo.Horizontal
             newSpi.BeginAzimuth = inRay.HorizontalDirection;
 
             newSpi.Dc1 = ptsDegree.newFromDegrees(degreeIn);
-            newSpi.Dc1 = ptsDegree.newFromDegrees(degreeOut);
+            newSpi.Dc2 = ptsDegree.newFromDegrees(degreeOut);
             newSpi.Length = length;
 
-            newSpi.DcChangeRate = (degreeOut - degreeIn) / length;
+            newSpi.DcChangeRate = newSpi.Dc2 - newSpi.Dc1
+                                    / length;
+            var v = newSpi.DcChangeRate.getAsRadians();
+
+            if(newSpi.isConnecting) // Type 3 or 4
+            {
+                throw new NotImplementedException();
+            }
+            else  // Type 1 or 2
+            {
+                var thetaS = newSpi.DcChangeRate.getAsRadians() * length / 200.0;
+                //thetaS = newSpi.DcChangeRate.getAsDouble() * length / 200.0;
+                newSpi.Deflection = new Deflection(thetaS);
+            }
+
             if(newSpi.CurvatureIncreasesAhead)
             {
                 if(newSpi.Dc1 == 0.0 ) // Type 1 Spiral
@@ -125,22 +141,19 @@ namespace ptsCogo.Horizontal
                 }
                 else   // Type 3 Spiral
                 {
-                    newSpi.AnchorLength = length;
-                    newSpi.AnchorRay = newSpi.BeginRay;
-
-                    // This flips the ray 180 degrees.
-                    newSpi.AnchorRay.HorizontalDirection += Deflection.HALFCIRCLE;
+                    throw new NotImplementedException("Type 3 spirals not yet implemented.");
                 }
             }
             else
             {
                 if(newSpi.Dc2 == 0.0) // Type 2 Spiral
                 {
-
+                    newSpi.AnchorLength = length;
+                    //newSpi.AnchorRay =  
                 }
                 else   // Type 4 Spiral
                 {
-
+                    throw new NotImplementedException("Type 4 spirals not yet implemented.");
                 }
             }
 
