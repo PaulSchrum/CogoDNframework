@@ -1053,6 +1053,19 @@ namespace Tests
             Assert.AreEqual(expected: expectedCount,
                 actual: actualCountOfStations);
         }
+
+        [TestMethod]
+        public void EulerSpiral_createType1_correct()
+        {
+            var inRay = new ptsRay(new ptsPoint(0.0, 0.0), Azimuth.fromDegreesDouble(90.0));
+            var aSpiral = rm21HorSpiralc.Create(inRay, 60.0, 0.0, -95.4929659);
+
+            Assert.IsNotNull(aSpiral);
+
+            Double expectedThetaS = -28.64789;
+            Double actualThetaS = aSpiral.Deflection.getAsDegreesDouble();
+            Assert.AreEqual(expected: expectedThetaS,actual: actualThetaS, delta: 0.00001);
+        }
     }
 
 

@@ -12,8 +12,8 @@ namespace ptsCogo.Horizontal
     {
         public ptsVector spiralX { get; protected set; }
         public ptsVector spiralY { get; protected set; }
-        public ptsDegree Dc1 { get; protected set; }
-        public ptsDegree Dc2 { get; protected set; }
+        public ptsDegree BeginDc { get; protected set; }
+        public ptsDegree EndDc { get; protected set; }
 
 
         public ptsDegree DcChangeRate { get; protected set; }
@@ -30,9 +30,24 @@ namespace ptsCogo.Horizontal
         /// </summary>
         protected Double AnchorLength { get; set; }
 
-        public bool CurvatureIncreasesAhead { get { return DcChangeRate > 0.0; } }
-        public bool CurvatureDecreasesAhead { get { return DcChangeRate < 0.0; } }
-        public bool isConnecting { get { return Dc1 != 0.0 && Dc2 != 0.0; } }
+        /// <summary>
+        /// True for Type 1 and Type 3.
+        /// </summary>
+        public bool CurvatureIncreasesAhead
+        {
+            get { return (Math.Abs(EndDc.getAsRadians() - BeginDc.getAsRadians()) > 0.0); }
+        }
+
+        /// <summary>
+        /// True for Type 2 and Type 4.
+        /// </summary>
+        public bool CurvatureDecreasesAhead
+        {
+            get { return (Math.Abs(EndDc.getAsRadians() - BeginDc.getAsRadians()) < 0.0); }
+        }
+
+
+        public bool isConnecting { get { return BeginDc != 0.0 && EndDc != 0.0; } }
 
         public Double LengthFraction(Double L)
         {
@@ -113,11 +128,11 @@ namespace ptsCogo.Horizontal
             newSpi.BeginPoint = inRay.StartPoint;
             newSpi.BeginAzimuth = inRay.HorizontalDirection;
 
-            newSpi.Dc1 = ptsDegree.newFromDegrees(degreeIn);
-            newSpi.Dc2 = ptsDegree.newFromDegrees(degreeOut);
+            newSpi.BeginDc = ptsDegree.newFromDegrees(degreeIn);
+            newSpi.EndDc = ptsDegree.newFromDegrees(degreeOut);
             newSpi.Length = length;
 
-            newSpi.DcChangeRate = newSpi.Dc2 - newSpi.Dc1
+            newSpi.DcChangeRate = newSpi.EndDc - newSpi.BeginDc
                                     / length;
             var v = newSpi.DcChangeRate.getAsRadians();
 
@@ -127,14 +142,15 @@ namespace ptsCogo.Horizontal
             }
             else  // Type 1 or 2
             {
-                var thetaS = newSpi.DcChangeRate.getAsRadians() * length / 200.0;
+                var thetaS = newSpi.DcChangeRate.getAsRadians() * length 
+                    / (2 * degreeOfCurveLength);
                 //thetaS = newSpi.DcChangeRate.getAsDouble() * length / 200.0;
                 newSpi.Deflection = new Deflection(thetaS);
             }
 
             if(newSpi.CurvatureIncreasesAhead)
             {
-                if(newSpi.Dc1 == 0.0 ) // Type 1 Spiral
+                if(newSpi.BeginDc == 0.0 ) // Type 1 Spiral
                 {
                     newSpi.AnchorLength = length;
                     newSpi.AnchorRay = newSpi.BeginRay;
@@ -146,7 +162,7 @@ namespace ptsCogo.Horizontal
             }
             else
             {
-                if(newSpi.Dc2 == 0.0) // Type 2 Spiral
+                if(newSpi.EndDc == 0.0) // Type 2 Spiral
                 {
                     newSpi.AnchorLength = length;
                     //newSpi.AnchorRay =  
