@@ -1054,7 +1054,7 @@ namespace Tests
                 actual: actualCountOfStations);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void EulerSpiral_createType1_correct()
         {
             var inRay = new ptsRay(new ptsPoint(0.0, 0.0), Azimuth.fromDegreesDouble(90.0));
@@ -1065,6 +1065,13 @@ namespace Tests
             Double expectedThetaS = -28.64789;
             Double actualThetaS = aSpiral.Deflection.getAsDegreesDouble();
             Assert.AreEqual(expected: expectedThetaS,actual: actualThetaS, delta: 0.00001);
+
+            Double expectedX = 58.517;
+            Double expectedY = 9.823;
+            Double actualX = aSpiral.spiralDX.Length;
+            Double actualY = aSpiral.spiralDY.Length;
+            Assert.AreEqual(expectedX, actualX, 0.0015);
+            Assert.AreEqual(expectedY, actualY, 0.0015);
         }
     }
 

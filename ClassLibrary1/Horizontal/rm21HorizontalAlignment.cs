@@ -334,7 +334,8 @@ namespace ptsCogo.Horizontal
             double increment,
             double offset = 0.0,
             StationOffsetElevation beginStation = null,
-            StationOffsetElevation endStation = null)
+            StationOffsetElevation endStation = null,
+            String csvOutFileName = null)
         {
             if(increment <= 0.0)
                 throw new Exception("increment value must be greater than 0.");
@@ -361,6 +362,20 @@ namespace ptsCogo.Horizontal
                 returnDict[anSOE] = this.getXYZcoordinates(anSOE);
             }
 
+            if(csvOutFileName != null)
+            {
+                using(StreamWriter outFile = new StreamWriter(csvOutFileName))
+                {
+                    outFile.WriteLine("X,Y");
+                    foreach(var row in returnDict.Values)
+                    {
+                        outFile.Write(row.x);
+                        outFile.Write(",");
+                        outFile.WriteLine(row.y);
+                    }
+
+                }
+            }
             return returnDict; 
         }
 

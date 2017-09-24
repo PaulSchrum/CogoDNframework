@@ -13,7 +13,7 @@ namespace ptsCogo
 
         public static ptsAngle HALFCIRCLE
         {
-            get { return new ptsAngle(2.0 * Math.PI); }
+            get { return new ptsAngle(Math.PI); }
             private set { }
         }
 

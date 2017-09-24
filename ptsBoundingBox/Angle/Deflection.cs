@@ -132,6 +132,11 @@ namespace ptsCogo.Angle
             }
         }
 
+        public static Deflection Perpandicular(int deflDirection)
+        {
+            return new Deflection(ptsAngle.HALFCIRCLE / 2.0 * deflDirection);
+        }
+
         public static implicit operator Deflection(double radianDbl)
         {
             return new Deflection(radianDbl);

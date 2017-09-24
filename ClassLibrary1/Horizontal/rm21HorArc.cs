@@ -41,6 +41,7 @@ namespace ptsCogo.Horizontal
             this.BeginAzimuth = incomingAzimuth;
 
             deflDirection = Math.Sign(tanOffsetToEndPt);
+            //Deflection defl = Deflection.ctorDeflectionFromAngle(90.0, deflDirection);
             Deflection defl = Deflection.ctorDeflectionFromAngle(90.0, deflDirection);
             Azimuth azToCenter = incomingAzimuth + defl;
             ptsVector traverseToCenterVec = new ptsVector(azToCenter, radius);

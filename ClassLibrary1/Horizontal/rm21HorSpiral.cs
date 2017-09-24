@@ -10,8 +10,8 @@ namespace ptsCogo.Horizontal
 {
     public class rm21HorSpiralc : HorizontalAlignmentBase
     {
-        public ptsVector spiralX { get; protected set; }
-        public ptsVector spiralY { get; protected set; }
+        public ptsVector spiralDX { get; protected set; }
+        public ptsVector spiralDY { get; protected set; }
         public ptsDegree BeginDc { get; protected set; }
         public ptsDegree EndDc { get; protected set; }
 
@@ -112,7 +112,7 @@ namespace ptsCogo.Horizontal
             Double xDist = computeXlength(localDistAlong);
             Double yDist = computeYlength(localDistAlong);
 
-            ptsVector chordVector = spiralX + spiralY;
+            ptsVector chordVector = spiralDX + spiralDY;
 
             return null;
         }
@@ -154,6 +154,15 @@ namespace ptsCogo.Horizontal
                 {
                     newSpi.AnchorLength = length;
                     newSpi.AnchorRay = newSpi.BeginRay;
+
+                    Azimuth startAz = newSpi.BeginRay.HorizontalDirection;
+                    Double x = newSpi.computeXlength(length);
+                    newSpi.spiralDX = new ptsVector(startAz, x);
+
+                    Azimuth perp2StartAz = 
+                        startAz + Deflection.Perpandicular(newSpi.Deflection.deflectionDirection);
+                    Double y = newSpi.computeYlength(length);
+                    newSpi.spiralDY = new ptsVector(perp2StartAz, y);
                 }
                 else   // Type 3 Spiral
                 {

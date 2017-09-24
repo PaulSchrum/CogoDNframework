@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using ptsCogo;
 using ptsCogo.Horizontal;
 using System.IO;
 
@@ -20,8 +15,8 @@ namespace CogoConsoleApp
             string testFile = projectDir.GetPathAndAppendFilename("Y15A.csv");
 
             rm21HorizontalAlignment Y15A = rm21HorizontalAlignment.createFromCsvFile(testFile);
-            var allPoints = Y15A.getXYZcoordinateList(20.0);
-
+            var outputPointsFile = @"D:\SourceModules\Python\RoadGeometryAnalysis\TestFiles\CSV\Y15A_Computed.csv";
+            var allPoints = Y15A.getXYZcoordinateList(30.0,csvOutFileName: outputPointsFile);
         }
     }
 
