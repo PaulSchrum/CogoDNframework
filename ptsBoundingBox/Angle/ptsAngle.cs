@@ -193,7 +193,7 @@ namespace ptsCogo
 
         public static ptsAngle operator /(ptsAngle angle, double divisor)
         {
-            return angle * 1 / divisor;
+            return new ptsAngle(angle.angle__ / divisor);
         }
 
         public ptsAngle multiply(Double multiplier)

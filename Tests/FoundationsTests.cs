@@ -26,6 +26,17 @@ namespace Tests
         }
 
         [TestMethod]
+        public void ptsAngle_division_isCorrect()
+        {
+            var anAngle = ptsAngle.DEGREE * 180.0;
+            var angleOverTwo = anAngle / 2.0;
+
+            var expectedDegrees = 90.0;
+            var actualDegrees = angleOverTwo.getAsDegreesDouble();
+            Assert.AreEqual(expected: expectedDegrees, actual: actualDegrees, delta: 0.0001);
+        }
+
+        [TestMethod]
         public void ptsDegree_sin90_returns1p0()
         {
             ptsDegree deg = 90.0;
