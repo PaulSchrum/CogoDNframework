@@ -1054,11 +1054,12 @@ namespace Tests
                 actual: actualCountOfStations);
         }
 
-        //[TestMethod]
-        public void EulerSpiral_createType1_correct()
+        [TestMethod]
+        public void EulerSpiral_createType1__correct()
         {
             var inRay = new ptsRay(new ptsPoint(0.0, 0.0), Azimuth.fromDegreesDouble(90.0));
-            var aSpiral = rm21HorSpiralc.Create(inRay, 60.0, 0.0, -95.4929659);
+            var aSpiral = rm21HorSpiralc.Create(inRay, 
+                length: 60.0, degreeIn: 0.0, degreeOut: -95.4929659);
 
             Assert.IsNotNull(aSpiral);
 
@@ -1072,6 +1073,22 @@ namespace Tests
             Double actualY = aSpiral.spiralDY.Length;
             Assert.AreEqual(expectedX, actualX, 0.0015);
             Assert.AreEqual(expectedY, actualY, 0.0015);
+
+            var expectedPt = new ptsPoint(19.994, 0.370);
+            var actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(20.0, 0.0, 0.0));
+            Assert.IsTrue(expectedPt.Equals(actualPt));
+
+            expectedPt = new ptsPoint(39.803, 2.953);
+            actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(40.0, 0.0, 0.0));
+            Assert.IsTrue(expectedPt.Equals(actualPt));
+
+            //expectedPt = new ptsPoint(19.938, 1.369);
+            //actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(20.0, -1.0, 0.0));
+            //Assert.IsTrue(expectedPt.Equals(actualPt));
+
+            //expectedPt = new ptsPoint(40.244, 1.002);
+            //actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(40.0, 2.0, 0.0));
+            //Assert.IsTrue(expectedPt.Equals(actualPt));
         }
     }
 

@@ -14,9 +14,17 @@ namespace ptsCogo.Horizontal
         public ptsVector spiralDY { get; protected set; }
         public ptsDegree BeginDc { get; protected set; }
         public ptsDegree EndDc { get; protected set; }
+        public double AnchorPhantomStation { get; protected set; }
 
 
         public ptsDegree DcChangeRate { get; protected set; }
+
+        /// <summary>
+        /// The point where Dc = 0. For connecting spirals,
+        /// this point is off the alignment, but we still have to use it.
+        /// </summary>
+        protected ptsPoint AnchorPoint
+        { get { return this.AnchorRay.StartPoint; } }
 
         /// <summary>
         /// The point and ahead-bearing where Dc = 0. For connecting spirals,
@@ -66,6 +74,7 @@ namespace ptsCogo.Horizontal
 
         /// <summary>
         /// The spiral X equation from Hickerson, Appendix C, p 374
+        /// This is the equation based on Radians, not Degrees.
         /// </summary>
         /// <param name="distanceAlong"></param>
         /// <returns></returns>
@@ -84,7 +93,8 @@ namespace ptsCogo.Horizontal
         }
 
         /// <summary>
-        /// The spiral X equation from Hickerson, Appendix C, p 374
+        /// The spiral Y equation from Hickerson, Appendix C, p 374
+        /// This is the equation based on Radians, not Degrees.
         /// </summary>
         /// <param name="distanceAlong"></param>
         /// <returns></returns>
@@ -107,21 +117,31 @@ namespace ptsCogo.Horizontal
             if(anSOE.station < this.BeginStation || anSOE.station > this.EndStation)
                 return null;
 
+            ptsPoint aPoint = this.BeginPoint;
+
             Double localDistAlong = anSOE.station - this.BeginStation;
+            Double anchorDistAlong = anSOE.station - this.AnchorPhantomStation;
 
             Double xDist = computeXlength(localDistAlong);
+            var dx = new ptsVector(this.AnchorRay, xDist);
+
             Double yDist = computeYlength(localDistAlong);
+            var dy = 
+                (new ptsVector(this.AnchorRay, yDist * this.Deflection.deflectionDirection))
+                .left90degrees();
 
-            ptsVector chordVector = spiralDX + spiralDY;
+            ptsVector chordVector = dx + dy;
+            ptsPoint targetPoint = aPoint + chordVector;
 
-            return null;
+            return targetPoint;
         }
 
         public static rm21HorSpiralc Create(
             ptsRay inRay, 
             double length, 
             double degreeIn, 
-            double degreeOut)
+            double degreeOut,
+            double beginStation = 0.0)
         {
             rm21HorSpiralc newSpi = new rm21HorSpiralc();
 
@@ -146,12 +166,16 @@ namespace ptsCogo.Horizontal
                     / (2 * degreeOfCurveLength);
                 //thetaS = newSpi.DcChangeRate.getAsDouble() * length / 200.0;
                 newSpi.Deflection = new Deflection(thetaS);
+                newSpi.BeginStation = beginStation;
+                newSpi.AnchorPhantomStation = beginStation;
+                newSpi.EndStation = beginStation + length;
             }
 
             if(newSpi.CurvatureIncreasesAhead)
             {
                 if(newSpi.BeginDc == 0.0 ) // Type 1 Spiral
                 {
+                    newSpi.AnchorPhantomStation = newSpi.BeginStation;
                     newSpi.AnchorLength = length;
                     newSpi.AnchorRay = newSpi.BeginRay;
 
@@ -173,6 +197,7 @@ namespace ptsCogo.Horizontal
             {
                 if(newSpi.EndDc == 0.0) // Type 2 Spiral
                 {
+                    newSpi.AnchorPhantomStation = newSpi.EndStation;
                     newSpi.AnchorLength = length;
                     //newSpi.AnchorRay =  
                 }

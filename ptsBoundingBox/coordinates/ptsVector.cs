@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using ptsCogo.coordinates;
 
 namespace ptsCogo
 {
@@ -33,6 +33,10 @@ namespace ptsCogo
             y = length * Math.Cos(direction.angle_);
             z = 0.0;
         }
+
+        public ptsVector(ptsRay startRay, double length) : 
+            this(startRay.HorizontalDirection, length)
+        { }
 
         public void flattenThisZ()
         {
@@ -87,6 +91,18 @@ namespace ptsCogo
             newVec.y = this.z * otherVec.x - this.x * otherVec.z;
             newVec.z = this.x * otherVec.y - this.y * otherVec.x;
             return newVec;
+        }
+
+        public ptsVector right90degrees()
+        {
+            var az = this.Azimuth + ptsAngle.HALFCIRCLE / 2.0; ;
+            return new ptsVector(az, this.Length);
+        }
+
+        public ptsVector left90degrees()
+        {
+            var az = this.Azimuth + ptsAngle.HALFCIRCLE * 1.5;
+            return new ptsVector(az, this.Length);
         }
 
         public static ptsVector operator +(ptsVector vec1, Deflection defl)
