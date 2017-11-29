@@ -15,8 +15,8 @@ namespace CogoConsoleApp
             string testFile = projectDir.GetPathAndAppendFilename("Y15A.csv");
 
             rm21HorizontalAlignment Y15A = rm21HorizontalAlignment.createFromCsvFile(testFile);
-            var outputPointsFile = @"D:\SourceModules\Python\RoadGeometryAnalysis\TestFiles\CSV\Y15A_Computed.csv";
-            var allPoints = Y15A.getXYZcoordinateList(30.0,csvOutFileName: outputPointsFile);
+            var outputPointsFile = @"D:\NCSU\201703 Fall 2017\GIS 630 Independent Study\WorkProduct\CSVdata\Y15A_Computed_05m.csv";
+            var allPoints = Y15A.getXYZcoordinateList(5.0,csvOutFileName: outputPointsFile);
         }
     }
 
