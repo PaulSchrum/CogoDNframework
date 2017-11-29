@@ -61,7 +61,7 @@ namespace ptsCogo.Horizontal
         /// <returns></returns>
         public Double ThetaFraction(Double L)
         {
-            return LengthFraction(L) * LengthFraction(L);
+            return this.Deflection.getAsRadians() * LengthFraction(L) * LengthFraction(L);
         }
 
         /// <summary>
