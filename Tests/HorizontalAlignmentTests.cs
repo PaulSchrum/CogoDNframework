@@ -1079,7 +1079,7 @@ namespace Tests
             var actualPt = aSpiral.getXYZcoordinates(sta20);
             Assert.IsTrue(expectedPt.Equals(actualPt));
             Assert.AreEqual(expected: 176.8178,
-                    actual: aSpiral.getPerpandicularAzimuth(sta20).getAsDegreesDouble(),
+                    actual: aSpiral.getPerpandicularAzimuth(sta20.station).getAsDegreesDouble(),
                     delta: 0.001);
 
             expectedPt = new ptsPoint(39.803, 2.953);
@@ -1087,16 +1087,16 @@ namespace Tests
             actualPt = aSpiral.getXYZcoordinates(sta40);
             Assert.IsTrue(expectedPt.Equals(actualPt));
             Assert.AreEqual(expected: 167.268,
-                    actual: aSpiral.getPerpandicularAzimuth(sta40).getAsDegreesDouble(),
+                    actual: aSpiral.getPerpandicularAzimuth(sta40.station).getAsDegreesDouble(),
                     delta: 0.001);
 
-            //expectedPt = new ptsPoint(19.938, 1.369);
-            //actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(20.0, -1.0, 0.0));
-            //Assert.IsTrue(expectedPt.Equals(actualPt));
+            expectedPt = new ptsPoint(19.938, 1.369);
+            actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(20.0, -1.0, 0.0));
+            Assert.IsTrue(expectedPt.Equals(actualPt));
 
-            //expectedPt = new ptsPoint(40.244, 1.002);
-            //actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(40.0, 2.0, 0.0));
-            //Assert.IsTrue(expectedPt.Equals(actualPt));
+            expectedPt = new ptsPoint(40.244, 1.002);
+            actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(40.0, 2.0, 0.0));
+            Assert.IsTrue(expectedPt.Equals(actualPt));
         }
     }
 

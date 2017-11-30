@@ -72,12 +72,17 @@ namespace ptsCogo.Horizontal
             return null;
         }
 
-        public virtual Azimuth getAzimuth(StationOffsetElevation anSOE)
+        public virtual Azimuth getAzimuth(double station)
         {
             return null;
         }
 
-        public virtual Azimuth getPerpandicularAzimuth(StationOffsetElevation anSOE)
+        public virtual Azimuth getPerpandicularAzimuth(double station)
+        {
+            return null;
+        }
+
+        public virtual ptsVector getPerpandicularVector(double station, double length)
         {
             return null;
         }

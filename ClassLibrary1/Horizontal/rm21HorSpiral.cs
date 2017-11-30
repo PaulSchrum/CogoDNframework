@@ -112,15 +112,32 @@ namespace ptsCogo.Horizontal
             return distanceAlong * y;
         }
 
-        public override Azimuth getAzimuth(StationOffsetElevation anSOE)
+        public override Azimuth getAzimuth(double station)
         {
-            var anchorLengthAlong = anSOE.station - this.AnchorPhantomStation;
+            var anchorLengthAlong = station - this.AnchorPhantomStation;
             return this.AnchorRay.HorizontalDirection + ThetaFraction(anchorLengthAlong);
         }
 
-        public override Azimuth getPerpandicularAzimuth(StationOffsetElevation anSOE)
+        /// <summary>
+        /// Based on clockwise being positive.
+        /// </summary>
+        /// <param name="anSOE"></param>
+        /// <returns></returns>
+        public override Azimuth getPerpandicularAzimuth(double station)
         {
-            return this.getAzimuth(anSOE) + Deflection.HALFCIRCLE / 2.0;
+            return this.getAzimuth(station) + Deflection.HALFCIRCLE / 2.0;
+        }
+
+        /// <summary>
+        /// Based on clockwise being positive.
+        /// </summary>
+        /// <param name="anSOE"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public override ptsVector getPerpandicularVector(double station, double length)
+        {
+            var az = getPerpandicularAzimuth(station);
+            return new ptsVector(az, length);
         }
 
         public override ptsPoint getXYZcoordinates(StationOffsetElevation anSOE)
@@ -141,13 +158,16 @@ namespace ptsCogo.Horizontal
 
             ptsVector chordVector = dx + dy;
             ptsPoint targetPoint = this.AnchorPoint + chordVector;
+
             var offsetIsNotZero = utilFunctions.tolerantCompare(
                     anSOE.offset.OFST, 0.0,
-                    0.00001)
-                != 0;
+                    0.00001) != 0;
+
             if(offsetIsNotZero)
             {
-                throw new NotImplementedException();
+                var perpandicluarVector = 
+                    this.getPerpandicularVector(anSOE.station, anSOE.offset.OFST);
+                targetPoint = targetPoint + perpandicluarVector;
             }
 
             return targetPoint;
