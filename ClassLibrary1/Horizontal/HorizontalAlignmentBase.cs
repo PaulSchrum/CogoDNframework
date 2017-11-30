@@ -72,6 +72,16 @@ namespace ptsCogo.Horizontal
             return null;
         }
 
+        public virtual Azimuth getAzimuth(StationOffsetElevation anSOE)
+        {
+            return null;
+        }
+
+        public virtual Azimuth getPerpandicularAzimuth(StationOffsetElevation anSOE)
+        {
+            return null;
+        }
+
         public virtual List<StationOffsetElevation> getStationOffsetElevation(ptsPoint aPoint)
         {
             throw new NotImplementedException();

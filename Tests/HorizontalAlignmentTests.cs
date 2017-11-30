@@ -1075,12 +1075,20 @@ namespace Tests
             Assert.AreEqual(expectedY, actualY, 0.0015);
 
             var expectedPt = new ptsPoint(19.994, 0.370);
-            var actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(20.0, 0.0, 0.0));
+            var sta20 = new StationOffsetElevation(20.0, 0.0, 0.0);
+            var actualPt = aSpiral.getXYZcoordinates(sta20);
             Assert.IsTrue(expectedPt.Equals(actualPt));
+            Assert.AreEqual(expected: 176.8178,
+                    actual: aSpiral.getPerpandicularAzimuth(sta20).getAsDegreesDouble(),
+                    delta: 0.001);
 
             expectedPt = new ptsPoint(39.803, 2.953);
-            actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(40.0, 0.0, 0.0));
+            var sta40 = new StationOffsetElevation(40.0, 0.0, 0.0);
+            actualPt = aSpiral.getXYZcoordinates(sta40);
             Assert.IsTrue(expectedPt.Equals(actualPt));
+            Assert.AreEqual(expected: 167.268,
+                    actual: aSpiral.getPerpandicularAzimuth(sta40).getAsDegreesDouble(),
+                    delta: 0.001);
 
             //expectedPt = new ptsPoint(19.938, 1.369);
             //actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(20.0, -1.0, 0.0));

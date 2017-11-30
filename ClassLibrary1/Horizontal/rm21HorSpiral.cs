@@ -112,26 +112,43 @@ namespace ptsCogo.Horizontal
             return distanceAlong * y;
         }
 
+        public override Azimuth getAzimuth(StationOffsetElevation anSOE)
+        {
+            var anchorLengthAlong = anSOE.station - this.AnchorPhantomStation;
+            return this.AnchorRay.HorizontalDirection + ThetaFraction(anchorLengthAlong);
+        }
+
+        public override Azimuth getPerpandicularAzimuth(StationOffsetElevation anSOE)
+        {
+            return this.getAzimuth(anSOE) + Deflection.HALFCIRCLE / 2.0;
+        }
+
         public override ptsPoint getXYZcoordinates(StationOffsetElevation anSOE)
         {
             if(anSOE.station < this.BeginStation || anSOE.station > this.EndStation)
                 return null;
 
-            ptsPoint aPoint = this.BeginPoint;
-
             Double localDistAlong = anSOE.station - this.BeginStation;
             Double anchorDistAlong = anSOE.station - this.AnchorPhantomStation;
 
-            Double xDist = computeXlength(localDistAlong);
+            Double xDist = computeXlength(anchorDistAlong);
             var dx = new ptsVector(this.AnchorRay, xDist);
 
-            Double yDist = computeYlength(localDistAlong);
+            Double yDist = computeYlength(anchorDistAlong);
             var dy = 
                 (new ptsVector(this.AnchorRay, yDist * this.Deflection.deflectionDirection))
                 .left90degrees();
 
             ptsVector chordVector = dx + dy;
-            ptsPoint targetPoint = aPoint + chordVector;
+            ptsPoint targetPoint = this.AnchorPoint + chordVector;
+            var offsetIsNotZero = utilFunctions.tolerantCompare(
+                    anSOE.offset.OFST, 0.0,
+                    0.00001)
+                != 0;
+            if(offsetIsNotZero)
+            {
+                throw new NotImplementedException();
+            }
 
             return targetPoint;
         }
