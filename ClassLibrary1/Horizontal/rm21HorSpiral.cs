@@ -20,6 +20,12 @@ namespace ptsCogo.Horizontal
         public ptsDegree DcChangeRate { get; protected set; }
 
         /// <summary>
+        /// Used internally to find by getStationOffsetElevation to
+        /// iteratate to a solution.
+        /// </summary>
+        private SpiralIterator myIterator { get; set; }
+
+        /// <summary>
         /// The point where Dc = 0. For connecting spirals,
         /// this point is off the alignment, but we still have to use it.
         /// </summary>
@@ -140,6 +146,15 @@ namespace ptsCogo.Horizontal
             return new ptsVector(az, length);
         }
 
+        public override List<StationOffsetElevation> getStationOffsetElevation(ptsPoint interestPoint)
+        {
+            var returnList = new List<StationOffsetElevation>();
+
+            var spiratIterator = SpiralIterator.createIterator(this, interestPoint);
+
+            return returnList;
+        }
+
         public override ptsPoint getXYZcoordinates(StationOffsetElevation anSOE)
         {
             if(anSOE.station < this.BeginStation || anSOE.station > this.EndStation)
@@ -245,6 +260,81 @@ namespace ptsCogo.Horizontal
             }
 
             return newSpi;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class SpiralIterator
+        {
+            /// <summary>
+            /// Factory method to create a spiral iterator and populate it with its
+            /// first five points
+            /// </summary>
+            /// <param name="mySpiral"></param>
+            /// <returns></returns>
+            public static SpiralIterator createIterator(rm21HorSpiralc mySpiral, ptsPoint aTargetPoint)
+            {
+                if(mySpiral.myIterator != null)
+                    return mySpiral.myIterator;
+
+                var newSpiralIter = new SpiralIterator(mySpiral, aTargetPoint);
+                double aLen = mySpiral.Length;
+                double begSta = mySpiral.BeginStation;
+                double segmentStations = 4.0;
+                for(double i = 0; i<=segmentStations; i++)
+                {
+                    double intermediateStation = begSta + (i / segmentStations);
+                    ptsPoint pos = mySpiral.getXYZcoordinates(intermediateStation);
+                    newSpiralIter.iterationList.Add(
+                        new SpiralIterationPoint(intermediateStation, pos));
+                }
+
+                foreach(var iterPoint in newSpiralIter.iterationList)
+                {
+                    iterPoint.computeParameters(newSpiralIter, aTargetPoint);
+                }
+                
+                return mySpiral.myIterator;
+            }
+
+            public rm21HorSpiralc mySpiral { get; private set; }
+            public ptsPoint targetPoint { get; private set; }
+            public List<SpiralIterationPoint> iterationList { get; private set; }
+            private SpiralIterator(rm21HorSpiralc mySpi, ptsPoint aTargetPoint)
+            {
+                this.mySpiral = mySpi;
+                this.targetPoint = aTargetPoint;
+                mySpi.myIterator = this;
+            }
+
+            public struct SpiralIterationPoint
+            {
+                double station { get; set; }
+                ptsPoint pointOnStation { get; set; }
+                Azimuth tangentDirection { get; set; }
+                ptsVector vectorToTarget { get; set; }
+                Deflection deflectionToTarget { get; set; }
+
+                public SpiralIterationPoint(double sta, ptsPoint pointOnSta)
+                {
+                    station = sta;
+                    pointOnStation = pointOnSta;
+                    tangentDirection = null;
+                    vectorToTarget = null;
+                    deflectionToTarget = null;
+                }
+
+                internal void computeParameters(SpiralIterator newSpiralIter,
+                    ptsPoint targetPoint)
+                {
+                    var spi = newSpiralIter.mySpiral;
+                    double sta = this.station;
+                    this.tangentDirection = spi.getAzimuth(sta);
+                    this.vectorToTarget = targetPoint - pointOnStation;
+                    this.deflectionToTarget = tangentDirection - vectorToTarget.Azimuth;
+                }
+            }
         }
     }
 

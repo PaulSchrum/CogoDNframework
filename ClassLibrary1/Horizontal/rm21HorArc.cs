@@ -173,7 +173,7 @@ namespace ptsCogo.Horizontal
             Double interestLength = this.Length * deflToInterestPt.getAsRadians() / this.Deflection.getAsRadians();
             Offset offset = new Offset(arcDeflDirection * (this.Radius - arcCenterToInterestPtVector.Length));
 
-            var soe = new StationOffsetElevation(this.BeginStation + interestLength, offset, 0.0);
+            var soe = new StationOffsetElevation(this.BeginStation + interestLength, offset);
             var returnList = new List<StationOffsetElevation>();
             returnList.Add(soe);
             return returnList;

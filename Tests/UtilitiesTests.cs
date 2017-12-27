@@ -41,7 +41,7 @@ namespace Tests
                 testFunc = x => x * x;
 
             double yBeingSought = 25.0;
-            double actualX = utilFunctions.findRoot(1.0, 5.22, testFunc, yBeingSought);
+            double actualX = utilFunctions.givenYfindX(1.0, 5.22, testFunc, yBeingSought);
 
             Assert.AreEqual(
                 expected: 5.0,

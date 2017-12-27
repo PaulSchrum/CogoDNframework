@@ -17,6 +17,12 @@ namespace ptsCogo.coordinates.CurvilinearCoordinates
             station = aStation; offset = anOffset; elevation = anElevation;
         }
 
+        public StationOffsetElevation(double aStation, double anOffset, double anElevation=0.0) :
+            this(aStation, new Offset(anOffset), new Elevation(anElevation))
+        {
+
+        }
+
         public StationOffsetElevation(StationOffsetElevation soeOther)
         {
             station = soeOther.station;

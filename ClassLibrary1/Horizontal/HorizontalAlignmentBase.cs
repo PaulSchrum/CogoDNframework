@@ -67,6 +67,12 @@ namespace ptsCogo.Horizontal
             throw new NotImplementedException();
         }
 
+        public ptsPoint getXYZcoordinates(double aStation)
+        {
+            var anSOE = new StationOffsetElevation(aStation, 0.0);
+            return getXYZcoordinates(anSOE);
+        }
+
         public virtual ptsPoint getXYZcoordinates(StationOffsetElevation anSOE)
         {
             return null;
@@ -87,6 +93,11 @@ namespace ptsCogo.Horizontal
             return null;
         }
 
+        /// <summary>
+        /// If the point does not fall on the element, return value is null.
+        /// </summary>
+        /// <param name="aPoint"></param>
+        /// <returns></returns>
         public virtual List<StationOffsetElevation> getStationOffsetElevation(ptsPoint aPoint)
         {
             throw new NotImplementedException();
