@@ -114,3 +114,7 @@ UpgradeLog*.XML
 /CogoTests/R2547/Y15A - Copy.csv
 /CogoTests/R2547/Y15A - Copy.csv
 /.vs/config/applicationhost.config
+/.vs/CogoDN/v15/Server/sqlite3/storage.ide-wal
+/.vs/CogoDN/v15/Server/sqlite3/storage.ide-shm
+/.vs/CogoDN/v15/Server/sqlite3/storage.ide
+/.vs/CogoDN/v15/Server/sqlite3/db.lock
