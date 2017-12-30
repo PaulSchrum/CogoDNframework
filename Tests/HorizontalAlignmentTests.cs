@@ -1098,9 +1098,9 @@ namespace Tests
             actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(40.0, 2.0, 0.0));
             Assert.IsTrue(expectedPt.Equals(actualPt));
 
-            var expecteStationOffset = new StationOffsetElevation(0020.0, 0.0);
-            var testPoint = new ptsPoint(X: 19.9938, Y: 0.3703);
-            var actualStationOffset = aSpiral.getStationOffsetElevation(testPoint);
+            //var expecteStationOffset = new StationOffsetElevation(0020.0, 0.0);
+            //var testPoint = new ptsPoint(X: 19.9938, Y: 0.3703);
+            //var actualStationOffset = aSpiral.getStationOffsetElevation(testPoint);
         }
     }
 

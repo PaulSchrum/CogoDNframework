@@ -148,6 +148,7 @@ namespace ptsCogo.Horizontal
 
         public override List<StationOffsetElevation> getStationOffsetElevation(ptsPoint interestPoint)
         {
+            throw new NotImplementedException();
             var returnList = new List<StationOffsetElevation>();
 
             var spiratIterator = SpiralIterator.createIterator(this, interestPoint);
@@ -284,7 +285,7 @@ namespace ptsCogo.Horizontal
                 double segmentStations = 4.0;
                 for(double i = 0; i<=segmentStations; i++)
                 {
-                    double intermediateStation = begSta + (i / segmentStations);
+                    double intermediateStation = begSta + (i * aLen/ segmentStations);
                     ptsPoint pos = mySpiral.getXYZcoordinates(intermediateStation);
                     newSpiralIter.iterationList.Add(
                         new SpiralIterationPoint(intermediateStation, pos));
@@ -305,6 +306,7 @@ namespace ptsCogo.Horizontal
             {
                 this.mySpiral = mySpi;
                 this.targetPoint = aTargetPoint;
+                this.iterationList = new List<SpiralIterationPoint>();
                 mySpi.myIterator = this;
             }
 
