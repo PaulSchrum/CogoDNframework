@@ -105,6 +105,16 @@ namespace ptsCogo.Angle
         //setAsDegreeMinuteSecond
         //yada
 
+        /// <summary>
+        /// Create a new Azimuth 90 degree perpandicular to the 
+        /// </summary>
+        /// <param name="multiplier">-1.0 for the left Normal</param>
+        /// <returns></returns>
+        public Azimuth RightNormal(double multiplier=1.0)
+        {
+            return newAzimuthFromAngle(this + ptsAngle.HALFCIRCLE * multiplier / 2.0);
+        }
+
         public static Azimuth newAzimuthFromAngle(ptsAngle angle)
         {
             Azimuth retAz = new Azimuth();

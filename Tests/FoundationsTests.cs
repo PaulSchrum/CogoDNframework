@@ -232,6 +232,23 @@ namespace Tests
             Assert.AreEqual(expected: ExpectedAz2Dbl, actual: actualAzimuth, delta: 0.00000001);
         }
 
+        [TestMethod]
+        public void AzimuthArithmatic_GetNormal()
+        {
+            Azimuth Az1 = new Azimuth(); Az1.setFromDegreesDouble(350.0);
+            Azimuth Az1Right = Az1.RightNormal();
+            Assert.AreEqual(
+                expected: 80.0,
+                actual: Az1Right.getAsDegreesDouble(),
+                delta: 0.00001
+                );
+            Assert.AreEqual(
+                expected: 260.0,
+                actual: Az1.RightNormal(-1.0).getAsDegreesDouble(),
+                delta: 0.00001
+                );
+        }
+
         [DataTestMethod]
         [DataRow(5.0, 10.0, 5.0)]
         [DataRow(15.0, 10.0, 5.0)]
