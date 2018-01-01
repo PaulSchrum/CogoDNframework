@@ -196,6 +196,16 @@ namespace ptsCogo
             return new ptsAngle(angle.angle__ / divisor);
         }
 
+        public static bool operator !=(ptsAngle first, ptsAngle second)
+        {
+            return first.angle_ != second.angle_;
+        }
+
+        public static bool operator ==(ptsAngle first, ptsAngle second)
+        {
+            return first.angle_ == second.angle_;
+        }
+
         public ptsAngle multiply(Double multiplier)
         {
             return new ptsAngle(this.angle__ * multiplier);
