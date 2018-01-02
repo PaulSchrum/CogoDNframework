@@ -95,7 +95,7 @@ namespace ptsCogo.coordinates
             bool horDirectionEqual = this.HorizontalDirection.Equals(other.HorizontalDirection);
             if(!horDirectionEqual) return false;
 
-            if(null == this.Slope && null == other.Slope)
+            if(this.Slope is null && other.Slope is null)
                 return true;
 
             if(null == this.Slope ^ null == other.Slope) return false;
