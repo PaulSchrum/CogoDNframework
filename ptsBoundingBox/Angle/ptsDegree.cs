@@ -7,6 +7,8 @@ namespace ptsCogo.Angle
 {
     public struct ptsDegree
     {
+        public const double lengthBasis = 100.0;
+
         private readonly Double degrees_;
         public ptsDegree(Double newVal)
         {
@@ -46,9 +48,9 @@ namespace ptsCogo.Angle
             return 18000.0 / (Math.PI * radius);
         }
 
-        public static double asRadiusFromDegDouble(double degrees)
+        public static double asRadiusFromDegDouble(double degrees, double basisLength = lengthBasis)
         {
-            return 18000.0 / (Math.PI * degrees);
+            return 180 * basisLength / (Math.PI * degrees);
         }
 
         public static ptsDegree FromRadius(double radius)
