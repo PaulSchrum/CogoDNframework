@@ -1009,6 +1009,110 @@ namespace Tests
         // Todo: Add test for instantiate from csv file in which the stationing
         // includes at least one equality
 
+        //[TestMethod]
+        public void HorizontalAlignment_instantiates_fromCSV_withSpirals()
+        {
+            var directory = new DirectoryManager();
+            directory.CdUp(2).CdDown("CogoTests");
+            string testFile = directory.GetPathAndAppendFilename("R2100_L1.CogoDN.csv");
+
+            rm21HorizontalAlignment L1 = rm21HorizontalAlignment.createFromCsvFile(testFile);
+            Assert.IsNotNull(L1);
+
+            var actualItemCount = L1.childCount();
+            Assert.AreEqual(expected: 44, actual: actualItemCount);
+
+            Assert.AreEqual(expected: new ptsPoint(1296205.4529, 960387.001),
+                actual: L1.BeginPoint);
+
+            Assert.AreEqual(expected: new ptsPoint(1291644.4100, 971366.237),
+                actual: L1.EndPoint);
+
+            var actualStation = L1.BeginStation;
+            double expectedStation = 25300.0;
+            Assert.AreEqual(expected: expectedStation,
+                actual: actualStation, delta: stdDelta);
+
+            expectedStation = 38218.3855;
+            Assert.AreEqual(expected: expectedStation,
+                actual: L1.EndStation, delta: 0.00011);
+        }
+
+        public void SpiralType1_proof(rm21HorSpiralc aSpiral)
+        {
+            Assert.AreEqual(expected: 1,
+                actual: aSpiral.SpiralType);
+
+            Assert.AreEqual(expected: new ptsPoint(1296158.5690, 960551.8990),
+                actual: aSpiral.BeginPoint);
+
+            Assert.AreEqual(expected: 344.12846,
+                actual: aSpiral.BeginAzimuth.getAsDegreesDouble(),
+                delta: 0.0001);
+
+            Assert.AreEqual(expected: 25471.4333,
+                actual: aSpiral.BeginStation,
+                delta: 0.0005);
+
+            Assert.AreEqual(expected: 0.0,
+                actual: aSpiral.BeginDegreeOfCurve.getAsDegreesDouble(),
+                delta: 0.0001);
+
+            double x = 0;
+            Assert.AreEqual(expected: -0.3375,
+                actual: aSpiral.Deflection.getAsDegreesDouble(),
+                delta: 0.0001);
+
+            Assert.AreEqual(expected: 90.0,
+                actual: aSpiral.Length,
+                delta: 0.0001);
+
+            Assert.AreEqual(expected: 0.1767,
+                actual: aSpiral.spiralDY.Length,
+                delta: 0.0005);
+
+            Assert.AreEqual(expected: 89.9997,
+                actual: aSpiral.spiralDX.Length,
+                delta: 0.0005);
+
+        }
+
+        //[TestMethod]
+        public void HorizontalAlignment_instantiates_fromCSV_withType1SpiralOnly()
+        {
+            var directory = new DirectoryManager();
+            directory.CdUp(2).CdDown("CogoTests");
+            string testFile = directory.GetPathAndAppendFilename("R2100_L1part.CogoDN.csv");
+
+            rm21HorizontalAlignment L1 = rm21HorizontalAlignment.createFromCsvFile(testFile);
+            Assert.IsNotNull(L1);
+
+            var actualItemCount = L1.childCount();
+            Assert.AreEqual(expected: 3, actual: actualItemCount);
+
+            SpiralType1_proof((L1.getChildBySequenceNumber(1)) as rm21HorSpiralc);
+
+            Assert.AreEqual(expected: new ptsPoint(1296205.4529, 960387.001),
+                actual: L1.BeginPoint);
+
+            Assert.AreEqual(expected: new ptsPoint(1295733.5145, 961709.039),
+                actual: L1.EndPoint);
+
+            var actualStation = L1.BeginStation;
+            double expectedStation = 25300.0;
+            Assert.AreEqual(expected: expectedStation,
+                actual: actualStation, delta: stdDelta);
+
+            expectedStation = 27014.0651;
+            Assert.AreEqual(expected: expectedStation,
+                actual: L1.EndStation, delta: 0.00011);
+
+            var expectedEndAzimuthDeg = 335.2105;
+            Assert.AreEqual(expected: expectedEndAzimuthDeg,
+                actual: L1.EndAzimuth.getAsDegreesDouble(),
+                delta: 0.0001);
+        }
+
         [TestMethod]
         public void HorizontalAlignment_fromCSV_stationOffsets_mapCorrectly()
         {
@@ -1097,6 +1201,9 @@ namespace Tests
             expectedPt = new ptsPoint(40.244, 1.002);
             actualPt = aSpiral.getXYZcoordinates(new StationOffsetElevation(40.0, 2.0, 0.0));
             Assert.IsTrue(expectedPt.Equals(actualPt));
+
+            // Get end point and verify
+            // Get Anchor point and verify
 
             //var expecteStationOffset = new StationOffsetElevation(0020.0, 0.0);
             //var testPoint = new ptsPoint(X: 19.9938, Y: 0.3703);
