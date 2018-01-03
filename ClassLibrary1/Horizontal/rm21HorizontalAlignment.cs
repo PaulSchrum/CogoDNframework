@@ -573,6 +573,14 @@ namespace ptsCogo.Horizontal
             return String.Empty;
         }
 
+
+        public int ChildCount { get { return this.allChildSegments.Count; } }
+
+        public HorizontalAlignmentBase getChildBySequenceNumber(int index)
+        {
+            if(index >= this.ChildCount) return null;
+            return this.allChildSegments[index];
+        }
     }
 
     public sealed class alignmentDataPacket
