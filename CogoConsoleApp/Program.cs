@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ptsCogo.Horizontal;
 using System.IO;
+using ptsCogo.Horizontal;
 
 namespace CogoConsoleApp
 {
