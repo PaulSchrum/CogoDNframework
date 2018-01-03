@@ -10,14 +10,13 @@ namespace ptsCogo.Horizontal
 {
     public class rm21HorSpiralc : HorizontalAlignmentBase
     {
+        public int SpiralType { get; protected set; }
         public ptsVector spiralDX { get; protected set; }
         public ptsVector spiralDY { get; protected set; }
-        public ptsDegree BeginDc { get; protected set; }
-        public ptsDegree EndDc { get; protected set; }
         public double AnchorPhantomStation { get; protected set; }
 
 
-        public ptsDegree DcChangeRate { get; protected set; }
+        public ptsAngle DcChangeRate { get; protected set; }
 
         /// <summary>
         /// Used internally to find by getStationOffsetElevation to
@@ -49,7 +48,7 @@ namespace ptsCogo.Horizontal
         /// </summary>
         public bool CurvatureIncreasesAhead
         {
-            get { return (Math.Abs(EndDc.getAsRadians() - BeginDc.getAsRadians()) > 0.0); }
+            get { return (Math.Abs(EndDegreeOfCurve.getAsRadians() - BeginDegreeOfCurve.getAsRadians()) > 0.0); }
         }
 
         /// <summary>
@@ -57,11 +56,11 @@ namespace ptsCogo.Horizontal
         /// </summary>
         public bool CurvatureDecreasesAhead
         {
-            get { return (Math.Abs(EndDc.getAsRadians() - BeginDc.getAsRadians()) < 0.0); }
+            get { return (Math.Abs(EndDegreeOfCurve.getAsRadians() - BeginDegreeOfCurve.getAsRadians()) < 0.0); }
         }
 
 
-        public bool isConnecting { get { return BeginDc != 0.0 && EndDc != 0.0; } }
+        public bool isConnecting { get { return BeginDegreeOfCurve != 0.0 && EndDegreeOfCurve != 0.0; } }
 
         public Double LengthFraction(Double L)
         {
@@ -189,6 +188,18 @@ namespace ptsCogo.Horizontal
             return targetPoint;
         }
 
+        protected static void setSpiralType(rm21HorSpiralc spi, double degreeIn, double degreeOut)
+        {
+            if(degreeIn == 0.0)
+                spi.SpiralType = 1;
+            else if(degreeOut == 0.0)
+                spi.SpiralType = 2;
+            else if(Math.Abs(degreeIn) < Math.Abs(degreeOut))
+                spi.SpiralType = 3;
+            else
+                spi.SpiralType = 4;
+        }
+
         public static rm21HorSpiralc Create(
             ptsRay inRay, 
             double length, 
@@ -197,36 +208,43 @@ namespace ptsCogo.Horizontal
             double beginStation = 0.0)
         {
             rm21HorSpiralc newSpi = new rm21HorSpiralc();
+            setSpiralType(newSpi, degreeIn, degreeOut);
 
             newSpi.BeginPoint = inRay.StartPoint;
             newSpi.BeginAzimuth = inRay.HorizontalDirection;
 
-            newSpi.BeginDc = ptsDegree.newFromDegrees(degreeIn);
-            newSpi.EndDc = ptsDegree.newFromDegrees(degreeOut);
+            newSpi.BeginDegreeOfCurve = ptsAngle.radiansFromDegree(degreeIn);
+            newSpi.EndDegreeOfCurve = ptsAngle.radiansFromDegree(degreeOut);
             newSpi.Length = length;
 
-            newSpi.DcChangeRate = newSpi.EndDc - newSpi.BeginDc
+            newSpi.DcChangeRate = (newSpi.EndDegreeOfCurve - newSpi.BeginDegreeOfCurve)
                                     / length;
-            var v = newSpi.DcChangeRate.getAsRadians();
+            var v = newSpi.DcChangeRate.getAsDegreesDouble();
 
-            if(newSpi.isConnecting) // Type 3 or 4
+            var highestDegree = Math.Max(Math.Abs(degreeIn), Math.Abs(degreeOut));
+            var minRadius = ptsDegree.asRadiusFromDegDouble(highestDegree);
+
+            if(newSpi.SpiralType == 1)
             {
-                throw new NotImplementedException();
-            }
-            else  // Type 1 or 2
-            {
-                var thetaS = newSpi.DcChangeRate.getAsRadians() * length 
-                    / (2 * degreeOfCurveLength);
-                //thetaS = newSpi.DcChangeRate.getAsDouble() * length / 200.0;
+                var deflDirection = Math.Sign(newSpi.DcChangeRate.getAsRadians());
+                var thetaS = deflDirection  * length 
+                    / (2 * minRadius);
                 newSpi.Deflection = new Deflection(thetaS);
                 newSpi.BeginStation = beginStation;
                 newSpi.AnchorPhantomStation = beginStation;
                 newSpi.EndStation = beginStation + length;
+                newSpi.EndAzimuth = newSpi.BeginAzimuth + newSpi.Deflection;
+                double spiralX = newSpi.computeXlength(length);
+                newSpi.spiralDX = new ptsVector(newSpi.BeginAzimuth, spiralX);
+                double spiralY = newSpi.computeYlength(length);
+                spiralY *= newSpi.Deflection.deflectionDirection;
+                newSpi.spiralDY = new ptsVector(newSpi.BeginAzimuth, spiralY);
+                newSpi.EndPoint = newSpi.BeginPoint + newSpi.spiralDX + newSpi.spiralDY;
             }
 
             if(newSpi.CurvatureIncreasesAhead)
             {
-                if(newSpi.BeginDc == 0.0 ) // Type 1 Spiral
+                if(newSpi.BeginDegreeOfCurve.getAsRadians() == 0.0 ) // Type 1 Spiral
                 {
                     newSpi.AnchorPhantomStation = newSpi.BeginStation;
                     newSpi.AnchorLength = length;
@@ -248,7 +266,7 @@ namespace ptsCogo.Horizontal
             }
             else
             {
-                if(newSpi.EndDc == 0.0) // Type 2 Spiral
+                if(newSpi.EndDegreeOfCurve.getAsRadians() == 0.0) // Type 2 Spiral
                 {
                     newSpi.AnchorPhantomStation = newSpi.EndStation;
                     newSpi.AnchorLength = length;
