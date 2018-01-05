@@ -13,6 +13,8 @@ namespace ptsCogo.Horizontal
         public int SpiralType { get; protected set; }
         public ptsVector spiralDX { get; protected set; }
         public ptsVector spiralDY { get; protected set; }
+        public ptsVector spiralU { get; protected set; }
+        public ptsVector spiralV { get; protected set; }
         public double AnchorPhantomStation { get; protected set; }
 
 
@@ -188,6 +190,21 @@ namespace ptsCogo.Horizontal
             return targetPoint;
         }
 
+        internal override void restationFollowOnOperation()
+        {
+            // Mend AnchorPhantomStation
+            if(this.SpiralType == 1)
+                this.AnchorPhantomStation = this.BeginStation;
+            else if(this.SpiralType == 2)
+                this.AnchorPhantomStation = this.EndStation;
+            else if(this.SpiralType == 3)
+                throw new NotImplementedException();
+            else // this.SpiralType == 4
+                throw new NotImplementedException();
+
+            return;
+        }
+
         protected static void setSpiralType(rm21HorSpiralc spi, double degreeIn, double degreeOut)
         {
             if(degreeIn == 0.0)
@@ -231,33 +248,45 @@ namespace ptsCogo.Horizontal
                     / (2 * minRadius);
                 newSpi.Deflection = new Deflection(thetaS);
                 newSpi.BeginStation = beginStation;
-                newSpi.AnchorPhantomStation = beginStation;
                 newSpi.EndStation = beginStation + length;
                 newSpi.EndAzimuth = newSpi.BeginAzimuth + newSpi.Deflection;
+
                 double spiralX = newSpi.computeXlength(length);
                 newSpi.spiralDX = new ptsVector(newSpi.BeginAzimuth, spiralX);
                 double spiralY = newSpi.computeYlength(length);
                 spiralY *= newSpi.Deflection.deflectionDirection;
                 newSpi.spiralDY = new ptsVector(newSpi.BeginAzimuth, spiralY);
                 newSpi.EndPoint = newSpi.BeginPoint + newSpi.spiralDX + newSpi.spiralDY;
+
+                double tan_thetaS = Math.Tan(Math.Abs(newSpi.Deflection.getAsRadians()));
+                double Ulength = newSpi.spiralDX.Length - (newSpi.spiralDY.Length /
+                                                            tan_thetaS);
+                newSpi.spiralU = new ptsVector(newSpi.BeginAzimuth, Ulength);
+
+                double sin_thetaS = Math.Sin(Math.Abs(newSpi.Deflection.getAsRadians()));
+                double Vlength = newSpi.spiralDY.Length /
+                                    sin_thetaS;
+                newSpi.spiralV = new ptsVector(newSpi.EndAzimuth, Vlength);
+                newSpi.AnchorRay = new ptsRay(newSpi.BeginPoint, newSpi.BeginAzimuth);
+                newSpi.AnchorPhantomStation = newSpi.BeginStation;
             }
 
             if(newSpi.CurvatureIncreasesAhead)
             {
                 if(newSpi.BeginDegreeOfCurve.getAsRadians() == 0.0) // Type 1 Spiral
                 {
-                    newSpi.AnchorPhantomStation = newSpi.BeginStation;
-                    newSpi.AnchorLength = length;
-                    newSpi.AnchorRay = newSpi.BeginRay;
+                    //newSpi.AnchorPhantomStation = newSpi.BeginStation;
+                    //newSpi.AnchorLength = length;
+                    //newSpi.AnchorRay = newSpi.BeginRay;
 
-                    Azimuth startAz = newSpi.BeginRay.HorizontalDirection;
-                    Double x = newSpi.computeXlength(length);
-                    newSpi.spiralDX = new ptsVector(startAz, x);
+                    //Azimuth startAz = newSpi.BeginRay.HorizontalDirection;
+                    //Double x = newSpi.computeXlength(length);
+                    //newSpi.spiralDX = new ptsVector(startAz, x);
 
-                    Azimuth perp2StartAz =
-                        startAz + Deflection.Perpandicular(newSpi.Deflection.deflectionDirection);
-                    Double y = newSpi.computeYlength(length);
-                    newSpi.spiralDY = new ptsVector(perp2StartAz, y);
+                    //Azimuth perp2StartAz =
+                    //    startAz + Deflection.Perpandicular(newSpi.Deflection.deflectionDirection);
+                    //Double y = newSpi.computeYlength(length);
+                    //newSpi.spiralDY = new ptsVector(perp2StartAz, y);
                 }
                 else   // Type 3 Spiral
                 {
