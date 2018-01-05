@@ -77,6 +77,15 @@ namespace ptsCogo
             }
         }
 
+        /// <summary>
+        /// Side effects only. Created so Spirals can do some essential cleanup
+        /// after a restationing operation, but it can be used as needed.
+        /// </summary>
+        internal virtual void restationFollowOnOperation()
+        {
+
+        }
+
         public void addRegion(double beginSta, double endSta)
         {
             if(Parent != null)

@@ -274,6 +274,7 @@ namespace ptsCogo.Horizontal
                 runningTrueStation += segment.Length;
                 segment.EndStation = runningTrueStation;
                 this.EndStation = runningTrueStation;
+                segment.restationFollowOnOperation();
             }
         }
 
