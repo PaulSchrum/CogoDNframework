@@ -53,6 +53,11 @@ namespace ptsCogo.Horizontal
         public virtual ptsVector LongChordVector
         { get { return (new ptsVector(this.BeginPoint, this.EndPoint)).flattenZnew(); } }
 
+
+        /// <summary>
+        /// DegeeOfCurveLength, usually 100, is the length of curve used to determine
+        /// What the Degree of Curve.
+        /// </summary>
         static HorizontalAlignmentBase() { degreeOfCurveLength = 100; }
         static public Double degreeOfCurveLength { get; set; }
         static public ptsAngle computeDegreeOfCurve(Double radius)
