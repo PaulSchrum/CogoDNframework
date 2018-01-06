@@ -1,0 +1,39 @@
+Attribute	Type 1	Type 2	Type 3	Type 4
+AnchorLength	u	u		
+AnchorPhantomStation	u	u		
+AnchorPoint	y	n		
+AnchorRay	y	n		
+BeginAzimuth	y	y		
+BeginDegreeOfCurve	y	y		
+BeginPoint	y	y		
+BeginRay	y	y		
+BeginStation	y	y		
+CurvatureDecreasesAhead	u	u		
+CurvatureIncreasesAhead	u	u		
+DcChangeRate	y	y		
+Deflection	y	y		
+EndAzimuth	y	y		
+EndDegreeOfCurve	y	y		
+EndPoint	y	y		
+EndRay	y	y		
+EndStation	y	y		
+Length	y	y		
+LongChordVector	y	n		
+Name	na	na		
+Parent	na	na		
+Radius	na	na		
+SpiralType	y	y	y	y
+allRegions	na	na		
+anAlignment	na	na		
+incomingElements	na	na		
+isConnecting	y	y	y	y
+myIterator	na	na		
+outgoingElements	na	na		
+spiralDX	y	y		
+spiralDY	y	y		
+spiralU	y	n		
+spiralV	y	n		
+				
+				
+This file tracks which spiral features have been implemented and tested.				
+Type 3 and 4 spirals are not expected to be developed in the near term.				
