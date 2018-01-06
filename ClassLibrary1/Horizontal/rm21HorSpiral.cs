@@ -254,8 +254,9 @@ namespace ptsCogo.Horizontal
                 double spiralX = newSpi.computeXlength(length);
                 newSpi.spiralDX = new ptsVector(newSpi.BeginAzimuth, spiralX);
                 double spiralY = newSpi.computeYlength(length);
-                spiralY *= newSpi.Deflection.deflectionDirection;
-                newSpi.spiralDY = new ptsVector(newSpi.BeginAzimuth, spiralY);
+                var dir = newSpi.Deflection.deflectionDirection;
+                var yDir = newSpi.BeginAzimuth.RightNormal();
+                newSpi.spiralDY = new ptsVector(yDir, spiralY);
                 newSpi.EndPoint = newSpi.BeginPoint + newSpi.spiralDX + newSpi.spiralDY;
 
                 double tan_thetaS = Math.Tan(Math.Abs(newSpi.Deflection.getAsRadians()));

@@ -1075,9 +1075,47 @@ namespace Tests
                 actual: aSpiral.spiralDX.Length,
                 delta: 0.0005);
 
+            Assert.AreEqual(expected: 60.0001,
+                actual: aSpiral.spiralU.Length,
+                delta: 0.0002);
+
+            Assert.AreEqual(expected: 30.0001,
+                actual: aSpiral.spiralV.Length,
+                delta: 0.0002);
+
+            // Next: Check EndStation, Bearing, Point.
+            Assert.AreEqual(expected: 25561.4342,
+                actual: aSpiral.EndStation,
+                delta: 0.002);
+
+            Assert.AreEqual(expected: 343.79103,
+                actual: aSpiral.EndAzimuth.getAsDegreesDouble(),
+                delta: 0.0005);
+
+            var expectedEndPt = new ptsPoint(1296133.7860, 960638.4200);
+            var actualEndPt = aSpiral.EndPoint;
+            Assert.AreEqual(expected: expectedEndPt,
+                actual: actualEndPt);
+
+            var expectedLongChordVectorLength = 90.0001;
+            var expectedLongChordVectorAzimuth = 344.01619;
+            var actualLongChordVector = aSpiral.LongChordVector;
+            Assert.IsNotNull(actualLongChordVector);
+            Assert.AreEqual(expected: expectedLongChordVectorLength,
+                actual: actualLongChordVector.Length,
+                delta: 0.001);
+            Assert.AreEqual(expected: expectedLongChordVectorAzimuth,
+                actual: actualLongChordVector.Azimuth.getAsDegreesDouble(),
+                delta: 0.0005);
+
         }
 
-        //[TestMethod]
+        /// <summary>
+        /// Note: At this time (5 Jan 2018), functionality for getStationOffsetElevation()
+        /// has not been implemented for Type 1, 2, 3, or 4 spirals.
+        /// Otherwise, Type 1 Spirals are complete.
+        /// </summary>
+        [TestMethod]
         public void HorizontalAlignment_instantiates_fromCSV_withType1SpiralOnly()
         {
             var directory = new DirectoryManager();
@@ -1090,6 +1128,7 @@ namespace Tests
             var actualItemCount = L1.childCount();
             Assert.AreEqual(expected: 3, actual: actualItemCount);
 
+            //ptsPoint.HorizontalEqualsTolerance.Push(0.4);
             SpiralType1_proof((L1.getChildBySequenceNumber(1)) as rm21HorSpiralc);
 
             Assert.AreEqual(expected: new ptsPoint(1296205.4529, 960387.001),
@@ -1103,14 +1142,24 @@ namespace Tests
             Assert.AreEqual(expected: expectedStation,
                 actual: actualStation, delta: stdDelta);
 
-            expectedStation = 27014.0651;
+            expectedStation = 26705.50;
             Assert.AreEqual(expected: expectedStation,
-                actual: L1.EndStation, delta: 0.00011);
+                actual: L1.EndStation, delta: 0.001);
 
-            var expectedEndAzimuthDeg = 335.2105;
+            var expectedEndAzimuthDeg = 335.21053;
             Assert.AreEqual(expected: expectedEndAzimuthDeg,
                 actual: L1.EndAzimuth.getAsDegreesDouble(),
-                delta: 0.0001);
+                delta: 0.0002);
+
+            var expectedStationPoint = new ptsPoint(1296150.7510, 960579.375);
+            var testStation = 25500.0; // On the Type 1 Spiral
+            var actualStationPoint = L1.getXYZcoordinates(testStation);
+            var P2Pdist = (expectedStationPoint - actualStationPoint).Length;
+            Assert.AreEqual(expected: 0.0,
+                actual: P2Pdist,
+                delta: 0.0005);
+
+            //ptsPoint.HorizontalEqualsTolerance.Pop();
         }
 
         [TestMethod]
