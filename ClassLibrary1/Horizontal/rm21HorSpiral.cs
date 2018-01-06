@@ -233,6 +233,8 @@ namespace ptsCogo.Horizontal
             newSpi.BeginDegreeOfCurve = ptsAngle.radiansFromDegree(degreeIn);
             newSpi.EndDegreeOfCurve = ptsAngle.radiansFromDegree(degreeOut);
             newSpi.Length = length;
+            newSpi.BeginStation = beginStation;
+            newSpi.EndStation = beginStation + length;
 
             newSpi.DcChangeRate = (newSpi.EndDegreeOfCurve - newSpi.BeginDegreeOfCurve)
                                     / length;
@@ -247,8 +249,6 @@ namespace ptsCogo.Horizontal
                 var thetaS = deflDirection * length
                     / (2 * minRadius);
                 newSpi.Deflection = new Deflection(thetaS);
-                newSpi.BeginStation = beginStation;
-                newSpi.EndStation = beginStation + length;
                 newSpi.EndAzimuth = newSpi.BeginAzimuth + newSpi.Deflection;
 
                 double spiralX = newSpi.computeXlength(length);
@@ -271,42 +271,53 @@ namespace ptsCogo.Horizontal
                 newSpi.AnchorRay = new ptsRay(newSpi.BeginPoint, newSpi.BeginAzimuth);
                 newSpi.AnchorPhantomStation = newSpi.BeginStation;
             }
-
-            if(newSpi.CurvatureIncreasesAhead)
+            else if(newSpi.SpiralType == 2)
             {
-                if(newSpi.BeginDegreeOfCurve.getAsRadians() == 0.0) // Type 1 Spiral
-                {
-                    //newSpi.AnchorPhantomStation = newSpi.BeginStation;
-                    //newSpi.AnchorLength = length;
-                    //newSpi.AnchorRay = newSpi.BeginRay;
+                var deflDirection = -1 * Math.Sign(newSpi.DcChangeRate.getAsRadians());
+                var thetaS = deflDirection * length
+                    / (2 * minRadius);
+                newSpi.Deflection = new Deflection(thetaS);
+                double spiralX = newSpi.computeXlength(length);
+                double spiralY = newSpi.computeYlength(length);
 
-                    //Azimuth startAz = newSpi.BeginRay.HorizontalDirection;
-                    //Double x = newSpi.computeXlength(length);
-                    //newSpi.spiralDX = new ptsVector(startAz, x);
+                newSpi.EndAzimuth = newSpi.BeginAzimuth + newSpi.Deflection;
+                var anchorAzimuth = newSpi.EndAzimuth + ptsAngle.HALFCIRCLE;
+                newSpi.AnchorRay = new ptsRay(newSpi.EndPoint, anchorAzimuth);
+                newSpi.AnchorLength = length;
+                newSpi.AnchorPhantomStation = newSpi.EndStation;
 
-                    //Azimuth perp2StartAz =
-                    //    startAz + Deflection.Perpandicular(newSpi.Deflection.deflectionDirection);
-                    //Double y = newSpi.computeYlength(length);
-                    //newSpi.spiralDY = new ptsVector(perp2StartAz, y);
-                }
-                else   // Type 3 Spiral
-                {
-                    throw new NotImplementedException("Type 3 spirals not yet implemented.");
-                }
+                newSpi.spiralDX = new ptsVector(anchorAzimuth, spiralX);
+                int sign = -1 * newSpi.Deflection.deflectionDirection;
+                var yDir = newSpi.BeginAzimuth.RightNormal(sign);
+                newSpi.spiralDY = new ptsVector(yDir, spiralY);
+
+                newSpi.EndPoint = newSpi.BeginPoint - newSpi.spiralDY
+                    - newSpi.spiralDX;
+
+                double tan_thetaS = Math.Tan(Math.Abs(newSpi.Deflection.getAsRadians()));
+                double Ulength = newSpi.spiralDX.Length - (newSpi.spiralDY.Length /
+                                                            tan_thetaS);
+                newSpi.spiralU = new ptsVector(anchorAzimuth, Ulength);
+
+                double sin_thetaS = Math.Sin(Math.Abs(newSpi.Deflection.getAsRadians()));
+                double Vlength = newSpi.spiralDY.Length /
+                                    sin_thetaS;
+                newSpi.spiralV = new ptsVector(newSpi.BeginAzimuth, Vlength);
+
+            }
+            else if (newSpi.SpiralType == 3)
+            {
+                // not implemented
+            }
+            else if (newSpi.SpiralType ==4)
+            {
+                // not implemented
             }
             else
             {
-                if(newSpi.EndDegreeOfCurve.getAsRadians() == 0.0) // Type 2 Spiral
-                {
-                    newSpi.AnchorPhantomStation = newSpi.EndStation;
-                    newSpi.AnchorLength = length;
-                    //newSpi.AnchorRay =  
-                }
-                else   // Type 4 Spiral
-                {
-                    throw new NotImplementedException("Type 4 spirals not yet implemented.");
-                }
+                // this should never happen
             }
+            
 
             return newSpi;
         }
