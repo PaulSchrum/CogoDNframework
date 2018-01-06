@@ -1128,7 +1128,6 @@ namespace Tests
             var actualItemCount = L1.childCount();
             Assert.AreEqual(expected: 3, actual: actualItemCount);
 
-            //ptsPoint.HorizontalEqualsTolerance.Push(0.4);
             SpiralType1_proof((L1.getChildBySequenceNumber(1)) as rm21HorSpiralc);
 
             Assert.AreEqual(expected: new ptsPoint(1296205.4529, 960387.001),
@@ -1159,7 +1158,6 @@ namespace Tests
                 actual: P2Pdist,
                 delta: 0.0005);
 
-            //ptsPoint.HorizontalEqualsTolerance.Pop();
         }
 
         [TestMethod]
