@@ -58,6 +58,11 @@ namespace ptsCogo
             return new ptsPoint(point.x + vector.x, point.y + vector.y, point.z + vector.z);
         }
 
+        public static ptsPoint operator -(ptsPoint point, ptsVector vector)
+        {
+            return new ptsPoint(point.x - vector.x, point.y - vector.y, point.z - vector.z);
+        }
+
         public Double GetHorizontalDistanceTo(ptsPoint other)
         {
             Double dx = other.x - this.x;
