@@ -1,15 +1,15 @@
 Attribute	Type 1	Type 2	Type 3	Type 4
-AnchorLength	u	u		
-AnchorPhantomStation	u	u		
-AnchorPoint	y	n		
-AnchorRay	y	n		
+AnchorLength	u	y		
+AnchorPhantomStation	u	y		
+AnchorPoint	derived	derived		
+AnchorRay	y	y		
 BeginAzimuth	y	y		
 BeginDegreeOfCurve	y	y		
 BeginPoint	y	y		
 BeginRay	y	y		
 BeginStation	y	y		
-CurvatureDecreasesAhead	u	u		
-CurvatureIncreasesAhead	u	u		
+CurvatureDecreasesAhead	y	y		
+CurvatureIncreasesAhead	y	y		
 DcChangeRate	y	y		
 Deflection	y	y		
 EndAzimuth	y	y		
@@ -18,7 +18,7 @@ EndPoint	y	y
 EndRay	y	y		
 EndStation	y	y		
 Length	y	y		
-LongChordVector	y	n		
+LongChordVector	derived	derived		
 Name	na	na		
 Parent	na	na		
 Radius	na	na		
@@ -31,8 +31,8 @@ myIterator	na	na
 outgoingElements	na	na		
 spiralDX	y	y		
 spiralDY	y	y		
-spiralU	y	n		
-spiralV	y	n		
+spiralU	y	y		
+spiralV	y	y		
 				
 				
 This file tracks which spiral features have been implemented and tested.				
