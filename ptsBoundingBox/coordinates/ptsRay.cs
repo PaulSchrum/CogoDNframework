@@ -18,6 +18,12 @@ namespace ptsCogo.coordinates
             this.Slope = slope;
         }
 
+        public ptsRay(double startX, double startY, double azimuthDegrees, Slope slope=null) :
+            this(new ptsPoint(startX, startY), Azimuth.fromDegreesDouble(azimuthDegrees), slope)
+        {
+
+        }
+
         public ptsRay(string x, string y, string z=null, string azimuth=null, string slope=null)
         {
             this.StartPoint = new ptsPoint(x, y, z);
@@ -103,6 +109,11 @@ namespace ptsCogo.coordinates
             if(this.Slope != other.Slope) return false;
 
             return true;
+        }
+
+        public override string ToString()
+        {
+            return this.StartPoint.ToString() + " " + this.HorizontalDirection.ToString();
         }
     }
 }
