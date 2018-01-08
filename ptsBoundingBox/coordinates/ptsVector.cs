@@ -15,7 +15,7 @@ namespace ptsCogo
         public double z { get; set; }
 
         public ptsVector() { }
-        public ptsVector(double x_, double y_, double z_)
+        public ptsVector(double x_, double y_, double z_=0.0)
         {
             x = x_; y = y_; z = z_;
         }
