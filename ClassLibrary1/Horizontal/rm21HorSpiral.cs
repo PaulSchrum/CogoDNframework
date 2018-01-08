@@ -288,10 +288,10 @@ namespace ptsCogo.Horizontal
 
                 newSpi.spiralDX = new ptsVector(anchorAzimuth, spiralX);
                 int sign = -1 * newSpi.Deflection.deflectionDirection;
-                var yDir = newSpi.BeginAzimuth.RightNormal(sign);
+                var yDir = anchorAzimuth.RightNormal(sign);
                 newSpi.spiralDY = new ptsVector(yDir, spiralY);
 
-                newSpi.EndPoint = newSpi.BeginPoint - newSpi.spiralDY
+                newSpi.EndPoint = newSpi.BeginPoint + newSpi.spiralDY
                     - newSpi.spiralDX;
 
                 double tan_thetaS = Math.Tan(Math.Abs(newSpi.Deflection.getAsRadians()));
