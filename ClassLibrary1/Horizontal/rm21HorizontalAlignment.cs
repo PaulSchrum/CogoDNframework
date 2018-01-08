@@ -67,6 +67,7 @@ namespace ptsCogo.Horizontal
             retAlign.BeginStation = startStation;
             // end "process start point, direction, and station"
 
+            //int lineCount = 0;
             // Read in all elements
             var endingRay = startRay;
             for(int i=tableStartLines["Elements"]+2; i<tableStartLines["Regions"]; i++)
@@ -82,6 +83,7 @@ namespace ptsCogo.Horizontal
                 aNewSegment.Parent = retAlign;
                 endingRay = aNewSegment.EndRay;
                 retAlign.allChildSegments.Add(aNewSegment);
+                //lineCount++;
             }
             // end "Read in all elements"
 
@@ -111,6 +113,21 @@ namespace ptsCogo.Horizontal
             // validate the alignment ends on the last point
             // end "validate the alignment ends on the last point"
 
+            var pts = retAlign.allChildSegments
+                .Select(seg => "xy=" + seg.EndPoint.ToString())
+                .ToList();
+
+            var block1 = pts.Take(6).Aggregate((accum, coord) => accum + ";" + coord);
+            var lngh = block1.Length;
+            var block2 = pts.Skip(6).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
+            var block3 = pts.Skip(12).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
+            var block4 = pts.Skip(18).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
+            var block5 = pts.Skip(24).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
+
+            var allEndPoints = retAlign.allChildSegments
+                .Select(seg => "xy=" + seg.EndPoint.ToString())
+                .Aggregate((accum, coord) => accum + ";" + coord);
+            
             return retAlign;
         }
 
