@@ -1009,7 +1009,41 @@ namespace Tests
         // Todo: Add test for instantiate from csv file in which the stationing
         // includes at least one equality
 
-        //[TestMethod]
+        private void SpiralType2_LeftTurning_proof(rm21HorSpiralc aSpiral)
+        {
+            Assert.AreEqual(expected: 2, actual: aSpiral.SpiralType);
+
+            var expectedLongChordVector = new ptsVector(x_: -117.5485, y_:23.2791);
+            var actualLongChordVector = aSpiral.LongChordVector;
+            Assert.AreEqual(expected: expectedLongChordVector.Azimuth.getAsDegreesDouble(),
+                actual: actualLongChordVector.Azimuth.getAsDegreesDouble(),
+                delta: 0.0001);
+            Assert.AreEqual(expected: expectedLongChordVector.Length,
+                actual: actualLongChordVector.Length,
+                delta: 0.001);
+            //Assert.AreEqual(expected: expectedLongChordVector,
+            //    actual: actualLongChordVector);
+
+            // Expected value source: Microstation file for NCDOT project R-2100B.
+            var expectedEndRay = new ptsRay(1295257.0660, 962242.6880, 277.80329);
+            var actualEndRay = aSpiral.EndRay;
+            var pointDist = (expectedEndRay.StartPoint - actualEndRay.StartPoint).Length;
+            Assert.AreEqual(expected: 0.0,
+                actual: pointDist,
+                delta: 0.004);
+        }
+
+        private void SpiralType1_RightTurning_proof(rm21HorSpiralc aSpiral)
+        {
+            // Todo: fill this out.
+        }
+
+        private void SpiralType2_RightTurning_proof(rm21HorSpiralc aSpiral)
+        {
+            // Todo: fill this out.
+        }
+
+        [TestMethod]
         public void HorizontalAlignment_instantiates_fromCSV_withSpirals()
         {
             var directory = new DirectoryManager();
@@ -1020,7 +1054,11 @@ namespace Tests
             Assert.IsNotNull(L1);
 
             var actualItemCount = L1.childCount();
-            Assert.AreEqual(expected: 44, actual: actualItemCount);
+            Assert.AreEqual(expected: 45, actual: actualItemCount);
+
+            SpiralType2_LeftTurning_proof((L1.getChildBySequenceNumber(7)) as rm21HorSpiralc);
+            SpiralType1_RightTurning_proof((L1.getChildBySequenceNumber(5)) as rm21HorSpiralc);
+            SpiralType2_RightTurning_proof((L1.getChildBySequenceNumber(3)) as rm21HorSpiralc);
 
             Assert.AreEqual(expected: new ptsPoint(1296205.4529, 960387.001),
                 actual: L1.BeginPoint);
@@ -1038,7 +1076,7 @@ namespace Tests
                 actual: L1.EndStation, delta: 0.00011);
         }
 
-        public void SpiralType1_proof(rm21HorSpiralc aSpiral)
+        private void SpiralType1_LeftTurning_proof(rm21HorSpiralc aSpiral)
         {
             Assert.AreEqual(expected: 1,
                 actual: aSpiral.SpiralType);
@@ -1128,7 +1166,7 @@ namespace Tests
             var actualItemCount = L1.childCount();
             Assert.AreEqual(expected: 3, actual: actualItemCount);
 
-            SpiralType1_proof((L1.getChildBySequenceNumber(1)) as rm21HorSpiralc);
+            SpiralType1_LeftTurning_proof((L1.getChildBySequenceNumber(1)) as rm21HorSpiralc);
 
             Assert.AreEqual(expected: new ptsPoint(1296205.4529, 960387.001),
                 actual: L1.BeginPoint);
