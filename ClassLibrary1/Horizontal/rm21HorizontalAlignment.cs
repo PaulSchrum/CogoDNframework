@@ -113,20 +113,7 @@ namespace ptsCogo.Horizontal
             // validate the alignment ends on the last point
             // end "validate the alignment ends on the last point"
 
-            var pts = retAlign.allChildSegments
-                .Select(seg => "xy=" + seg.EndPoint.ToString())
-                .ToList();
 
-            var block1 = pts.Take(6).Aggregate((accum, coord) => accum + ";" + coord);
-            var lngh = block1.Length;
-            var block2 = pts.Skip(6).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
-            var block3 = pts.Skip(12).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
-            var block4 = pts.Skip(18).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
-            var block5 = pts.Skip(24).Take(6).Aggregate((accum, coord) => accum + ";" + coord);
-
-            var allEndPoints = retAlign.allChildSegments
-                .Select(seg => "xy=" + seg.EndPoint.ToString())
-                .Aggregate((accum, coord) => accum + ";" + coord);
             
             return retAlign;
         }
@@ -598,6 +585,32 @@ namespace ptsCogo.Horizontal
         {
             if(index >= this.ChildCount) return null;
             return this.allChildSegments[index];
+        }
+
+        public IEnumerable<ptsPoint> GetAllEventPoints()
+        {
+            var returnList = new List<ptsPoint>();
+
+            var kids = this.allChildSegments;
+            if(kids is null) return null;
+
+            returnList.Add(kids.First().BeginPoint);
+            foreach(var item in kids)
+                returnList.Add(item.EndPoint);
+
+            return returnList;
+        }
+
+        public void WriteEventPointsToCSV(string outFile)
+        { // From https://stackoverflow.com/a/18757247/1339950
+            StringBuilder outString = new StringBuilder();
+
+            outString.AppendLine("x,y,z");
+            foreach(var pt in this.GetAllEventPoints())
+                outString.AppendLine(pt.ToString());
+
+            var v = outString.ToString();
+            File.WriteAllText(outFile, outString.ToString());
         }
     }
 
