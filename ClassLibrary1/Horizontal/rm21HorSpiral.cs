@@ -253,9 +253,9 @@ namespace ptsCogo.Horizontal
 
                 double spiralX = newSpi.computeXlength(length);
                 newSpi.spiralDX = new ptsVector(newSpi.BeginAzimuth, spiralX);
-                double spiralY = newSpi.computeYlength(length);
-                var dir = newSpi.Deflection.deflectionDirection;
-                var yDir = newSpi.BeginAzimuth.RightNormal();
+                double spiralY = Math.Abs(newSpi.computeYlength(length));
+                int sign = newSpi.Deflection.deflectionDirection;
+                var yDir = newSpi.BeginAzimuth.RightNormal(sign);
                 newSpi.spiralDY = new ptsVector(yDir, spiralY);
                 newSpi.EndPoint = newSpi.BeginPoint + newSpi.spiralDX + newSpi.spiralDY;
 
@@ -287,9 +287,9 @@ namespace ptsCogo.Horizontal
                 newSpi.AnchorPhantomStation = newSpi.EndStation;
 
                 newSpi.spiralDX = new ptsVector(anchorAzimuth, spiralX);
-                int sign = -1 * newSpi.Deflection.deflectionDirection;
+                int sign = newSpi.Deflection.deflectionDirection;
                 var yDir = anchorAzimuth.RightNormal(sign);
-                newSpi.spiralDY = new ptsVector(yDir, spiralY);
+                newSpi.spiralDY = new ptsVector(yDir, Math.Abs(spiralY));
 
                 newSpi.EndPoint = newSpi.BeginPoint + newSpi.spiralDY
                     - newSpi.spiralDX;

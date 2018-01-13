@@ -977,6 +977,27 @@ namespace Tests
 
         }
 
+        //[TestMethod]
+        public void HorizontalAlignment_outputControlPointsToCSV()
+        {
+            var directory = new DirectoryManager();
+            directory.CdUp(2).CdDown("CogoTests");
+            string testFile = directory.GetPathAndAppendFilename("R2100_L1.CogoDN.csv");
+
+            rm21HorizontalAlignment AccRev = rm21HorizontalAlignment.createFromCsvFile(testFile);
+            Assert.IsNotNull(AccRev);
+
+            var outDirectory = new DirectoryManager();
+            outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
+            outDirectory.EnsureExists();
+            string outFile = outDirectory.GetPathAndAppendFilename("ACC_REV_events.csv");
+
+            AccRev.WriteEventPointsToCSV(outFile);
+
+            bool fileExists = File.Exists(outFile);
+            Assert.IsTrue(fileExists);
+        }
+
         [TestMethod]
         public void HorizontalAlignment_instantiates_fromCSV_noSpirals()
         {
@@ -1033,14 +1054,55 @@ namespace Tests
                 delta: 0.004);
         }
 
-        private void SpiralType1_RightTurning_proof(rm21HorSpiralc aSpiral)
-        {
-            // Todo: fill this out.
-        }
-
         private void SpiralType2_RightTurning_proof(rm21HorSpiralc aSpiral)
         {
-            // Todo: fill this out.
+            Assert.AreEqual(expected: 2, actual: aSpiral.SpiralType);
+
+            var expectedLongChordVector = new ptsVector(x_: -58.8425, y_: 104.4418);
+            var expectAz = expectedLongChordVector.Azimuth.getAsDegreesDouble();
+            var actualLongChordVector = aSpiral.LongChordVector;
+            var actualAz = actualLongChordVector.Azimuth.getAsDegreesDouble();
+
+            Assert.AreEqual(expected: expectAz,
+                actual: actualAz,
+                delta: 0.0001);
+            Assert.AreEqual(expected: expectedLongChordVector.Length,
+                actual: actualLongChordVector.Length,
+                delta: 0.001);
+            //Assert.AreEqual(expected: expectedLongChordVector,
+            //    actual: actualLongChordVector);
+
+            // Expected value source: Microstation file for NCDOT project R-2100B.
+            var expectedEndRay = new ptsRay(1294823.8430,962526.7940,333.50256);
+            var actualEndRay = aSpiral.EndRay;
+            var pointDist = (expectedEndRay.StartPoint - actualEndRay.StartPoint).Length;
+            Assert.AreEqual(expected: 0.0,
+                actual: pointDist,
+                delta: 0.005);
+        }
+
+        private void SpiralType1_RightTurning_proof(rm21HorSpiralc aSpiral) 
+        {
+            Assert.AreEqual(expected: 1, actual: aSpiral.SpiralType);
+//for right-turning type 1 spirals, spiralY is being added in the wrong direction.
+            var expectedLongChordVector = new ptsVector(x_: -117.7917, y_: 22.2628);
+            var actualLongChordVector = aSpiral.LongChordVector;
+            Assert.AreEqual(expected: expectedLongChordVector.Azimuth.getAsDegreesDouble(),
+                actual: actualLongChordVector.Azimuth.getAsDegreesDouble(),
+                delta: 0.001);
+            Assert.AreEqual(expected: expectedLongChordVector.Length,
+                actual: actualLongChordVector.Length,
+                delta: 0.001);
+            //Assert.AreEqual(expected: expectedLongChordVector,
+            //    actual: actualLongChordVector);
+
+            // Expected value source: Microstation file for NCDOT project R-2100B.
+            var expectedEndRay = new ptsRay(1295093.3392, 962271.2450, 41.39871);
+            var actualEndRay = aSpiral.EndRay;
+            var pointDist = (expectedEndRay.StartPoint - actualEndRay.StartPoint).Length;
+            Assert.AreEqual(expected: 0.0,
+                actual: pointDist,
+                delta: 0.005);
         }
 
         [TestMethod]
@@ -1056,9 +1118,10 @@ namespace Tests
             var actualItemCount = L1.childCount();
             Assert.AreEqual(expected: 45, actual: actualItemCount);
 
-            SpiralType2_LeftTurning_proof((L1.getChildBySequenceNumber(7)) as rm21HorSpiralc);
-            SpiralType1_RightTurning_proof((L1.getChildBySequenceNumber(5)) as rm21HorSpiralc);
-            SpiralType2_RightTurning_proof((L1.getChildBySequenceNumber(3)) as rm21HorSpiralc);
+            SpiralType1_LeftTurning_proof(L1.getChildBySequenceNumber(1) as rm21HorSpiralc);
+            SpiralType2_LeftTurning_proof(L1.getChildBySequenceNumber(7) as rm21HorSpiralc);
+            SpiralType1_RightTurning_proof(L1.getChildBySequenceNumber(9) as rm21HorSpiralc);
+            SpiralType2_RightTurning_proof(L1.getChildBySequenceNumber(11) as rm21HorSpiralc);
 
             Assert.AreEqual(expected: new ptsPoint(1296205.4529, 960387.001),
                 actual: L1.BeginPoint);
@@ -1363,6 +1426,12 @@ namespace Tests
         public override string ToString()
         {
             return this.path;
+        }
+
+        internal void EnsureExists()
+        {
+            if(!Directory.Exists(this.path))
+                Directory.CreateDirectory(this.path);
         }
     }
 
