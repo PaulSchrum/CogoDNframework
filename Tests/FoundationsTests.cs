@@ -37,6 +37,45 @@ namespace Tests
         }
 
         [TestMethod]
+        public void ptsAngle_verify_customRangeNormalization()
+        {
+            // Test basis 0 -- 360
+            double inputVal = 360.0 + 20.0;
+            double actual = ptsAngle.normalizeToCustomRange(inputVal, 0.0, 360.0);
+            Assert.AreEqual(expected: 20.0, actual: actual, delta: 0.001);
+
+            inputVal = 180.0;
+            actual = ptsAngle.normalizeToCustomRange(inputVal, 0.0, 360.0);
+            Assert.AreEqual(expected: 180.0, actual: actual, delta: 0.001);
+
+            inputVal = -20.0;
+            actual = ptsAngle.normalizeToCustomRange(inputVal, 0.0, 360.0);
+            Assert.AreEqual(expected: 340.0, actual: actual, delta: 0.001);
+
+            inputVal = -360.0 - 20.0;
+            actual = ptsAngle.normalizeToCustomRange(inputVal, 0.0, 360.0);
+            Assert.AreEqual(expected: 340.0, actual: actual, delta: 0.001);
+
+            // Test basis -180 -- +180
+            inputVal = 180.0 + 20.0;
+            actual = ptsAngle.normalizeToCustomRange(inputVal, -180.0, 180.0);
+            Assert.AreEqual(expected: -160.0, actual: actual, delta: 0.001);
+
+            inputVal = 90.0;
+            actual = ptsAngle.normalizeToCustomRange(inputVal, -180.0, 180.0);
+            Assert.AreEqual(expected: 90.0, actual: actual, delta: 0.001);
+
+            inputVal = -20.0;
+            actual = ptsAngle.normalizeToCustomRange(inputVal, -180.0, 180.0);
+            Assert.AreEqual(expected: -20.0, actual: actual, delta: 0.001);
+
+            inputVal = -180.0 - 20.0;
+            actual = ptsAngle.normalizeToCustomRange(inputVal, -180.0, 180.0);
+            Assert.AreEqual(expected: 160.0, actual: actual, delta: 0.001);
+
+        }
+
+        [TestMethod]
         public void ptsDegree_sin90_returns1p0()
         {
             ptsDegree deg = 90.0;
@@ -258,6 +297,15 @@ namespace Tests
         {
             Double actualDbl = ptsAngle.ComputeRemainderScaledByDenominator(numerator, Denominator);
             Assert.AreEqual(expected: expectedDbl, actual: actualDbl, delta: 0.00000001);
+        }
+
+        [TestMethod]
+        public void AzimuthArithmatic_Subtraction_Correct()
+        {
+            Azimuth Az1 = new Azimuth(); Az1.setFromDegreesDouble(299);
+            Azimuth Az2 = new Azimuth(); Az2.setFromDegreesDouble(247);
+            var defl = Az1.minus(Az2);  //start here. This value is wrong.
+            //Assert.AreEqual(expected: 52.0, actual: defl, delta: 0.001);
         }
 
     }

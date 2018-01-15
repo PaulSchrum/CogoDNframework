@@ -167,6 +167,37 @@ namespace ptsCogo
             return returnDouble;
         }
 
+        public static double normalizeToCustomRange(double inputVal, double minVal, double maxVal)
+        {
+            if(inputVal >= minVal && inputVal <= maxVal)
+                return inputVal;
+        
+            double zeroBase = 0.0 - minVal;
+            double realMin = minVal + zeroBase;
+            double realMax = maxVal + zeroBase;
+            double realInput = inputVal + zeroBase;
+            int inSign = Math.Sign(realInput);
+
+            double scratchNumber = realInput / realMax;
+            double fp = 0.0;
+            if(realInput >  realMax)
+            {
+                fp = scratchNumber - Math.Truncate(scratchNumber);
+            }
+            else if(realInput < realMin)
+            {
+                scratchNumber *= -1.0;
+                fp = scratchNumber - Math.Truncate(scratchNumber);
+                fp *= -1.0;
+                fp += 1.0;
+            }
+
+            fp = (fp * realMax)
+                - zeroBase;
+
+            return fp;
+        }
+
         public override string ToString()
         {
             return (angle__ * 180 / Math.PI).ToString();
