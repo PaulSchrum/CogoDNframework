@@ -23,6 +23,17 @@ namespace ptsCogo.Angle
             this.angle__ = Math.Atan2(ptsDegree.Sin(deg), ptsDegree.Cos(deg));
         }
 
+        public int quadrant
+        {
+            get
+            {
+                double quad = 2.0 * angle_ / Math.PI;
+                if(quad < 0.0)
+                    quad = 3.0;
+                return (int) quad + 1;
+            }
+        }
+
         public Azimuth(ptsPoint beginPt, ptsPoint endPt)
         {
             this.angle__ = Math.Atan2(endPt.y - beginPt.y, endPt.x - beginPt.x);
@@ -74,7 +85,8 @@ namespace ptsCogo.Angle
         public override void setFromDegreesDouble(double degrees)
         {
             //double adjustedDegrees = ((degrees / -180.0)+ 1) *180.0;
-            double radians = degrees * Math.PI / 180.0;
+            var normalizedDegrees = ptsAngle.normalizeToPlusOrMinus360Static(degrees);
+            var radians = normalizedDegrees * Math.PI / 180.0;
             angle_ = Math.Atan2(Math.Cos(radians), Math.Sin(radians));  // This is flipped intentionally
 
         }
@@ -153,13 +165,33 @@ namespace ptsCogo.Angle
         public Deflection minus(Azimuth Az2)
         {
             Double returnDeflection = (this.angle_ - Az2.angle_);
-            return new Deflection(ptsAngle.normalizeToPlusOrMinus2PiStatic(returnDeflection));
+
+            var contraryQuadrants = this.quadrant == 4 && Az2.quadrant != 4 ||
+                this.quadrant != 4 && Az2.quadrant == 4;
+
+
+            var normalizedDeflection = ptsAngle.normalizeToPlusOrMinus2PiStatic(returnDeflection);
+            if(contraryQuadrants) normalizedDeflection -= 2 * Math.PI;
+            return new Deflection(normalizedDeflection);
         }
 
         public override String ToString()
         {
             return String.Format("{0:0.0000}°", this.getAsDegreesDouble());
         }
+
+        public static double MAX_AZIMUTH_RAD
+        {
+            get { return 2.0 * Math.PI; }
+            private set { }
+        }
+
+        public static double MIN_AZIMUTH_RAD
+        {
+            get { return 0.0; }
+            private set { }
+        }
+
     }
 
     public static class extendDoubleForAzimuth

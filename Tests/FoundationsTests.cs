@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ptsCogo;
 using ptsCogo.Angle;
+using ptsCogo.Utils;
 
 namespace Tests
 {
@@ -240,6 +241,22 @@ namespace Tests
         }
 
         [DataTestMethod]
+        //[DataRow(45.0, 1)]
+        //[DataRow(135.0, 2)]
+        //[DataRow(225.0, 3)]
+        [DataRow(315.0, 4)]
+        public void Azimuth_quadrant_isCorrect(Double azim, int expected)
+        {
+            Azimuth azimuth = new Azimuth(); azimuth.setFromDegreesDouble(azim);
+            int actual = azimuth.quadrant;
+            Assert.AreEqual(expected: expected, actual: actual);
+        }
+
+        [DataTestMethod]
+        [DataRow(270.0 + 5.0, 270.0 - 5.0, -10.0)]
+        [DataRow(250.0 + 5.0, 250.0 - 5.0, -10.0)]
+        [DataRow(185.0, 175.0, -10.0)]
+        [DataRow(95.0, 85.0, -10.0)]
         [DataRow(20.0, 10.0, -10.0)]
         [DataRow(340.0, 350.0, 10.0)]
         [DataRow(20.0, 340.0, -40.0)]
@@ -249,7 +266,11 @@ namespace Tests
             Azimuth Az1 = new Azimuth(); Az1.setFromDegreesDouble(Az1Dbl);
             Azimuth Az2 = new Azimuth(); Az2.setFromDegreesDouble(Az2Dbl);
 
-            Double actualDeflection = Az2.minus(Az1).getAsDegreesDouble();
+            var actualDefl = Az2.minus(Az1);
+            Double actualDeflection = actualDefl.getAsDegreesDouble();
+
+            var diff = expectedDeflection - actualDeflection;
+            var ratio = expectedDeflection / actualDeflection;
 
             Assert.AreEqual(expected: expectedDeflection, actual: actualDeflection, delta: 0.00000001);
         }
@@ -305,7 +326,7 @@ namespace Tests
             Azimuth Az1 = new Azimuth(); Az1.setFromDegreesDouble(299);
             Azimuth Az2 = new Azimuth(); Az2.setFromDegreesDouble(247);
             var defl = Az1.minus(Az2);  //start here. This value is wrong.
-            //Assert.AreEqual(expected: 52.0, actual: defl, delta: 0.001);
+            Assert.AreEqual(expected: 52.0, actual: defl.getAsDegreesDouble(), delta: 0.001);
         }
 
     }
