@@ -84,7 +84,7 @@ namespace Tests
             Double expectedValue = -0.39479111970;
             Azimuth begAz = new Azimuth(new ptsPoint(0.0, 0.0, 0.0), new ptsPoint(10.0, 50.0, 0.0));
             Azimuth endAz = new Azimuth(new ptsPoint(10.0, 50.0, 0.0), new ptsPoint(0.0, 100.0, 0.0));
-            Deflection defl = new Deflection(begAz, endAz, true);
+            Deflection defl = new Deflection(endAz, begAz, true);
             Double actualValue = defl.getAsRadians();
             Assert.AreEqual(expected: expectedValue, actual: actualValue, delta: 0.0000001);
         }
