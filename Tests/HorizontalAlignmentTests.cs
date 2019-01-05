@@ -95,7 +95,7 @@ namespace Tests
             Double expectedValue = -5.88839418748;
             Azimuth endAz = new Azimuth(new ptsPoint(0.0, 0.0, 0.0), new ptsPoint(10.0, 50.0, 0.0));
             Azimuth begAz = new Azimuth(new ptsPoint(10.0, 50.0, 0.0), new ptsPoint(0.0, 100.0, 0.0));
-            Deflection defl = new Deflection(begAz, endAz, false);
+            Deflection defl = new Deflection(endAz, begAz, false);
             Double actualValue = defl.getAsRadians();
             Assert.AreEqual(expected: expectedValue, actual: actualValue, delta: 0.00001);
         }
@@ -551,19 +551,19 @@ namespace Tests
         [TestMethod]
         public void ArcSegment_ctor1_correct()
         {
-            var begPt = new ptsPoint(2152973.8702, 735330.7239);
-            var endPt = new ptsPoint(2153151.3148, 735350.0147);
-            var inAz = Azimuth.fromDegreesDouble(77.5488);
-            var radius = 820.2083;
+            var begPt = new ptsPoint(1293788.6543, 963246.6113);
+            var endPt = new ptsPoint(1293807.3081, 963594.4737);
+            var inAz = Azimuth.fromDegreesDouble(337.39838);
+            var radius = 402.0756;
 
             //var anArc = new rm21HorArc(begPt, endPt, inAz, radius);
             var anArc = rm21HorArc.Create(begPt, endPt, inAz, radius);
 
             var actualDeflection = anArc.Deflection.getAsDegreesDouble();
-            Assert.AreEqual(expected: 12.4932, actual: actualDeflection, delta: 0.00015);
+            Assert.AreEqual(expected: 51.34223, actual: actualDeflection, delta: 0.00015);
 
             var actualLength = anArc.Length;
-            Assert.AreEqual(expected: 178.8443, actual: actualLength, delta: 0.00015);
+            Assert.AreEqual(expected: 360.2963, actual: actualLength, delta: 0.00015);
         }
 
         //[TestMethod]

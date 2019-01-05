@@ -325,8 +325,8 @@ namespace Tests
         {
             Azimuth Az1 = new Azimuth(); Az1.setFromDegreesDouble(299);
             Azimuth Az2 = new Azimuth(); Az2.setFromDegreesDouble(247);
-            var defl = Az1.minus(Az2);  //start here. This value is wrong.
-            Assert.AreEqual(expected: 52.0, actual: defl.getAsDegreesDouble(), delta: 0.001);
+            var defl = Az2.minus(Az1);  //start here. This value is wrong.
+            Assert.AreEqual(expected: -52.0, actual: defl.getAsDegreesDouble(), delta: 0.001);
         }
 
     }

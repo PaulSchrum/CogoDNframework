@@ -149,8 +149,7 @@ namespace ptsCogo.Angle
 
         public static double operator -(Azimuth Az1, Azimuth Az2)
         {
-            Double returnDeflection = (Az1.angle_ - Az2.angle_);
-            return ptsAngle.normalizeToPlusOrMinus2PiStatic(returnDeflection);
+            return Az2.minus(Az1).getAsRadians();
         }
 
         public static Azimuth operator +(Azimuth Az1, Deflection defl)
