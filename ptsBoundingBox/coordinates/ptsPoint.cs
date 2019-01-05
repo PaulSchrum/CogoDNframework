@@ -117,7 +117,7 @@ namespace ptsCogo
         /// or Pop.
         /// </summary>
         public static Stack<double> HorizontalEqualsTolerance { get; set; } =
-            new Stack<double>(new double[] { 0.0025 });
+            new Stack<double>(new double[] { 0.006 });
         public override bool Equals(object obj)
         {
             var other = obj as ptsPoint;
