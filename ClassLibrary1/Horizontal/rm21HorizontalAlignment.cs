@@ -67,7 +67,7 @@ namespace ptsCogo.Horizontal
             retAlign.BeginStation = startStation;
             // end "process start point, direction, and station"
 
-            //int lineCount = 0;
+            int lineCount = 0;
             // Read in all elements
             var endingRay = startRay;
             for(int i=tableStartLines["Elements"]+2; i<tableStartLines["Regions"]; i++)
@@ -83,7 +83,7 @@ namespace ptsCogo.Horizontal
                 aNewSegment.Parent = retAlign;
                 endingRay = aNewSegment.EndRay;
                 retAlign.allChildSegments.Add(aNewSegment);
-                //lineCount++;
+                lineCount++;
             }
             // end "Read in all elements"
 

@@ -17,7 +17,8 @@ namespace ptsCogo.Horizontal
         public ptsVector BeginRadiusVector { get; protected set; }
         public ptsVector EndRadiusVector { get; protected set; }
 
-        public static rm21HorArc Create(ptsPoint begPt, ptsPoint endPt, Azimuth incomingAzimuth, Double radius)
+        public static rm21HorArc Create(ptsPoint begPt, ptsPoint endPt,
+            Azimuth incomingAzimuth, Double radius)
         {
             return new rm21HorArc(begPt, endPt, incomingAzimuth, radius);
         }
