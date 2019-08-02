@@ -11,12 +11,14 @@ namespace CogoConsoleApp
         static void Main(string[] args)
         {
             projectDir = new DirectoryManager();
-            projectDir.CdUp(2).CdDown("CogoTests").CdDown("R2547");
-            string testFile = projectDir.GetPathAndAppendFilename("Y15A.csv");
+            // projectDir.CdUp(2).CdDown("CogoTests").CdDown("R2547");
+            // string testFile = projectDir.GetPathAndAppendFilename("Y15A.csv");
+            string testFile = @"D:\SourceModules\CSharp\CogoDN\CogoTests\R2100_L1_workingPart.CogoDN.csv";
 
-            rm21HorizontalAlignment Y15A = rm21HorizontalAlignment.createFromCsvFile(testFile);
-            var outputPointsFile = @"D:\NCSU\201703 Fall 2017\GIS 630 Independent Study\WorkProduct\CSVdata\Y15A_Computed_05m.csv";
-            var allPoints = Y15A.getXYZcoordinateList(5.0,csvOutFileName: outputPointsFile);
+            rm21HorizontalAlignment R2100B = rm21HorizontalAlignment.createFromCsvFile(testFile);
+            // var outputPointsFile = @"D:\NCSU\201703 Fall 2017\GIS 630 Independent Study\WorkProduct\CSVdata\Y15A_Computed_05m.csv";
+            var outputPointsFile = @"D:\SourceModules\CSharp\CogoDN\CogoTests\outputs\R2100B_Computed_05ft.csv";
+            var allPoints = R2100B.getXYZcoordinateList(5.0,csvOutFileName: outputPointsFile);
         }
     }
 

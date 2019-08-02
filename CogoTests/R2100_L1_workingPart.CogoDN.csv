@@ -23,8 +23,6 @@ DegreeIn,Length,DegreeOut,TypeTag,
 0,324.3037,0,,
 0,120,14.25,,
 14.25,360.2963,14.25,,
-14.25,120,0,,
-0,67.1,0,,
 ,,,,
 Regions:,,,,
 StartStation,RegionNo,EndStation,,
@@ -32,4 +30,4 @@ StartStation,RegionNo,EndStation,,
 ,,,,
 EndHA:,,,,
 Northing,Easting,Station,Region,Azimuth
-1291644.41,971366.237,,1,346.40198
+1293807.308,963594.4737,,1,28.74061

@@ -416,6 +416,10 @@ namespace ptsCogo.Horizontal
             {
                 if(anSOE.station < segment.EndStation)
                 {
+                    if(segment is rm21HorSpiralc)
+                    {
+                        int dbg = 1;
+                    }
                     return segment.getXYZcoordinates(anSOE);
                 }
             }

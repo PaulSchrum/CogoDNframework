@@ -30,7 +30,7 @@ namespace ptsCogo.Horizontal
         /// The point where Dc = 0. For connecting spirals,
         /// this point is off the alignment, but we still have to use it.
         /// </summary>
-        protected ptsPoint AnchorPoint
+        internal ptsPoint AnchorPoint
         { get { return this.AnchorRay.StartPoint; } }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace ptsCogo.Horizontal
                 + Math.Pow(theta, 8.0) / 685440.0
                 ;
 
-            return distanceAlong * x;
+            return Math.Abs(distanceAlong * x);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace ptsCogo.Horizontal
                 + Math.Pow(theta, 9.0) / 6894720.0
                 ;
 
-            return distanceAlong * y;
+            return Math.Abs(distanceAlong * y);
         }
 
         public override Azimuth getAzimuth(double station)
@@ -279,13 +279,10 @@ namespace ptsCogo.Horizontal
                 newSpi.Deflection = new Deflection(thetaS);
                 double spiralX = newSpi.computeXlength(length);
                 double spiralY = newSpi.computeYlength(length);
+                //newSpi.EndPoint = newSpi
 
                 newSpi.EndAzimuth = newSpi.BeginAzimuth + newSpi.Deflection;
                 var anchorAzimuth = newSpi.EndAzimuth + ptsAngle.HALFCIRCLE;
-                newSpi.AnchorRay = new ptsRay(newSpi.EndPoint, anchorAzimuth);
-                newSpi.AnchorLength = length;
-                newSpi.AnchorPhantomStation = newSpi.EndStation;
-
                 newSpi.spiralDX = new ptsVector(anchorAzimuth, spiralX);
                 int sign = newSpi.Deflection.deflectionDirection;
                 var yDir = anchorAzimuth.RightNormal(sign);
@@ -293,6 +290,10 @@ namespace ptsCogo.Horizontal
 
                 newSpi.EndPoint = newSpi.BeginPoint + newSpi.spiralDY
                     - newSpi.spiralDX;
+
+                newSpi.AnchorRay = new ptsRay(newSpi.EndPoint, anchorAzimuth);
+                newSpi.AnchorLength = length;
+                newSpi.AnchorPhantomStation = newSpi.EndStation;
 
                 double tan_thetaS = Math.Tan(Math.Abs(newSpi.Deflection.getAsRadians()));
                 double Ulength = newSpi.spiralDX.Length - (newSpi.spiralDY.Length /
