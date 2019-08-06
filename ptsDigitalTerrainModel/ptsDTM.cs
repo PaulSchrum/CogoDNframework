@@ -22,8 +22,15 @@ namespace ptsDigitalTerrainModel
       private List<ptsDTMtriangle> allTriangles;
       private ptsBoundingBox2d myBoundingBox;
 
-      // temp scratch pad members -- do not serialize
-      [NonSerialized]
+        public static ptsDTM CreateFromLAS(string lidarFileName)
+        {
+            LasReader lasReader = new LasReader(lidarFileName);
+
+            return null;
+        }
+
+        // temp scratch pad members -- do not serialize
+        [NonSerialized]
       private ConcurrentBag<ptsDTMtriangle> allTrianglesBag;
       [NonSerialized]
       private ptsDTMpoint scratchPoint;

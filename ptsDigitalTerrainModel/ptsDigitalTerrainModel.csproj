@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LasReader.cs" />
     <Compile Include="ptsDTM.cs" />
     <Compile Include="ptsDTMtriangle.cs" />
     <Compile Include="ptsDTMpoint.cs" />
