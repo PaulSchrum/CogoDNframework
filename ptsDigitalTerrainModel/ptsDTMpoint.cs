@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ptsCogo;
+using MIConvexHull;
 
 namespace ptsDigitalTerrainModel
 {
-    public interface IVertex
-    {
-        double[] Position { get; }
-    }
-
    [Serializable]
    public struct ptsDTMpoint : IVertex //: ptsCogo.ptsPoint
    {

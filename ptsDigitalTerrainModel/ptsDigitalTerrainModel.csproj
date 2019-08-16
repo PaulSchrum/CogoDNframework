@@ -52,6 +52,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LasFile.cs" />
+    <Compile Include="MIConvexHull\Constants.cs" />
+    <Compile Include="MIConvexHull\ConvexHull.cs" />
+    <Compile Include="MIConvexHull\ConvexHullCreationResultOutcome.cs" />
+    <Compile Include="MIConvexHull\ConvexHullGenerationException.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\Collections.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ConvexFace.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ConvexHullAlgorithm.2D.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ConvexHullAlgorithm.Initialize.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ConvexHullAlgorithm.MainLoop.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\DataModel.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\MathHelper.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ObjectManager.cs" />
+    <Compile Include="MIConvexHull\IVertex.cs" />
+    <Compile Include="MIConvexHull\Triangulation.cs" />
+    <Compile Include="MIConvexHull\Triangulation\DelaunayTriangulation.cs" />
+    <Compile Include="MIConvexHull\Triangulation\DelaunayTriangulationInternal.cs" />
+    <Compile Include="MIConvexHull\Triangulation\TriangulationCell.cs" />
+    <Compile Include="MIConvexHull\Triangulation\VoronoiEdge.cs" />
+    <Compile Include="MIConvexHull\Triangulation\VoronoiMesh.cs" />
     <Compile Include="ptsDTM.cs" />
     <Compile Include="ptsDTMtriangle.cs" />
     <Compile Include="ptsDTMpoint.cs" />
@@ -66,7 +85,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="MIConvexHull\" />
     <Folder Include="Testing\XYZinput\" />
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+using MIConvexHull;
+using MIConvexHull.ConvexHull;
 
 namespace TinTests
 {
@@ -48,6 +50,11 @@ namespace TinTests
             var str = $"X: {Position[0]:f2}  Y: {Position[1]:f2}  Z: {Position[2]:f2}";
             return str;
         }
+    }
+
+    public class Face : ConvexFace<TestVertex, Face>
+    {
+
     }
 
     [TestClass]
@@ -78,10 +85,16 @@ namespace TinTests
         }
 
         [TestMethod]
-        public void verify_ListIsNotNull()
+        public void Verify_ListIsNotNull()
         {
             this.Initialize();
             Assert.IsNotNull(this.Vertices);
+        }
+
+        [TestMethod]
+        public void CreationOfTriangulation_works()
+        {
+            //var convexHull = ConvexHull.Create<TestVertex, Face>(this.Vertices);
         }
     }
 }
