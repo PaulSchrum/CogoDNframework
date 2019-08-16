@@ -14,23 +14,33 @@ using System.Threading.Tasks;
 
 namespace ptsDigitalTerrainModel
 {
-   [Serializable]
-   public class ptsDTM
-   {
-      // Substantive members - Do serialize
-      private Dictionary<UInt64, ptsDTMpoint> allPoints;
-      private List<ptsDTMtriangle> allTriangles;
-      private ptsBoundingBox2d myBoundingBox;
+    [Serializable]
+    public class ptsDTM
+    {
+        // Substantive members - Do serialize
+        public Dictionary<UInt64, ptsDTMpoint> allPoints { get; private set; }
+        private List<ptsDTMtriangle> allTriangles;
+        private ptsBoundingBox2d myBoundingBox;
+        private LasFile lasFile { get; set; } = null;
 
         public static ptsDTM CreateFromLAS(string lidarFileName)
         {
-            LasReader lasReader = new LasReader(lidarFileName);
+            LasFile lasFile = new LasFile(lidarFileName);
+            ptsDTM returnObject = new ptsDTM();
+            returnObject.allPoints = new Dictionary<ulong, ptsDTMpoint>();
+            UInt64 counter = 0;
+            foreach(var point in lasFile.AllPoints)
+            {
+                returnObject.allPoints[counter] = point;
+                counter++;
+            }
+            lasFile.ClearAllPoints();  // Because I have them now.
 
-            return null;
+            return returnObject;
         }
 
         // temp scratch pad members -- do not serialize
-        [NonSerialized]
+      [NonSerialized]
       private ConcurrentBag<ptsDTMtriangle> allTrianglesBag;
       [NonSerialized]
       private ptsDTMpoint scratchPoint;
@@ -38,6 +48,8 @@ namespace ptsDigitalTerrainModel
       private ptsDTMtriangle scratchTriangle;
       [NonSerialized]
       private UInt64pair scratchUIntPair;
+
+
       [NonSerialized]
       private ptsDTMtriangleLine scratchTriangleLine;
       [NonSerialized]

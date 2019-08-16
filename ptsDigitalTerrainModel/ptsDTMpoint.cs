@@ -6,12 +6,21 @@ using ptsCogo;
 
 namespace ptsDigitalTerrainModel
 {
+    public interface IVertex
+    {
+        double[] Position { get; }
+    }
+
    [Serializable]
-   public struct ptsDTMpoint //: ptsCogo.ptsPoint
+   public struct ptsDTMpoint : IVertex //: ptsCogo.ptsPoint
    {
       public Double x { get; set; }
       public Double y { get; set; }
       public Double z { get; set; }
+      public double[] Position
+      {
+         get { return new double[] { x, y, z }; }
+      }
 
       [NonSerialized]
       private static String[] parsedStrings;

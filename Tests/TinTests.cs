@@ -58,6 +58,7 @@ namespace Tests
         public void TIN_isNotNull()
         {
             this.Initialize();
+            //Assert.IsNotNull(this.tinFromLidar);
         }
     }
 }

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="DTMfromZYZdata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestMIConvexHull.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\ClassLibrary1\ptsCogo.csproj">
