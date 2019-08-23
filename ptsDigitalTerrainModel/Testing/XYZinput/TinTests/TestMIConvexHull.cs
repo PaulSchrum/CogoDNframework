@@ -129,7 +129,7 @@ namespace TinTests
                 this.Vertices = new List<Vertex>();
 
                 // This section adapted from MIConvexHull/Examples/3DConvexHullWPF
-                Random r = new Random(4);
+                Random r = new Random(4);  // Keep 4 to be synched with the WPF app
                 for(int i = 0; i < 6; i++)
                 {
                     Vertex v = new Vertex(
