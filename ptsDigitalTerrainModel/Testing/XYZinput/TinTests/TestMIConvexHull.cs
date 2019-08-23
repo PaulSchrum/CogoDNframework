@@ -74,9 +74,6 @@ namespace TinTests
 
     public class Cell : TriangulationCell<Vertex, Cell>
     {
-        //static Random rnd = new Random();
-
-
         double Det(double[,] m)
         {
             return m[0, 0] * ((m[1, 1] * m[2, 2]) - (m[2, 1] * m[1, 2])) - m[0, 1] * (m[1, 0] * m[2, 2] - m[2, 0] * m[1, 2]) + m[0, 2] * (m[1, 0] * m[2, 1] - m[2, 0] * m[1, 1]);
@@ -95,48 +92,9 @@ namespace TinTests
 
 
         public Cell()
-        {
-            
+        {            
         }
 
-        public override string ToString()
-        {
-            try
-            {
-                string str = $"{this.Vertices[0]};{this.Vertices[1]};{this.Vertices[2]};{this.Vertices[0]}";
-                return str;
-            }
-            catch
-            {
-                string str = $"{this.Vertices[0]};{this.Vertices[1]};{this.Vertices[0]}";
-                return str;
-            }
-        }
-    }
-
-
-    public struct TestVertex : IVertex
-    {
-        public double[] Position { get; set; }
-        public double Z { get; set; }
-        public double X { get { return Position[0]; } }
-        public double Y { get { return Position[1]; } }
-
-        public TestVertex(double x, double y)
-        {
-            Position = new double[] { x, y};
-            Z = 0d;
-        }
-
-        public override string ToString()
-        {
-            string str = $"xy={Position[0]:f2},{Position[1]:f2}"; //  Z: {Position[2]:f1}";
-            return str;
-        }
-    }
-
-    public class TestFace : ConvexFace<TestVertex, TestFace>
-    {
         public override string ToString()
         {
             try
@@ -159,10 +117,6 @@ namespace TinTests
         { }
 
         private List<Vertex> Vertices { get; set; } = null;
-        //private MIConvexHull.ConvexHullCreationResult<Vertex, Cell>
-        //    ConvexHull { get; set; } = null;
-        //private List<Vertex> ConvexHullVertices { get; set; }
-        //private List<Cell> Faces { get; set; } = null;
         private VoronoiMesh<Vertex, Cell, VoronoiEdge<Vertex, Cell>>
             VoronoiMesh { get; set; } = null;
         private IEnumerable<VoronoiEdge<Vertex, Cell>> Lines { get; set; } = null;
