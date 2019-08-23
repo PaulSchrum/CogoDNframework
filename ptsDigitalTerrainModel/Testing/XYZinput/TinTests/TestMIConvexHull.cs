@@ -201,24 +201,9 @@ namespace TinTests
             this.Initialize();
             Assert.IsNotNull(this.Vertices);
             Assert.IsNotNull(this.Triangles);
+            Assert.AreEqual(this.Vertices.Count, 6);
+            Assert.AreEqual(this.Triangles.Count(), 6);
         }
-
-        //[TestMethod]
-        //public void CreationOfTriangulation_works()
-        //{
-        //    //var convexHull = ConvexHull.Create<TestVertex, Face>(this.Triangles);
-        //}
-
-        //public override string ToString()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    foreach(var aFace in this.Faces)
-        //    {
-        //        sb.Append(aFace.ToString());
-        //        sb.Append(" | ");
-        //    }
-        //    return sb.ToString();
-        //}
     }
 }
 
