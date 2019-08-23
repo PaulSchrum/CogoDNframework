@@ -329,10 +329,11 @@ namespace MIConvexHull
         /// <summary>
         /// Find the (dimension+1) initial points and create the simplexes.
         /// Creates the initial simplex of n+1 vertices by using points from the bounding box.
-        /// Special care is taken to ensure that the vertices chosen do not result in a degenerate shape
-        /// where vertices are collinear (co-planar, etc). This would technically be resolved when additional
-        /// vertices are checked in the main loop, but: 1) a degenerate simplex would not eliminate any other
-        /// vertices (thus no savings there), 2) the creation of the face normal is prone to error.
+        /// Special care is taken to ensure that the vertices chosen do not result in a 
+        /// degenerate shape where vertices are collinear (co-planar, etc). This would 
+        /// technically be resolved when additional vertices are checked in the main loop,
+        /// but: 1) a degenerate simplex would not eliminate any other vertices (thus no 
+        /// savings there), 2) the creation of the face normal is prone to error.
         /// </summary>
         private void CreateInitialSimplex()
         {
@@ -584,7 +585,7 @@ namespace MIConvexHull
         /*
          * Representation of the input vertices.
          * 
-         * - In the algorithm, a vertex is represented by its index in the Vertices array.
+         * - In the algorithm, a vertex is represented by its index in the Triangles array.
          *   This makes the algorithm a lot faster (up to 30%) than using object reference everywhere.
          * - Positions are stored as a single array of values. Coordinates for vertex with index i
          *   are stored at indices <i * Dimension, (i + 1) * Dimension)

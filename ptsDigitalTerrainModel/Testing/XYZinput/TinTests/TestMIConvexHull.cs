@@ -31,30 +31,125 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using MIConvexHull;
-using MIConvexHull.ConvexHull;
+using System.Linq;
+using System.Text;
+using System.Windows;
 
 namespace TinTests
 {
-
-    public struct TestVertex : IVertex
+    public class Vertex : IVertex
     {
-        public double[] Position { get; set; }
 
-        public TestVertex(double x, double y, double z)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Vertex"/> class.
+        /// </summary>
+        /// <param name="x">The x position.</param>
+        /// <param name="y">The y position.</param>
+        public Vertex(double x, double y)
         {
-            Position = new double[] { x, y, z };
+            Position = new double[] { x, y };
         }
+
+        public double X { get { return Position[0]; } }
+        public double Y { get { return Position[1]; } }
+
+        /// <summary>
+        /// Gets or sets the Z. Not used by MIConvexHull2D.
+        /// </summary>
+        /// <value>The Z position.</value>
+        public double Z { get; set; } = 0d;
+
+        /// <summary>
+        /// Gets or sets the coordinates.
+        /// </summary>
+        /// <value>The coordinates.</value>
+        public double[] Position { get; set; }
 
         public override string ToString()
         {
-            var str = $"X: {Position[0]:f2}  Y: {Position[1]:f2}  Z: {Position[2]:f2}";
+            string str = $"xy={Position[0]:f2},{Position[1]:f2}"; //  Z: {Position[2]:f1}";
             return str;
         }
     }
 
-    public class Face : ConvexFace<TestVertex, Face>
+    public class Cell : TriangulationCell<Vertex, Cell>
     {
+        static Random rnd = new Random();
 
+
+        double Det(double[,] m)
+        {
+            return m[0, 0] * ((m[1, 1] * m[2, 2]) - (m[2, 1] * m[1, 2])) - m[0, 1] * (m[1, 0] * m[2, 2] - m[2, 0] * m[1, 2]) + m[0, 2] * (m[1, 0] * m[2, 1] - m[2, 0] * m[1, 1]);
+        }
+
+        double LengthSquared(double[] v)
+        {
+            double norm = 0;
+            for(int i = 0; i < v.Length; i++)
+            {
+                double t = v[i];
+                norm += t * t;
+            }
+            return norm;
+        }
+
+
+        public Cell()
+        {
+            
+        }
+
+        public override string ToString()
+        {
+            try
+            {
+                string str = $"{this.Vertices[0]};{this.Vertices[1]};{this.Vertices[2]};{this.Vertices[0]}";
+                return str;
+            }
+            catch
+            {
+                string str = $"{this.Vertices[0]};{this.Vertices[1]};{this.Vertices[0]}";
+                return str;
+            }
+        }
+    }
+
+
+    public struct TestVertex : IVertex
+    {
+        public double[] Position { get; set; }
+        public double Z { get; set; }
+        public double X { get { return Position[0]; } }
+        public double Y { get { return Position[1]; } }
+
+        public TestVertex(double x, double y)
+        {
+            Position = new double[] { x, y};
+            Z = 0d;
+        }
+
+        public override string ToString()
+        {
+            string str = $"xy={Position[0]:f2},{Position[1]:f2}"; //  Z: {Position[2]:f1}";
+            return str;
+        }
+    }
+
+    public class TestFace : ConvexFace<TestVertex, TestFace>
+    {
+        public override string ToString()
+        {
+            try
+            {
+                string str = $"{this.Vertices[0]};{this.Vertices[1]};{this.Vertices[2]};{this.Vertices[0]}";
+                return str;
+            }
+            catch
+            {
+                string str = $"{this.Vertices[0]};{this.Vertices[1]};{this.Vertices[0]}";
+                return str;
+            }
+        }
     }
 
     [TestClass]
@@ -63,24 +158,40 @@ namespace TinTests
         public TestMIConvexHull()
         { }
 
-        private List<TestVertex> Vertices { get; set; } = null;
+        private List<Vertex> Vertices { get; set; } = null;
+        //private MIConvexHull.ConvexHullCreationResult<Vertex, Cell>
+        //    ConvexHull { get; set; } = null;
+        //private List<Vertex> ConvexHullVertices { get; set; }
+        //private List<Cell> Faces { get; set; } = null;
+        private VoronoiMesh<Vertex, Cell, VoronoiEdge<Vertex, Cell>>
+            VoronoiMesh { get; set; } = null;
+        private IEnumerable<VoronoiEdge<Vertex, Cell>> Lines { get; set; } = null;
+        private IEnumerable<Cell> Triangles { get; set; } = null;
 
         private void Initialize()
         {
-            if(Vertices == null)
+            if(this.Vertices == null)
             {
-                this.Vertices = new List<TestVertex>();
+                this.Vertices = new List<Vertex>();
 
                 // This section adapted from MIConvexHull/Examples/3DConvexHullWPF
-                var r = new Random(1);
-                for(int i = 0; i < 10; i++)
+                Random r = new Random(4);
+                for(int i = 0; i < 6; i++)
                 {
-                    var v = new TestVertex(
-                        100.0 * r.NextDouble(),
-                        100.0 * r.NextDouble(),
-                        5.0 * r.NextDouble());
+                    Vertex v = new Vertex(
+                        538.0 * r.NextDouble(),
+                        495.04 * r.NextDouble());
+                    v.Z = 5.0 * r.NextDouble();
                     this.Vertices.Add(v);
                 }
+            }
+
+            if(this.VoronoiMesh == null)
+            {
+                this.VoronoiMesh = 
+                    MIConvexHull.VoronoiMesh.Create<Vertex, Cell>(this.Vertices);
+                this.Lines = this.VoronoiMesh.Edges;
+                this.Triangles = this.VoronoiMesh.Triangles;
             }
         }
 
@@ -89,13 +200,25 @@ namespace TinTests
         {
             this.Initialize();
             Assert.IsNotNull(this.Vertices);
+            Assert.IsNotNull(this.Triangles);
         }
 
-        [TestMethod]
-        public void CreationOfTriangulation_works()
-        {
-            //var convexHull = ConvexHull.Create<TestVertex, Face>(this.Vertices);
-        }
+        //[TestMethod]
+        //public void CreationOfTriangulation_works()
+        //{
+        //    //var convexHull = ConvexHull.Create<TestVertex, Face>(this.Triangles);
+        //}
+
+        //public override string ToString()
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    foreach(var aFace in this.Faces)
+        //    {
+        //        sb.Append(aFace.ToString());
+        //        sb.Append(" | ");
+        //    }
+        //    return sb.ToString();
+        //}
     }
 }
 

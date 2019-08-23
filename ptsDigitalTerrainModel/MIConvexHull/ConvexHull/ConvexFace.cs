@@ -37,7 +37,7 @@ namespace MIConvexHull
     {
         /// <summary>
         /// Adjacency. Array of length "dimension".
-        /// If F = Adjacency[i] then the vertices shared with F are Vertices[j] where j != i.
+        /// If F = Adjacency[i] then the vertices shared with F are Triangles[j] where j != i.
         /// In the context of triangulation, can be null (indicates the cell is at boundary).
         /// </summary>
         /// <value>The adjacency.</value>

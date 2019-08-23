@@ -107,7 +107,9 @@ namespace MIConvexHull
             where TVertex : IVertex
             where TCell : TriangulationCell<TVertex, TCell>, new()
         {
-            return VoronoiMesh<TVertex, TCell, VoronoiEdge<TVertex, TCell>>.Create(data, PlaneDistanceTolerance);
+            return VoronoiMesh<TVertex, TCell, 
+                VoronoiEdge<TVertex, TCell>>
+                .Create(data, PlaneDistanceTolerance);
         }
     }
 
@@ -130,10 +132,10 @@ namespace MIConvexHull
         }
 
         /// <summary>
-        /// Vertices of the diagram.
+        /// Triangles of the diagram.
         /// </summary>
         /// <value>The vertices.</value>
-        public IEnumerable<TCell> Vertices { get; private set; }
+        public IEnumerable<TCell> Triangles { get; private set; }
 
         /// <summary>
         /// Edges connecting the cells.
@@ -171,7 +173,7 @@ namespace MIConvexHull
 
             return new VoronoiMesh<TVertex, TCell, TEdge>
             {
-                Vertices = vertices,
+                Triangles = vertices,
                 Edges = edges.ToList()
             };
         }
