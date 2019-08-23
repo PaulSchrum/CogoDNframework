@@ -74,7 +74,7 @@ namespace TinTests
 
     public class Cell : TriangulationCell<Vertex, Cell>
     {
-        static Random rnd = new Random();
+        //static Random rnd = new Random();
 
 
         double Det(double[,] m)
@@ -196,7 +196,7 @@ namespace TinTests
         }
 
         [TestMethod]
-        public void Verify_ListIsNotNull()
+        public void Verify_ListsNotNull_AndHaveRightCount()
         {
             this.Initialize();
             Assert.IsNotNull(this.Vertices);
