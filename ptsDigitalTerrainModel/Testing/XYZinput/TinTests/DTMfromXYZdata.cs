@@ -33,7 +33,7 @@ namespace TinTests
    }
 
    //[TestClass]
-   public class DTMfromZYZdata : TimeableTest
+   public class DTMfromXYZdata : TimeableTest
    {
       private String pathRM21SourceCode;
       [TestInitialize]
