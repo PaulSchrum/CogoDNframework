@@ -36,6 +36,9 @@ namespace ptsDigitalTerrainModel
             }
             lasFile.ClearAllPoints();  // Because I have them now.
 
+            //var VoronoiMesh = MIConvexHull.VoronoiMesh
+            //    .Create<ptsDTMpoint, Cell>(returnObject.allPoints.Values);
+
             return returnObject;
         }
 
@@ -655,4 +658,6 @@ namespace ptsDigitalTerrainModel
       public long X { get; set; }
       public long Y { get; set; }
    }
+
+    
 }

@@ -15,7 +15,7 @@ namespace ptsDigitalTerrainModel
       public Double z { get; set; }
       public double[] Position
       {
-         get { return new double[] { x, y, z }; }
+         get { return new double[] { x, y }; }
       }
 
       [NonSerialized]
