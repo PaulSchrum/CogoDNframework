@@ -571,12 +571,12 @@ namespace ptsDigitalTerrainModel
 
         }
 
-        public Azimuth getSlopeAzimuth(ptsPoint aPoint)
+        public Azimuth getAspect(ptsPoint aPoint)
         {
-            return getSlopeAzimuth((ptsDTMpoint)aPoint);
+            return getAspect((ptsDTMpoint)aPoint);
         }
 
-        public Azimuth getSlopeAzimuth(ptsDTMpoint aPoint)
+        public Azimuth getAspect(ptsDTMpoint aPoint)
         {
             ptsDTMtriangle aTriangle = getTriangleContaining(aPoint);
             if(null == aTriangle)
@@ -584,6 +584,15 @@ namespace ptsDigitalTerrainModel
 
             return aTriangle.givenXYgetSlopeAzimuth(aPoint);
 
+        }
+
+        public ElSlopeAzTriplet getElevationSlopeAzimuth(ptsDTMpoint aPoint)
+        {
+            return new ElSlopeAzTriplet(
+                getElevation(aPoint),
+                getSlope(aPoint),
+                getAspect(aPoint)
+                );
         }
 
         public void loadFromXYZtextFile(string fileToOpen)
@@ -664,5 +673,18 @@ namespace ptsDigitalTerrainModel
         public long Y { get; set; }
     }
 
+    public class ElSlopeAzTriplet
+    {
+        public double? Elevation { get; private set; }
+        public double? Slope { get; private set; }
+        public Azimuth Azimuth { get; private set; }
+
+        public ElSlopeAzTriplet(double? el=null, double? sl=null, Azimuth az=null)
+        {
+            this.Elevation = el;
+            this.Slope = sl;
+            this.Azimuth = az;
+        }
+    }
 
 }
