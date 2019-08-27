@@ -586,9 +586,10 @@ namespace ptsDigitalTerrainModel
 
         }
 
-        public ElSlopeAzTriplet getElevationSlopeAzimuth(ptsDTMpoint aPoint)
+        public PointSlopeAspect getElevationSlopeAzimuth(ptsDTMpoint aPoint)
         {
-            return new ElSlopeAzTriplet(
+            return new PointSlopeAspect(
+                aPoint,
                 getElevation(aPoint),
                 getSlope(aPoint),
                 getAspect(aPoint)
@@ -673,17 +674,68 @@ namespace ptsDigitalTerrainModel
         public long Y { get; set; }
     }
 
-    public class ElSlopeAzTriplet
+    public class PointSlopeAspect
     {
+        public ptsPoint Point { get; private set; }
         public double? Elevation { get; private set; }
         public double? Slope { get; private set; }
-        public Azimuth Azimuth { get; private set; }
+        public Azimuth Aspect { get; private set; }
 
-        public ElSlopeAzTriplet(double? el=null, double? sl=null, Azimuth az=null)
+        public PointSlopeAspect(ptsDTMpoint pt, double? el=null, double? sl=null, Azimuth aspect=null)
         {
+            this.Point = new ptsPoint(pt.x, pt.y);
+            if(el != null) this.Point.z = (double) el;
             this.Elevation = el;
             this.Slope = sl;
-            this.Azimuth = az;
+            this.Aspect = aspect;
+        }
+
+        public override string ToString()
+        {
+            return $"EL: {Elevation:f2}, SL: {Slope:f1}%, AS: {Aspect}";
+        }
+
+        private static double tolerance = 0.15;
+        private static double ntolerance = -tolerance;
+        /// <summary>
+        /// Compares only the derived values, elevation, slope, and aspect.
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="sl"></param>
+        /// <param name="aspect"></param>
+        public void AssertDerivitivesAreEqual(double? el, double? sl, Azimuth aspect)
+        {
+            bool verifyNullStatus_AndIsItNull(Object n1, Object n2, string msg)
+            {
+                if(n1 == null && n2 == null) return true;
+                if(n1 != null && n2 != null) return false;
+                throw new Exception(msg);
+            }
+
+            if(verifyNullStatus_AndIsItNull(el, this.Elevation, 
+                "Elevation items not same null state."))
+                return;
+
+            double? diff = this.Elevation - el;
+            if(diff > tolerance || diff < ntolerance)
+                throw new Exception("Elevation values differ.");
+
+            if(verifyNullStatus_AndIsItNull(sl, this.Slope, 
+                "Slope items not same null state."))
+                return;
+
+            diff = this.Slope - sl;
+            if(diff > tolerance || diff < ntolerance)
+                throw new Exception("Slope values differ.");
+
+            if(verifyNullStatus_AndIsItNull(aspect, this.Aspect, 
+                "Aspect items not same null state."))
+                return;
+
+            diff = this.Aspect - aspect;
+            if(diff > tolerance || diff < ntolerance)
+                throw new Exception("Aspect values differ.");
+
         }
     }
 
