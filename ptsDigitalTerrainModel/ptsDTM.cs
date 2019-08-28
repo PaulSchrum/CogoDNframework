@@ -18,7 +18,7 @@ namespace ptsDigitalTerrainModel
     public class ptsDTM
     {
         // Substantive members - Do serialize
-        public Dictionary<UInt64, ptsDTMpoint> allPoints { get; private set; }
+        public List<ptsDTMpoint> allPoints { get; private set; }
         private List<ptsDTMtriangle> allTriangles;
         private ptsBoundingBox2d myBoundingBox;
         private LasFile lasFile { get; set; } = null;
@@ -27,12 +27,10 @@ namespace ptsDigitalTerrainModel
         {
             LasFile lasFile = new LasFile(lidarFileName);
             ptsDTM returnObject = new ptsDTM();
-            returnObject.allPoints = new Dictionary<ulong, ptsDTMpoint>();
-            UInt64 counter = 0;
+            returnObject.allPoints = new List<ptsDTMpoint>();
             foreach(var point in lasFile.AllPoints)
             {
-                returnObject.allPoints[counter] = point;
-                counter++;
+                returnObject.allPoints.Add(point);
             }
             lasFile.ClearAllPoints();  // Because I have them now.
 
@@ -50,13 +48,13 @@ namespace ptsDigitalTerrainModel
         [NonSerialized]
         private ptsDTMtriangle scratchTriangle;
         [NonSerialized]
-        private UInt64pair scratchUIntPair;
+        private IntPair scratchUIntPair;
 
 
         [NonSerialized]
         private ptsDTMtriangleLine scratchTriangleLine;
         [NonSerialized]
-        private Dictionary<UInt64pair, ptsDTMtriangleLine> triangleLines;
+        private Dictionary<IntPair, ptsDTMtriangleLine> triangleLines;
         [NonSerialized]
         private long memoryUsed = 0;
 
@@ -119,7 +117,7 @@ namespace ptsDigitalTerrainModel
                         createAllpointsCollection();
                         myBoundingBox = new ptsBoundingBox2d(scratchPoint.x, scratchPoint.y, scratchPoint.x, scratchPoint.y);
                     }
-                    allPoints.Add(ptIndex, scratchPoint);
+                    allPoints.Add(scratchPoint);
                     ptIndex++;
                     myBoundingBox.expandByPoint(scratchPoint.x, scratchPoint.y, scratchPoint.z);
                 }
@@ -156,12 +154,12 @@ namespace ptsDigitalTerrainModel
 
         private ptsDTMtriangle convertLineOfDataToTriangle(string line)
         {
-            UInt64 ptIndex1, ptIndex2, ptIndex3;
+            int ptIndex1, ptIndex2, ptIndex3;
             string[] parsed = line.Split(',');
             int correction = parsed.Length - 4;
-            ptIndex1 = Convert.ToUInt64(parsed[0 + correction]);
-            ptIndex2 = Convert.ToUInt64(parsed[1 + correction]);
-            ptIndex3 = Convert.ToUInt64(parsed[2 + correction]);
+            ptIndex1 = Convert.ToInt32(parsed[0 + correction]);
+            ptIndex2 = Convert.ToInt32(parsed[1 + correction]);
+            ptIndex3 = Convert.ToInt32(parsed[2 + correction]);
             ptsDTMtriangle triangle = new ptsDTMtriangle(allPoints, ptIndex1, ptIndex2, ptIndex3);
             return triangle;
         }
@@ -242,7 +240,7 @@ namespace ptsDigitalTerrainModel
             List<string> trianglesAsStrings;
             setupStopWatches();
 
-            scratchUIntPair = new UInt64pair();
+            scratchUIntPair = new IntPair();
 
             System.Console.WriteLine("Load XML document took:");
             stopwatch.Reset(); stopwatch.Start();
@@ -278,7 +276,7 @@ namespace ptsDigitalTerrainModel
                                 createAllpointsCollection();
                                 myBoundingBox = new ptsBoundingBox2d(scratchPoint.x, scratchPoint.y, scratchPoint.x, scratchPoint.y);
                             }
-                            allPoints.Add(id, scratchPoint);
+                            allPoints.Add(scratchPoint);
                             myBoundingBox.expandByPoint(scratchPoint.x, scratchPoint.y, scratchPoint.z);
                         }
                     }
@@ -447,7 +445,7 @@ namespace ptsDigitalTerrainModel
             Console.WriteLine();
         }
 
-        private bool addTriangleLine(UInt64 ndx1, UInt64 ndx2, ptsDTMtriangle aTriangle)
+        private bool addTriangleLine(int ndx1, int ndx2, ptsDTMtriangle aTriangle)
         {
             if(ndx1 == 0 || ndx2 == 0 || aTriangle == null)
                 return false;
@@ -465,7 +463,7 @@ namespace ptsDigitalTerrainModel
 
             if(triangleLines == null)
             {
-                triangleLines = new Dictionary<UInt64pair, ptsDTMtriangleLine>();
+                triangleLines = new Dictionary<IntPair, ptsDTMtriangleLine>();
                 scratchTriangleLine = new ptsDTMtriangleLine(allPoints[ndx1], allPoints[ndx2], aTriangle);
                 triangleLines.Add(scratchUIntPair, scratchTriangleLine);
 
@@ -617,7 +615,7 @@ namespace ptsDigitalTerrainModel
 
         private void createAllpointsCollection()
         {
-            allPoints = new Dictionary<UInt64, ptsDTMpoint>();
+            allPoints = new List<ptsDTMpoint>();
         }
 
         public String GenerateSizeSummaryString()
@@ -703,7 +701,7 @@ namespace ptsDigitalTerrainModel
         /// <param name="el"></param>
         /// <param name="sl"></param>
         /// <param name="aspect"></param>
-        public void AssertDerivitivesAreEqual(double? el, double? sl, Azimuth aspect)
+        public void AssertDerivedValuesAreEqual(double? el, double? sl, Azimuth aspect)
         {
             bool verifyNullStatus_AndIsItNull(Object n1, Object n2, string msg)
             {

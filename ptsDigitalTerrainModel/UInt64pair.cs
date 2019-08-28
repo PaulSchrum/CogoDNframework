@@ -5,14 +5,14 @@ using System.Text;
 
 namespace ptsDigitalTerrainModel
 {
-   internal class UInt64pair
+   internal class IntPair
    {
-      public UInt64 num1;
-      public UInt64 num2;
+      public int num1;
+      public int num2;
 
       public override bool Equals(object obj)
       {
-         UInt64pair other = obj as UInt64pair;
+         IntPair other = obj as IntPair;
          if (other == null)
             return false;
 

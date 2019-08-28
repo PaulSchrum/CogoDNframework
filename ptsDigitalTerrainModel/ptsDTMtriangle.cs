@@ -29,24 +29,24 @@ namespace ptsDigitalTerrainModel
       [NonSerialized]
       private ptsCogo.ptsBoundingBox2d myBoundingBox_;
 
-      public ptsDTMtriangle(Dictionary<UInt64, ptsDTMpoint> pointList, string pointRefs)
+      public ptsDTMtriangle(List<ptsDTMpoint> pointList, string pointRefs)
       {
-         indices = new UInt64[3];
+         int[] indices = new int[3];
          indexStrings = pointRefs.Split(' ');
-         UInt64.TryParse(indexStrings[0], out indices[0]);
-         UInt64.TryParse(indexStrings[1], out indices[1]);
-         UInt64.TryParse(indexStrings[2], out indices[2]);
+         int.TryParse(indexStrings[0], out indices[0]);
+         int.TryParse(indexStrings[1], out indices[1]);
+         int.TryParse(indexStrings[2], out indices[2]);
 
-         point1 = pointList[indices[0]];
-         point2 = pointList[indices[1]];
-         point3 = pointList[indices[2]];
+         point1 = pointList[indices[0] - 1];
+         point2 = pointList[indices[1] - 1];
+         point3 = pointList[indices[2] - 1];
 
          computeBoundingBox();
          normalVec_ = null;
       }
 
-      public ptsDTMtriangle(Dictionary<UInt64, ptsDTMpoint> pointList, UInt64 ptIndex1,
-         UInt64 ptIndex2, UInt64 ptIndex3)
+      public ptsDTMtriangle(List<ptsDTMpoint> pointList, int ptIndex1,
+         int ptIndex2, int ptIndex3)
       {
          point1 = pointList[ptIndex1];
          point2 = pointList[ptIndex2];
