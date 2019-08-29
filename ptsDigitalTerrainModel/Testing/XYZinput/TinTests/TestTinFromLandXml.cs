@@ -58,13 +58,13 @@ namespace TinTests
         //
         #endregion
 
-        private bool runTheBigOne = true;
+        private bool runGardenParkway = true;
         private ptsDTM gardenParkway { get; set; } = null;
 
         [TestInitialize]
         public void TestInit()
         {
-            if(runTheBigOne)
+            if(runGardenParkway)
                 if(this.gardenParkway == null)
                     gardenParkway = ptsDTM.CreateFromExistingFile(
                     @"D:\SourceModules\CSharp\CogoDN\ptsDigitalTerrainModel\Testing\XYZinput\TinTests\data\GPEtin.xml");
@@ -73,6 +73,7 @@ namespace TinTests
         [TestMethod]
         public void Test_VerifyKeyLocation_InGardenParkway_LandXMLfile()
         {
+            if(!runGardenParkway) return;
             PointSlopeAspect psa = 
                 gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529399.6100, 1408669.1900, 0.0));
             psa.AssertDerivedValuesAreEqual(671.13, 14.1, 285.94);
