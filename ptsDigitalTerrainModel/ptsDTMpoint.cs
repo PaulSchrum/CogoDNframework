@@ -49,6 +49,14 @@ namespace ptsDigitalTerrainModel
                );
         }
 
+        private static double gridFactor = 10.0;
+        public Tuple<int, int> GridCoordinates
+        {
+            get { return new Tuple<int, int>(
+                Convert.ToInt32(this.x * gridFactor),
+                Convert.ToInt32(this.y * gridFactor)); }
+        }
+
         public static ptsVector operator -(ptsDTMpoint p1, ptsDTMpoint p2)
         {
             return new ptsVector(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);

@@ -30,15 +30,41 @@ namespace ptsDigitalTerrainModel
         {
             LasFile lasFile = new LasFile(lidarFileName);
             ptsDTM returnObject = new ptsDTM();
-            returnObject.allPoints = new List<ptsDTMpoint>();
+            int indexCount = 0;
+            var gridIndexer = new Dictionary<Tuple<int, int>, int>();
             foreach(var point in lasFile.AllPoints)
             {
+                if(returnObject.allPoints == null)
+                {
+                    returnObject.createAllpointsCollection();
+                    returnObject.myBoundingBox = 
+                        new ptsBoundingBox2d(point.x, point.y, point.x, point.y);
+                }
+                else
+                    returnObject.
+                        myBoundingBox.expandByPoint(point.x, point.y, point.z);
                 returnObject.allPoints.Add(point);
+                // Note this approach will occasionally skip over points that 
+                // are double-stamps. I am fine with that for now.
+                gridIndexer[point.GridCoordinates] = indexCount;
+                indexCount++;
             }
             lasFile.ClearAllPoints();  // Because I have them now.
 
             var VoronoiMesh = MIConvexHull.VoronoiMesh
                 .Create<ptsDTMpoint, ConvexFaceTriangle>(returnObject.allPoints);
+
+            returnObject.allTriangles = new List<ptsDTMtriangle>(2*returnObject.allPoints.Count);
+            foreach(var vTriangle in VoronoiMesh.Triangles)
+            {
+                var point1 = gridIndexer[vTriangle.Vertices[0].GridCoordinates];
+                var point2 = gridIndexer[vTriangle.Vertices[1].GridCoordinates];
+                var point3 = gridIndexer[vTriangle.Vertices[2].GridCoordinates];
+                returnObject.allTriangles.Add(new ptsDTMtriangle(
+                    returnObject.allPoints, point1, point2, point3));
+                returnObject.myBoundingBox.expandByPoint(point1, point2, point3);
+            }
+            
 
             return returnObject;
         }
