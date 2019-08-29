@@ -61,19 +61,20 @@ namespace TinTests
         private bool runGardenParkway = true;
         private ptsDTM gardenParkway { get; set; } = null;
 
-        [TestInitialize]
-        public void TestInit()
+        private void testInit()
         {
-            if(runGardenParkway)
-                if(this.gardenParkway == null)
-                    gardenParkway = ptsDTM.CreateFromExistingFile(
-                    @"D:\SourceModules\CSharp\CogoDN\ptsDigitalTerrainModel\Testing\XYZinput\TinTests\data\GPEtin.xml");
+            if(this.gardenParkway == null)
+                gardenParkway = ptsDTM.CreateFromExistingFile(
+                @"D:\SourceModules\CSharp\CogoDN\ptsDigitalTerrainModel\Testing\XYZinput\TinTests\data\GPEtin.xml");
         }
 
         [TestMethod]
         public void Test_VerifyKeyLocation_InGardenParkway_LandXMLfile()
         {
             if(!runGardenParkway) return;
+
+            testInit();
+
             PointSlopeAspect psa = 
                 gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529399.6100, 1408669.1900, 0.0));
             psa.AssertDerivedValuesAreEqual(671.13, 14.1, 285.94);
@@ -97,7 +98,7 @@ namespace TinTests
             psa.AssertDerivedValuesAreEqual(653.57, 11.1, 194.3426);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529231.2117, 1413280.0812, 0.0));
-            psa.AssertDerivedValuesAreEqual(650.76, 16.4, 294.6933);
+            psa.AssertDerivedValuesAreEqual(650.76, 16.45, 294.6933);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529987.6366, 1406533.3478, 0.0));
             psa.AssertDerivedValuesAreEqual(687.08, 1.8, 33.6581);

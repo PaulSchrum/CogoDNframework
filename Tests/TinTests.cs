@@ -58,7 +58,16 @@ namespace Tests
         public void TIN_isNotNull()
         {
             this.Initialize();
-            //Assert.IsNotNull(this.tinFromLidar);
+            Assert.IsNotNull(this.tinFromLidar);
+        }
+
+        //[TestMethod]
+        public void TIN_Triangles_areNotNull()
+        {
+            this.Initialize();
+            TIN_isNotNull();
+            this.tinFromLidar.getTriangleContaining(new ptsDTMpoint(2133759.26, 765.55, 0.0));
+            // expect EL: 202.65, Slope: 1.5, Aspect: 65.225, TriangleID = 0)
         }
     }
 }

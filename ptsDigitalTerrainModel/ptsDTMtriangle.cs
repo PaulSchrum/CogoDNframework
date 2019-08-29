@@ -167,5 +167,22 @@ namespace ptsDigitalTerrainModel
 
     }
 
+    internal class ConvexFaceTriangle : MIConvexHull.TriangulationCell<ptsDTMpoint, ConvexFaceTriangle>
+    {
+        double Det(double[,] m)
+        {
+            return m[0, 0] * ((m[1, 1] * m[2, 2]) - (m[2, 1] * m[1, 2])) - m[0, 1] * (m[1, 0] * m[2, 2] - m[2, 0] * m[1, 2]) + m[0, 2] * (m[1, 0] * m[2, 1] - m[2, 0] * m[1, 1]);
+        }
 
+        double LengthSquared(double[] v)
+        {
+            double norm = 0;
+            for(int i = 0; i < v.Length; i++)
+            {
+                double t = v[i];
+                norm += t * t;
+            }
+            return norm;
+        }
+    }
 }

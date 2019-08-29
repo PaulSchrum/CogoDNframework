@@ -11,6 +11,9 @@ using System.Collections.Concurrent;
 using ptsCogo;
 using ptsCogo.Angle;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Tests")]
 
 namespace ptsDigitalTerrainModel
 {
@@ -34,8 +37,8 @@ namespace ptsDigitalTerrainModel
             }
             lasFile.ClearAllPoints();  // Because I have them now.
 
-            //var VoronoiMesh = MIConvexHull.VoronoiMesh
-            //    .Create<ptsDTMpoint, Cell>(returnObject.allPoints.Values);
+            var VoronoiMesh = MIConvexHull.VoronoiMesh
+                .Create<ptsDTMpoint, ConvexFaceTriangle>(returnObject.allPoints);
 
             return returnObject;
         }
