@@ -13,10 +13,13 @@ namespace ptsCogo
 
       private ptsBoundingBox2d() { }
 
-      public ptsBoundingBox2d(Double LLx, Double LLy, Double URx, Double URy)
+      public ptsBoundingBox2d(
+          Double LLx, Double LLy, 
+          Double URx, Double URy,
+          Double LLz=0.0, Double URz=0.0)
       {
-         lowerLeftPt = new ptsPoint(LLx, LLy);
-         upperRightPt = new ptsPoint(URx, URy);
+         lowerLeftPt = new ptsPoint(LLx, LLy, LLz);
+         upperRightPt = new ptsPoint(URx, URy, URz);
       }
 
       public ptsBoundingBox2d(ptsPoint aPoint)

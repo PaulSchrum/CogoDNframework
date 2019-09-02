@@ -77,7 +77,7 @@ namespace TinTests
 
             PointSlopeAspect psa = 
                 gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529399.6100, 1408669.1900, 0.0));
-            psa.AssertDerivedValuesAreEqual(671.13, 14.1, 285.94);
+            psa.AssertDerivedValuesAreEqual(671.13, 14.1, 105.94);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529868.0890, 1407914.1624, 0.0));
             psa.AssertDerivedValuesAreEqual(654.16, 25.6, 26.6446);
@@ -86,25 +86,25 @@ namespace TinTests
             psa.AssertDerivedValuesAreEqual(730.02, 1.4, 204.0430);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529890.1833, 1409331.1264, 0.0));
-            psa.AssertDerivedValuesAreEqual(684.01, 17.3, 298.4007);
+            psa.AssertDerivedValuesAreEqual(684.01, 17.3, 118.4007);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(530069.6770, 1410934.1035, 0.0));
-            psa.AssertDerivedValuesAreEqual(707.94, 14.5, 137.6170);
+            psa.AssertDerivedValuesAreEqual(707.94, 14.5, 317.6170);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(531816.0608, 1402087.7063, 0.0));
-            psa.AssertDerivedValuesAreEqual(603.45, 12.3, 288.7335);
+            psa.AssertDerivedValuesAreEqual(603.45, 12.3, 108.7335);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529211.7956, 1413338.5912, 0.0));
             psa.AssertDerivedValuesAreEqual(653.57, 11.1, 194.3426);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529231.2117, 1413280.0812, 0.0));
-            psa.AssertDerivedValuesAreEqual(650.76, 16.45, 294.6933);
+            psa.AssertDerivedValuesAreEqual(650.76, 6.5, 253.1351);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(529987.6366, 1406533.3478, 0.0));
             psa.AssertDerivedValuesAreEqual(687.08, 1.8, 33.6581);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(530437.7030, 1402565.4940, 0.0));
-            psa.AssertDerivedValuesAreEqual(610.00, 70.8, 146.5787);
+            psa.AssertDerivedValuesAreEqual(610.00, 9.2, 293.5287);
 
             psa = gardenParkway.getElevationSlopeAzimuth(new ptsDTMpoint(530935.4300, 1401737.1885, 0.0));
             psa.AssertDerivedValuesAreEqual(573.53, 34.3, 246.1545);

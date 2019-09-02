@@ -55,20 +55,48 @@ namespace Tests
         }
 
         [TestMethod]
-        public void TIN_isNotNull()
+        public void TinFromLidar_isNotNull()
         {
             this.Initialize();
             Assert.IsNotNull(this.tinFromLidar);
         }
 
         [TestMethod]
-        public void TIN_Triangles_areNotNull()
+        public void TinFromLidar_ElevationSlopeAspect_correctForTriangleZero()
         {
             this.Initialize();
-            TIN_isNotNull();
-            var thing = this.tinFromLidar
-                .getTriangleContaining(new ptsDTMpoint(2133759.26, 765.55, 0.0));
-            // expect EL: 202.65, Slope: 1.5, Aspect: 65.225, TriangleID = 0)
+            TinFromLidar_isNotNull();
+            var ElSlopeAspect = this.tinFromLidar
+                .getElevationSlopeAzimuth(new ptsDTMpoint(2133760.0, 775765.59, 0.0));
+            ElSlopeAspect.AssertDerivedValuesAreEqual(202.63, 2.6, 24.775);
+        }
+
+        [TestMethod]
+        public void TinFromLidar_ElevationSlopeAspect_OnSameTriangleOfAroadwayFillSlope()
+        {
+            this.Initialize();
+            TinFromLidar_isNotNull();
+            var ElSlopeAspect = this.tinFromLidar
+                .getElevationSlopeAzimuth(new ptsDTMpoint(2133835.08, 775629.79));
+            ElSlopeAspect.AssertDerivedValuesAreEqual(200.0, 44.0, 226.48);
+
+            ElSlopeAspect = this.tinFromLidar
+                .getElevationSlopeAzimuth(new ptsDTMpoint(2133836.27, 775629.41));
+            ElSlopeAspect.AssertDerivedValuesAreEqual(200.24, 44.0, 226.48);
+        }
+
+        [TestMethod]
+        public void TinFromLidar_ElevationSlopeAspect_OnSameTriangleOfAbridgeEndBentSlope()
+        {
+            this.Initialize();
+            TinFromLidar_isNotNull();
+            var ElSlopeAspect = this.tinFromLidar
+                .getElevationSlopeAzimuth(new ptsDTMpoint(2133952.01, 775539.31));
+            ElSlopeAspect.AssertDerivedValuesAreEqual(190.0, 41.3, 137.291);
+
+            ElSlopeAspect = this.tinFromLidar
+                .getElevationSlopeAzimuth(new ptsDTMpoint(2133987.65, 775577.91));
+            ElSlopeAspect.AssertDerivedValuesAreEqual(190.0, 41.3, 137.291);
         }
     }
 }

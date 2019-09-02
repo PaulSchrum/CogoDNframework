@@ -21,7 +21,7 @@ namespace ptsDigitalTerrainModel
         [NonSerialized]
         private static String[] parsedStrings;
 
-        public ptsDTMpoint(double newX, double newY, double newZ) : this()
+        public ptsDTMpoint(double newX, double newY, double newZ=0.0) : this()
         { x = newX; y = newY; z = newZ; } //myIndex = 0L; }
 
         public ptsDTMpoint(String ptAsString, UInt64 myIndx) : this()

@@ -38,11 +38,14 @@ namespace ptsDigitalTerrainModel
                 {
                     returnObject.createAllpointsCollection();
                     returnObject.myBoundingBox = 
-                        new ptsBoundingBox2d(point.x, point.y, point.x, point.y);
+                        new ptsBoundingBox2d(
+                            point.x, point.y, 
+                            point.x, point.y,
+                            point.z, point.z);
                 }
                 else
-                    returnObject.
-                        myBoundingBox.expandByPoint(point.x, point.y, point.z);
+                    returnObject
+                        .myBoundingBox.expandByPoint(point.x, point.y, point.z);
                 returnObject.allPoints.Add(point);
                 // Note this approach will occasionally skip over points that 
                 // are double-stamps. I am fine with that for now.
@@ -65,7 +68,6 @@ namespace ptsDigitalTerrainModel
                 returnObject.myBoundingBox.expandByPoint(point1, point2, point3);
             }
             
-
             return returnObject;
         }
 

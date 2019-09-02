@@ -53,7 +53,7 @@ namespace ptsDigitalTerrainModel
             point3 = pointList[ptIndex3];
 
             computeBoundingBox();
-            normalVec_ = null;
+            setupNormalVec();
         }
 
         public void computeBoundingBox()
@@ -162,6 +162,13 @@ namespace ptsDigitalTerrainModel
             if(normalVec_ == null)
             {
                 normalVec_ = (point2 - point1).crossProduct(point3 - point1);
+                if((normalVec_.x * normalVec_.y * normalVec_.z) < 0.0)
+                {
+                    var tmp = this.point2;
+                    this.point2 = this.point1;
+                    this.point1 = tmp;
+                    normalVec_ = (point2 - point1).crossProduct(point3 - point1);
+                }
             }
         }
 
