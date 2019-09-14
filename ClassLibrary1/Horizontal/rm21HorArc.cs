@@ -1,4 +1,5 @@
-﻿using ptsCogo.Angle;
+﻿using netDxf;
+using ptsCogo.Angle;
 using ptsCogo.coordinates;
 using ptsCogo.coordinates.CurvilinearCoordinates;
 using System;
@@ -228,6 +229,28 @@ namespace ptsCogo.Horizontal
         {
             drawer.drawArcSegment(this.BeginPoint, this.ArcCenterPt, this.EndPoint,
                this.Deflection.getAsRadians());
+        }
+
+        public override void AddToDxf(DxfDocument dxfDoc)
+        {
+            double getCadAngle(ptsVector vec)
+            {
+                return ptsAngle.degreesFromRadians(Math.Atan2(vec.y, vec.x));
+            }
+
+            var startAngle = getCadAngle(this.BeginRadiusVector);
+            var endAngle = getCadAngle(this.EndRadiusVector);
+            netDxf.Entities.Arc theArc = null;
+            if(this.deflDirection < 0)
+                theArc =  new netDxf.Entities.Arc(
+                    new Vector2(this.ArcCenterPt.x, this.ArcCenterPt.y),
+                    this.Radius, startAngle, endAngle);
+            else
+                theArc = new netDxf.Entities.Arc(
+                    new Vector2(this.ArcCenterPt.x, this.ArcCenterPt.y),
+                    this.Radius, endAngle, startAngle);
+
+            dxfDoc.AddEntity(theArc);
         }
 
     }

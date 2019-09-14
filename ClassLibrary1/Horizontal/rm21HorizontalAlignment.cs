@@ -9,6 +9,7 @@ using ptsCogo.Utils;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using netDxf;
 
 [assembly: InternalsVisibleToAttribute("Tests")]
 
@@ -616,6 +617,31 @@ namespace ptsCogo.Horizontal
             var v = outString.ToString();
             File.WriteAllText(outFile, outString.ToString());
         }
+
+        public override void WriteToDxf(string outFile)
+        {
+            // setup
+            var dxf = new DxfDocument();
+            dxf.DrawingVariables.AcadVer = netDxf.Header.DxfVersion.AutoCad2013;
+
+            // write elements
+            foreach (var item in this.allChildSegments)
+            {
+                try
+                {
+                    item.AddToDxf(dxf);
+                }
+                catch (NotImplementedException e)
+                {
+                    continue;
+                }
+
+            }
+
+            // closeout
+            dxf.Save(outFile);
+        }
+
     }
 
     public sealed class alignmentDataPacket

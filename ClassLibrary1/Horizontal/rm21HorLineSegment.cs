@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using ptsCogo.Angle;
 using ptsCogo.coordinates;
+using netDxf;
+using netDxf.Entities;
 
 namespace ptsCogo.Horizontal
 {
@@ -118,6 +120,17 @@ namespace ptsCogo.Horizontal
         {
             drawer.drawLineSegment(this.BeginPoint, this.EndPoint);
         }
+
+        public override void AddToDxf(DxfDocument dxfDoc)
+        {
+            Polyline poly = new Polyline();
+            poly.Vertexes.Add(new PolylineVertex(this.BeginPoint.x, 
+                this.BeginPoint.y, 0));
+            poly.Vertexes.Add(new PolylineVertex(this.EndPoint.x,
+                this.EndPoint.y, 0));
+            dxfDoc.AddEntity(poly);
+        }
+
 
     }
 }

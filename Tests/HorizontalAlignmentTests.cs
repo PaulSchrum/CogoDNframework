@@ -1000,6 +1000,27 @@ namespace Tests
         }
 
         [TestMethod]
+        public void HorizontalAlignment_outputToDxf()
+        {
+            var directory = new DirectoryManager();
+            directory.CdUp(2).CdDown("CogoTests");
+            string testFile = directory.GetPathAndAppendFilename("R2100_L1.CogoDN.csv");
+
+            rm21HorizontalAlignment AccRev = rm21HorizontalAlignment.createFromCsvFile(testFile);
+            Assert.IsNotNull(AccRev);
+
+            var outDirectory = new DirectoryManager();
+            outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
+            outDirectory.EnsureExists();
+            string outFile = outDirectory.GetPathAndAppendFilename("R2100b_L1.dxf");
+
+            AccRev.WriteToDxf(outFile);
+
+            bool fileExists = File.Exists(outFile);
+            Assert.IsTrue(fileExists);
+        }
+
+        [TestMethod]
         public void HorizontalAlignment_instantiates_fromCSV_noSpirals()
         {
             var directory = new DirectoryManager();

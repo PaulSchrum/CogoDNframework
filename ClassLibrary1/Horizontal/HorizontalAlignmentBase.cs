@@ -1,4 +1,5 @@
-﻿using ptsCogo.Angle;
+﻿using netDxf;
+using ptsCogo.Angle;
 using ptsCogo.coordinates;
 using ptsCogo.coordinates.CurvilinearCoordinates;
 using System;
@@ -125,6 +126,16 @@ namespace ptsCogo.Horizontal
         public virtual void draw(ILinearElementDrawer drawer)
         {
 
+        }
+
+        public virtual void WriteToDxf(string outFile)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void AddToDxf(DxfDocument doc)
+        {
+            throw new NotImplementedException();
         }
 
         //public virtual ptsVector MoveStartPtTo(ptsPoint newBeginPoint)
