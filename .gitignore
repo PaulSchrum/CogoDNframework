@@ -118,3 +118,5 @@ UpgradeLog*.XML
 /.vs/CogoDN/v15/Server/sqlite3/storage.ide-shm
 /.vs/CogoDN/v15/Server/sqlite3/storage.ide
 /.vs/CogoDN/v15/Server/sqlite3/db.lock
+/CogoTests/outputs/R2100b_L1.dxf
+/CogoTests/outputs/ACC_REV_events.csv
