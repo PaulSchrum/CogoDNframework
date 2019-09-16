@@ -121,3 +121,8 @@ UpgradeLog*.XML
 /CogoTests/outputs/R2100b_L1.dxf
 /CogoTests/outputs/ACC_REV_events.csv
 /CogoTests/outputs/SmallLidar_Points.dxf
+/CogoTests/outputs/SmallLidar_Mesh.dxf
+/CogoTests/outputs/SmallLidar_Triangles.dxf
+/CogoTests/outputs/SmallLidar_Triangles.dgn
+/CogoTests/outputs/SmallLidar_Triangles.bak
+/CogoTests/outputs/SmallLidar_Points.bak
