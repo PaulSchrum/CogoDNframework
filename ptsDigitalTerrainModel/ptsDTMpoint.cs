@@ -14,6 +14,8 @@ namespace ptsDigitalTerrainModel
         public Double x { get; set; }
         public Double y { get; set; }
         public Double z { get; set; }
+
+        public int myIndex { get; internal set; }
         public double[] Position
         {
             get { return new double[] { x, y }; }

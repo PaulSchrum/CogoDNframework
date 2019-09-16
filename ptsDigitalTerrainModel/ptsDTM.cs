@@ -13,6 +13,8 @@ using ptsCogo.Angle;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using netDxf;
+using netDxf.Entities;
+using netDxf.Tables;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -54,6 +56,13 @@ namespace ptsDigitalTerrainModel
                 indexCount++;
             }
             lasFile.ClearAllPoints();  // Because I have them now.
+
+            for(indexCount=0; indexCount < returnObject.allPoints.Count; indexCount++)
+            {
+                var aPoint = returnObject.allPoints[indexCount];
+                aPoint.myIndex = indexCount;
+                returnObject.allPoints[indexCount] = aPoint;
+            }
 
             var VoronoiMesh = MIConvexHull.VoronoiMesh
                 .Create<ptsDTMpoint, ConvexFaceTriangle>(returnObject.allPoints);
@@ -182,6 +191,34 @@ namespace ptsDigitalTerrainModel
             {
                 file.Close();
             }
+        }
+
+        internal void WriteTinToDxf(string outFile)
+        {
+            // Adapted from https://github.com/haplokuon/netDxf/blob/master/TestDxfDocument/Program.cs
+            // MeshEntity()
+            // Note: The comments there say MeshEdges are optional.
+            var dxf = new DxfDocument();
+            dxf.DrawingVariables.AcadVer = netDxf.Header.DxfVersion.AutoCad2013;
+
+            //List<Vector3> vertices = this.allPoints
+            //    .Select(pt => new Vector3(pt.x, pt.y, pt.z)).ToList();
+
+            //var faces = new List<int[]>();
+            System.Diagnostics.Trace.WriteLine(this.allTriangles.Count + " triangles.");
+            int counter = 0;
+            foreach (var triangle in this.allTriangles)
+            {
+                if (counter++ % 1000 == 0) System.Diagnostics.Trace.WriteLine(counter);
+                var aFace = new Face3d();
+                aFace.FirstVertex = new Vector3(triangle.point1.x, triangle.point1.y, triangle.point1.z);
+                aFace.SecondVertex = new Vector3(triangle.point2.x, triangle.point2.y, triangle.point2.z);
+                aFace.ThirdVertex = new Vector3(triangle.point3.x, triangle.point3.y, triangle.point3.z);
+                aFace.FourthVertex = new Vector3(triangle.point1.x, triangle.point1.y, triangle.point1.z);
+                dxf.AddEntity(aFace);
+            }
+
+            dxf.Save(outFile);
         }
 
         public void WritePointsToDxf(string outFile)

@@ -118,5 +118,22 @@ namespace Tests
             Assert.IsTrue(fileExists);
         }
 
+        [TestMethod]
+        public void TinFromLidar_SaveTinsAsDxfTriangleShapes()
+        {
+            this.Initialize();
+            TinFromLidar_isNotNull();
+
+            var outDirectory = new DirectoryManager();
+            outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
+            outDirectory.EnsureExists();
+            string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Triangles.dxf");
+
+            this.tinFromLidar.WriteTinToDxf(outFile);
+
+            bool fileExists = File.Exists(outFile);
+            Assert.IsTrue(fileExists);
+        }
+
     }
 }
