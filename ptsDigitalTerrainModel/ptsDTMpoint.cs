@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ptsCogo;
 using MIConvexHull;
+using netDxf;
 
 namespace ptsDigitalTerrainModel
 {
@@ -65,6 +66,12 @@ namespace ptsDigitalTerrainModel
         public static explicit operator ptsDTMpoint(ptsPoint aPt)
         {
             return new ptsDTMpoint(aPt.x, aPt.y, aPt.z);
+        }
+
+        internal void AddToDxf(DxfDocument dxf)
+        {
+            var pt = new netDxf.Entities.Point(new Vector3(this.x, this.y, this.z));
+            dxf.AddEntity(pt);
         }
     }
 }

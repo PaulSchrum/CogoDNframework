@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ptsDigitalTerrainModel;
+using System.IO;
 
 namespace Tests
 {
@@ -98,5 +99,24 @@ namespace Tests
                 .getElevationSlopeAzimuth(new ptsDTMpoint(2133987.65, 775577.91));
             ElSlopeAspect.AssertDerivedValuesAreEqual(190.0, 41.3, 137.291);
         }
+
+        [Ignore]
+        [TestMethod]
+        public void TinFromLidar_SavePointsAsDxf()
+        {
+            this.Initialize();
+            TinFromLidar_isNotNull();
+
+            var outDirectory = new DirectoryManager();
+            outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
+            outDirectory.EnsureExists();
+            string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Points.dxf");
+
+            this.tinFromLidar.WritePointsToDxf(outFile);
+
+            bool fileExists = File.Exists(outFile);
+            Assert.IsTrue(fileExists);
+        }
+
     }
 }

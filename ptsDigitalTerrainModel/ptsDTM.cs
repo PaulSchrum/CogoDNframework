@@ -12,6 +12,7 @@ using ptsCogo;
 using ptsCogo.Angle;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using netDxf;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -181,6 +182,19 @@ namespace ptsDigitalTerrainModel
             {
                 file.Close();
             }
+        }
+
+        public void WritePointsToDxf(string outFile)
+        {
+            var dxf = new DxfDocument();
+            dxf.DrawingVariables.AcadVer = netDxf.Header.DxfVersion.AutoCad2013;
+
+            foreach (var item in this.allPoints)
+            {
+                item.AddToDxf(dxf);
+            }
+
+            dxf.Save(outFile);
         }
 
         private ptsDTMtriangle convertLineOfDataToTriangle(string line)
