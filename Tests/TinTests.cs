@@ -118,6 +118,7 @@ namespace Tests
             Assert.IsTrue(fileExists);
         }
 
+        [Ignore]  // We don't need this to run every time we run all tests.
         [TestMethod]
         public void TinFromLidar_SaveTinsAsDxfTriangleShapes()
         {
