@@ -30,7 +30,10 @@ namespace ptsDigitalTerrainModel
         private List<ptsDTMtriangle> allTriangles;
         private ptsBoundingBox2d myBoundingBox;
         private LasFile lasFile { get; set; } = null;
-        public int TriangleCount { get { return this.allTriangles.Count; } }
+        public int TriangleCount
+        {
+            get { return this.allTriangles.Where(t => t.isValid).Count(); }
+        }
 
         public static ptsDTM CreateFromLAS(string lidarFileName)
         {
@@ -210,38 +213,51 @@ namespace ptsDigitalTerrainModel
                 int point1 = aTriangle.point1.myIndex;
                 int point2 = aTriangle.point2.myIndex;
                 int point3 = aTriangle.point3.myIndex;
+                ptsDTMtriangleLine aLine = null;
                 var tuple = createOrderedTuple(point1, point2);
                 if (this.allLines.ContainsKey(tuple))
                 {
-                    var aLine = this.allLines[tuple];
+                    aLine = this.allLines[tuple];
                     aLine.theOtherTriangle = aTriangle;
                 }
                 else
-                    allLines[tuple] =
+                {
+                    aLine =
                         new ptsDTMtriangleLine(aTriangle.point1, aTriangle.point2,
                         aTriangle);
+                    allLines[tuple] = aLine;
+                }
+                aTriangle.myLine1 = aLine;
 
                 tuple = createOrderedTuple(point2, point3);
                 if (this.allLines.ContainsKey(tuple))
                 {
-                    var aLine = this.allLines[tuple];
+                    aLine = this.allLines[tuple];
                     aLine.theOtherTriangle = aTriangle;
                 }
                 else
-                    allLines[tuple] =
-                        new ptsDTMtriangleLine(aTriangle.point1, aTriangle.point2,
+                {
+                    aLine =
+                        new ptsDTMtriangleLine(aTriangle.point2, aTriangle.point3,
                         aTriangle);
+                    allLines[tuple] = aLine;
+                }
+                aTriangle.myLine2 = aLine;
 
                 tuple = createOrderedTuple(point3, point1);
                 if (this.allLines.ContainsKey(tuple))
                 {
-                    var aLine = this.allLines[tuple];
+                    aLine = this.allLines[tuple];
                     aLine.theOtherTriangle = aTriangle;
                 }
                 else
-                    allLines[tuple] =
-                        new ptsDTMtriangleLine(aTriangle.point1, aTriangle.point2,
+                {
+                    aLine =
+                        new ptsDTMtriangleLine(aTriangle.point3, aTriangle.point1,
                         aTriangle);
+                    allLines[tuple] = aLine;
+                }
+                aTriangle.myLine3 = aLine;
 
 
             }
@@ -253,7 +269,7 @@ namespace ptsDigitalTerrainModel
                 populateAllLines();
 
             return this.allLines.Values
-                .Where(line => line.theOtherTriangle == null)
+                .Where(line => line.TriangleCount == 1)
                 .Select(line => line.oneTriangle);
         }
 
@@ -265,12 +281,13 @@ namespace ptsDigitalTerrainModel
         internal void pruneTinHull(bool recolorOnly = false)
         {
             var exteriorTriangles = this.getExteriorTriangles();
-            //foreach(var tri in exteriorTriangles)
-            //{
-            //    bool result = tri.shouldRemove();
-            //}
-            var dropCandidates = exteriorTriangles.Where(tr => tr.shouldRemove()).Count();
-            throw new NotImplementedException();
+            var markNotValid = exteriorTriangles.Where(tr => tr.shouldRemove()).ToList();
+            foreach (var triangle in markNotValid)
+            {
+                triangle.isValid = false;
+
+            }
+            //throw new NotImplementedException();
         }
 
         internal void WriteTinToDxf(string outFile)
@@ -295,6 +312,8 @@ namespace ptsDigitalTerrainModel
                 aFace.SecondVertex = new Vector3(triangle.point2.x, triangle.point2.y, triangle.point2.z);
                 aFace.ThirdVertex = new Vector3(triangle.point3.x, triangle.point3.y, triangle.point3.z);
                 aFace.FourthVertex = new Vector3(triangle.point1.x, triangle.point1.y, triangle.point1.z);
+                if (!triangle.isValid)
+                    aFace.Color = AciColor.Red;
                 dxf.AddEntity(aFace);
             }
 

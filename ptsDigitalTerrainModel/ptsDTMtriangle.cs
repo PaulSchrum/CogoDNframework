@@ -25,6 +25,12 @@ namespace ptsDigitalTerrainModel
         private ptsVector normalVec_;
         public ptsVector normalVec { get { return normalVec_; } }
 
+        public bool isValid { get; set; } = true;
+
+        public ptsDTMtriangleLine myLine1 { get; internal set; } = null;
+        public ptsDTMtriangleLine myLine2 { get; internal set; } = null;
+        public ptsDTMtriangleLine myLine3 { get; internal set; } = null;
+
         private void computeAngles()
         {
             ptsVector vec12 = new ptsVector(point2.x - point1.x, point2.y - point1.y);

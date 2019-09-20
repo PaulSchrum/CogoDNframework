@@ -148,6 +148,13 @@ namespace Tests
             aTin.pruneTinHull();
             triangleCount = aTin.TriangleCount;
 
+            var outDirectory = new DirectoryManager();
+            outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
+            outDirectory.EnsureExists();
+            string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Triangles.dxf");
+
+            aTin.WriteTinToDxf(outFile);
+
         }
 
     }

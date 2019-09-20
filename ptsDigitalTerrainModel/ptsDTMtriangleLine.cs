@@ -26,6 +26,39 @@ namespace ptsDigitalTerrainModel
             theOtherTriangle = null;
         }
 
+        public ptsDTMtriangle FirstAvailableTriangle
+        {
+            get
+            {
+                if (this.oneTriangle.isValid)
+                    return oneTriangle;
+
+                if (!(this.theOtherTriangle is null)
+                        && this.theOtherTriangle.isValid)
+                    return this.theOtherTriangle;
+
+                return null;
+            }
+        }
+
+        public int TriangleCount
+        {
+            get
+            {
+                int retVal = 2;
+                if (this.theOtherTriangle is null ||
+                    !this.theOtherTriangle.isValid)
+                    retVal--;
+
+                if (this.oneTriangle is null ||
+                    !this.oneTriangle.isValid)
+                    retVal--;
+
+
+                return retVal;
+            }
+        }
+
         internal static triangleLineComparer compr = new triangleLineComparer();
     }
 
