@@ -132,3 +132,5 @@ UpgradeLog*.XML
 /.vs/CogoDN/v16/TestStore/0
 /.vs/CogoDN/v16/Server/sqlite3/storage.ide
 /.vs/CogoDN/v16/Server/sqlite3/db.lock
+/.vs/CogoDN/v16/Server/sqlite3/storage.ide-wal
+/.vs/CogoDN/v16/Server/sqlite3/storage.ide-shm
