@@ -126,3 +126,4 @@ UpgradeLog*.XML
 /CogoTests/outputs/SmallLidar_Triangles.dgn
 /CogoTests/outputs/SmallLidar_Triangles.bak
 /CogoTests/outputs/SmallLidar_Points.bak
+/CogoTests/outputs/SmallLidar_Mesh_fromUstn.dxf
