@@ -136,5 +136,19 @@ namespace Tests
             Assert.IsTrue(fileExists);
         }
 
+        //[Ignore]
+        [TestMethod]
+        public void TinFromLidar_CompareTriangleCount()
+        {
+            var aTin = ptsDTM.CreateFromLAS(lidarFileName);
+            var triangleCount = aTin.TriangleCount;
+            int expected = 150781;
+            Assert.AreEqual(expected: expected, actual: triangleCount);
+
+            aTin.pruneTinHull();
+            triangleCount = aTin.TriangleCount;
+
+        }
+
     }
 }

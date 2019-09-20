@@ -25,6 +25,55 @@ namespace ptsDigitalTerrainModel
         private ptsVector normalVec_;
         public ptsVector normalVec { get { return normalVec_; } }
 
+        private void computeAngles()
+        {
+            ptsVector vec12 = new ptsVector(point2.x - point1.x, point2.y - point1.y);
+            ptsVector vec23 = new ptsVector(point3.x - point2.x, point3.y - point2.y);
+            ptsVector vec31 = new ptsVector(point1.x - point3.x, point1.y - point3.y);
+            angle1_ = (new Deflection(vec31.Azimuth, vec12.Azimuth, false))
+                .piCompliment.getAsDegreesDouble();
+            angle2_ = new Deflection(vec12.Azimuth, vec23.Azimuth, false)
+                .piCompliment.getAsDegreesDouble();
+            angle3_ = new Deflection(vec23.Azimuth, vec31.Azimuth, false)
+                .piCompliment.getAsDegreesDouble();
+        }
+
+        [NonSerialized]
+        private double? angle1_ = null;
+        public double angle1
+        {
+            get
+            {
+                if (this.angle1_ is null)
+                    this.computeAngles();
+                return (Double) this.angle1_;
+            }
+        }
+
+        [NonSerialized]
+        private double? angle2_ = null;
+        public double angle2
+        {
+            get
+            {
+                if (this.angle2_ is null)
+                    this.computeAngles();
+                return (Double) this.angle2_;
+            }
+        }
+
+        [NonSerialized]
+        private double? angle3_ = null;
+        public double angle3
+        {
+            get
+            {
+                if (this.angle3_ is null)
+                    this.computeAngles();
+                return (Double) this.angle3_;
+            }
+        }
+
         // non-substantive fields
         [NonSerialized]
         private ptsCogo.ptsBoundingBox2d myBoundingBox_;
@@ -172,6 +221,18 @@ namespace ptsDigitalTerrainModel
             }
         }
 
+        private static double angleThreshold = 178.0;
+        internal bool shouldRemove()
+        {
+            bool retBool = false;
+            // if max interior angle > threshold, true
+            var maxInteriorAngle = 
+                Math.Max(this.angle1, Math.Max(this.angle2, this.angle3));
+            if (maxInteriorAngle > angleThreshold)
+                retBool = true;
+
+            return retBool;
+        }
     }
 
     internal class ConvexFaceTriangle : MIConvexHull.TriangulationCell<ptsDTMpoint, ConvexFaceTriangle>

@@ -25,9 +25,12 @@ namespace ptsDigitalTerrainModel
     {
         // Substantive members - Do serialize
         public List<ptsDTMpoint> allPoints { get; private set; }
+        private Dictionary<Tuple<int, int>, ptsDTMtriangleLine> allLines { get; set; } 
+            = new Dictionary<Tuple<int, int>, ptsDTMtriangleLine>();
         private List<ptsDTMtriangle> allTriangles;
         private ptsBoundingBox2d myBoundingBox;
         private LasFile lasFile { get; set; } = null;
+        public int TriangleCount { get { return this.allTriangles.Count; } }
 
         public static ptsDTM CreateFromLAS(string lidarFileName)
         {
@@ -191,6 +194,83 @@ namespace ptsDigitalTerrainModel
             {
                 file.Close();
             }
+        }
+
+        private static Tuple<int, int> createOrderedTuple(int i1, int i2)
+        {
+            if (i1 < i2)
+                return new Tuple<int, int>(i1, i2);
+            return new Tuple<int, int>(i2, i1);
+        }
+        private void populateAllLines()
+        {
+            int dummy = 0;
+            foreach(var aTriangle in this.allTriangles)
+            {
+                int point1 = aTriangle.point1.myIndex;
+                int point2 = aTriangle.point2.myIndex;
+                int point3 = aTriangle.point3.myIndex;
+                var tuple = createOrderedTuple(point1, point2);
+                if (this.allLines.ContainsKey(tuple))
+                {
+                    var aLine = this.allLines[tuple];
+                    aLine.theOtherTriangle = aTriangle;
+                }
+                else
+                    allLines[tuple] =
+                        new ptsDTMtriangleLine(aTriangle.point1, aTriangle.point2,
+                        aTriangle);
+
+                tuple = createOrderedTuple(point2, point3);
+                if (this.allLines.ContainsKey(tuple))
+                {
+                    var aLine = this.allLines[tuple];
+                    aLine.theOtherTriangle = aTriangle;
+                }
+                else
+                    allLines[tuple] =
+                        new ptsDTMtriangleLine(aTriangle.point1, aTriangle.point2,
+                        aTriangle);
+
+                tuple = createOrderedTuple(point3, point1);
+                if (this.allLines.ContainsKey(tuple))
+                {
+                    var aLine = this.allLines[tuple];
+                    aLine.theOtherTriangle = aTriangle;
+                }
+                else
+                    allLines[tuple] =
+                        new ptsDTMtriangleLine(aTriangle.point1, aTriangle.point2,
+                        aTriangle);
+
+
+            }
+        }
+
+        private IEnumerable<ptsDTMtriangle> getExteriorTriangles()
+        {
+            if (this.allLines.Count == 0)
+                populateAllLines();
+
+            return this.allLines.Values
+                .Where(line => line.theOtherTriangle == null)
+                .Select(line => line.oneTriangle);
+        }
+
+        private IEnumerable<ptsDTMtriangle> meetDropCriteria(IEnumerable<ptsDTMtriangle> exteriorTriangles)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void pruneTinHull(bool recolorOnly = false)
+        {
+            var exteriorTriangles = this.getExteriorTriangles();
+            //foreach(var tri in exteriorTriangles)
+            //{
+            //    bool result = tri.shouldRemove();
+            //}
+            var dropCandidates = exteriorTriangles.Where(tr => tr.shouldRemove()).Count();
+            throw new NotImplementedException();
         }
 
         internal void WriteTinToDxf(string outFile)
@@ -816,6 +896,18 @@ namespace ptsDigitalTerrainModel
             if(diff > tolerance || diff < ntolerance)
                 throw new Exception("Aspect values differ.");
 
+        }
+    }
+
+    public static class TupleExtensionMethods
+    {
+        public static bool Contains(this Tuple<int, int> tpl, int first, int second)
+        {
+            if(tpl.Item1 == first && tpl.Item2 == second)
+                return true;
+            if (tpl.Item1 == second && tpl.Item2 == first)
+                return true;
+            return false;
         }
     }
 
