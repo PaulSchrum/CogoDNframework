@@ -26,6 +26,13 @@ namespace ptsDigitalTerrainModel
             theOtherTriangle = null;
         }
 
+        public ptsDTMtriangle GetOtherTriangle(ptsDTMtriangle currentTriangle)
+        {
+            if (oneTriangle == currentTriangle)
+                return theOtherTriangle;
+            return oneTriangle;
+        }
+
         public ptsDTMtriangle FirstAvailableTriangle
         {
             get

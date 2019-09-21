@@ -27,9 +27,23 @@ namespace ptsDigitalTerrainModel
 
         public bool isValid { get; set; } = true;
 
-        public ptsDTMtriangleLine myLine1 { get; internal set; } = null;
-        public ptsDTMtriangleLine myLine2 { get; internal set; } = null;
-        public ptsDTMtriangleLine myLine3 { get; internal set; } = null;
+        private List<ptsDTMtriangleLine> lines { get; set; } =
+            new List<ptsDTMtriangleLine>() { null, null, null };
+        public ptsDTMtriangleLine myLine1
+        { get { return this.lines[0]; }
+            internal set { this.lines[0] = value; }}
+
+        public ptsDTMtriangleLine myLine2
+        {
+            get { return this.lines[1]; }
+            internal set { this.lines[1] = value; }
+        }
+
+        public ptsDTMtriangleLine myLine3
+        {
+            get { return this.lines[2]; }
+            internal set { this.lines[2] = value; }
+        }
 
         private void computeAngles()
         {
@@ -227,7 +241,9 @@ namespace ptsDigitalTerrainModel
             }
         }
 
-        private static double angleThreshold = 178.0;
+        public bool HasBeenVisited { get; set; } = false;
+
+        private static double angleThreshold = 165.0;
         internal bool shouldRemove()
         {
             bool retBool = false;
@@ -239,6 +255,25 @@ namespace ptsDigitalTerrainModel
 
             return retBool;
         }
+
+        internal void walkNetwork()
+        {
+            if (this.HasBeenVisited) return;
+            this.HasBeenVisited = true;
+            foreach(var aLine in this.lines)
+            {
+                var neighborTri = aLine.GetOtherTriangle(this);
+                if(!(neighborTri is null))
+                {
+                    if (neighborTri.shouldRemove())
+                    {
+                        neighborTri.isValid = false;
+                        neighborTri.walkNetwork();
+                    }
+                }
+            }
+        }
+
     }
 
     internal class ConvexFaceTriangle : MIConvexHull.TriangulationCell<ptsDTMpoint, ConvexFaceTriangle>

@@ -207,7 +207,6 @@ namespace ptsDigitalTerrainModel
         }
         private void populateAllLines()
         {
-            int dummy = 0;
             foreach(var aTriangle in this.allTriangles)
             {
                 int point1 = aTriangle.point1.myIndex;
@@ -273,21 +272,22 @@ namespace ptsDigitalTerrainModel
                 .Select(line => line.oneTriangle);
         }
 
-        private IEnumerable<ptsDTMtriangle> meetDropCriteria(IEnumerable<ptsDTMtriangle> exteriorTriangles)
-        {
-            throw new NotImplementedException();
-        }
-
         internal void pruneTinHull(bool recolorOnly = false)
         {
             var exteriorTriangles = this.getExteriorTriangles();
-            var markNotValid = exteriorTriangles.Where(tr => tr.shouldRemove()).ToList();
+            var markNotValid = exteriorTriangles
+                .Where(tr => tr.shouldRemove()).ToList();
             foreach (var triangle in markNotValid)
             {
                 triangle.isValid = false;
-
+                triangle.walkNetwork();
             }
-            //throw new NotImplementedException();
+
+            //foreach (var triangle in markNotValid)
+            //{
+            //    triangle.walkNetwork(doSomething(triangle));
+            //}
+
         }
 
         internal void WriteTinToDxf(string outFile)
@@ -314,7 +314,8 @@ namespace ptsDigitalTerrainModel
                 aFace.FourthVertex = new Vector3(triangle.point1.x, triangle.point1.y, triangle.point1.z);
                 if (!triangle.isValid)
                     aFace.Color = AciColor.Red;
-                dxf.AddEntity(aFace);
+                if(triangle.isValid)
+                    dxf.AddEntity(aFace);
             }
 
             dxf.Save(outFile);
