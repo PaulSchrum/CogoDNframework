@@ -243,17 +243,22 @@ namespace ptsDigitalTerrainModel
 
         public bool HasBeenVisited { get; set; } = false;
 
-        private static double angleThreshold = 165.0;
+        private static double triangleInternalAngleThreshold = 165.0;
+        private static double slopeThreshold = 5.5; // :1  About 79 degrees.
         internal bool shouldRemove()
         {
-            bool retBool = false;
+            var slope = this.normalVec.NormalSlope;
+            var slopeAsDeg = slope.getAsDegreesDouble();
             // if max interior angle > threshold, true
             var maxInteriorAngle = 
                 Math.Max(this.angle1, Math.Max(this.angle2, this.angle3));
-            if (maxInteriorAngle > angleThreshold)
-                retBool = true;
+            if (maxInteriorAngle > triangleInternalAngleThreshold)
+                return true;
+            var slopeAsDeg90Complement = Math.Abs(90.0 - slopeAsDeg);
+            if (slopeAsDeg90Complement < 10.0)
+                return true;
 
-            return retBool;
+            return false;
         }
 
         internal void walkNetwork()

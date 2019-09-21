@@ -22,6 +22,12 @@ namespace ptsCogo.Angle
             
         }
 
+        public Slope(double run, double rise)
+        {
+            double ratio = run / rise;
+            setFromXY(rise, run);
+        }
+
         /* */
         public Slope FlipDirection()
         {

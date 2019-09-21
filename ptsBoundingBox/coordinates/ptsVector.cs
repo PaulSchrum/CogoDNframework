@@ -79,6 +79,18 @@ namespace ptsCogo
             private set { }
         }
 
+        /// <summary>
+        /// The slope of the base of this vector if it is a normal vector.
+        /// </summary>
+        public Slope NormalSlope
+        {
+            get
+            {
+                var baseLength = Math.Sqrt(x * x + y * y);
+                return new Slope(baseLength, z);
+            }
+        }
+
         public double dotProduct(ptsVector otherVec)
         {
             return (this.x * otherVec.x) + (this.y * otherVec.y) + (this.z * otherVec.z);
