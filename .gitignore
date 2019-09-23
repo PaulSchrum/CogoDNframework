@@ -134,3 +134,6 @@ UpgradeLog*.XML
 /.vs/CogoDN/v16/Server/sqlite3/db.lock
 /.vs/CogoDN/v16/Server/sqlite3/storage.ide-wal
 /.vs/CogoDN/v16/Server/sqlite3/storage.ide-shm
+/CogoTests/outputs/SmallLidar_StreamAlignment.dxf
+/CogoTests/outputs/SmallLidar_StreamAlignment.dgn
+/CogoTests/outputs/SmallLidar_StreamAlignment - Copy.dgn
