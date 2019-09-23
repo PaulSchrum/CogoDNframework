@@ -149,6 +149,8 @@ namespace Tests
             //triangleCount = aTin.TriangleCount;
             var diff = triangleCount - aTin.TriangleCount;
 
+            Assert.AreEqual(expected: 517, actual: diff);
+
             var outDirectory = new DirectoryManager();
             outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
             outDirectory.EnsureExists();

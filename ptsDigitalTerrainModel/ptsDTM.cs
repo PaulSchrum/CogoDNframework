@@ -272,21 +272,18 @@ namespace ptsDigitalTerrainModel
                 .Select(line => line.oneTriangle);
         }
 
-        internal void pruneTinHull(bool recolorOnly = false)
+        internal void pruneTinHull(double maxInternalAngle=157.0, 
+            double maxSlopeDegrees=79.5)
         {
             var exteriorTriangles = this.getExteriorTriangles();
             var markNotValid = exteriorTriangles
                 .Where(tr => tr.shouldRemove()).ToList();
+
             foreach (var triangle in markNotValid)
             {
                 triangle.isValid = false;
                 triangle.walkNetwork();
             }
-
-            //foreach (var triangle in markNotValid)
-            //{
-            //    triangle.walkNetwork(doSomething(triangle));
-            //}
 
         }
 

@@ -248,8 +248,8 @@ namespace ptsDigitalTerrainModel
         public bool HasBeenVisited { get; set; } = false;
 
         private static int ct = 0;
-        private static double triangleInternalAngleThreshold = 157.0;
-        private static double slopeThreshold = 5.5; // :1  About 79 degrees.
+        internal static double triangleInternalAngleThreshold = 157.0;
+        internal static double slopeThreshold = 79.5; // degrees.
         internal bool shouldRemove()
         {
             var slope = this.normalVec.NormalSlope;
@@ -260,7 +260,7 @@ namespace ptsDigitalTerrainModel
             if (maxInteriorAngle > triangleInternalAngleThreshold)
                 return true;
             var slopeAsDeg90Complement = Math.Abs(90.0 - slopeAsDeg);
-            if (slopeAsDeg90Complement < 10.0)
+            if (slopeAsDeg90Complement < 90.0 - slopeThreshold)
                 return true;
 
             return false;
