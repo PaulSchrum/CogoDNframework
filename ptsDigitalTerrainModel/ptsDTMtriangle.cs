@@ -56,6 +56,10 @@ namespace ptsDigitalTerrainModel
                 .piCompliment.getAsDegreesDouble();
             angle3_ = new Deflection(vec23.Azimuth, vec31.Azimuth, false)
                 .piCompliment.getAsDegreesDouble();
+
+            angle1_ = Math.Abs((double)angle1_);
+            angle2_ = Math.Abs((double)angle2_);
+            angle3_ = Math.Abs((double)angle3_);
         }
 
         [NonSerialized]
@@ -243,7 +247,8 @@ namespace ptsDigitalTerrainModel
 
         public bool HasBeenVisited { get; set; } = false;
 
-        private static double triangleInternalAngleThreshold = 165.0;
+        private static int ct = 0;
+        private static double triangleInternalAngleThreshold = 157.0;
         private static double slopeThreshold = 5.5; // :1  About 79 degrees.
         internal bool shouldRemove()
         {
@@ -256,6 +261,23 @@ namespace ptsDigitalTerrainModel
                 return true;
             var slopeAsDeg90Complement = Math.Abs(90.0 - slopeAsDeg);
             if (slopeAsDeg90Complement < 10.0)
+                return true;
+
+            return false;
+        }
+
+        private bool includesPointByGridCoord(int xInt, int yInt, int? zInt=null)
+        {
+            var gridCoords = this.point1.GridCoordinates;
+            if (gridCoords.Item1 == xInt && gridCoords.Item2 == yInt)
+                return true;
+
+            gridCoords = this.point2.GridCoordinates;
+            if (gridCoords.Item1 == xInt && gridCoords.Item2 == yInt)
+                return true;
+
+            gridCoords = this.point3.GridCoordinates;
+            if (gridCoords.Item1 == xInt && gridCoords.Item2 == yInt)
                 return true;
 
             return false;

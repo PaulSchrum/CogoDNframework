@@ -154,7 +154,7 @@ namespace Tests
             outDirectory.EnsureExists();
             string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Triangles.dxf");
 
-            aTin.WriteTinToDxf(outFile);
+            //aTin.WriteTinToDxf(outFile);
 
         }
 

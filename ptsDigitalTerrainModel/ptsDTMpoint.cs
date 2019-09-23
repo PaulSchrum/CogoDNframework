@@ -52,7 +52,7 @@ namespace ptsDigitalTerrainModel
                );
         }
 
-        private static double gridFactor = 10.0;
+        private static double gridFactor = 1.0;
         public Tuple<int, int> GridCoordinates
         {
             get { return new Tuple<int, int>(
