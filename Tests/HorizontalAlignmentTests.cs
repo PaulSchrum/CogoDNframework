@@ -1472,6 +1472,20 @@ namespace Tests
             //var testPoint = new ptsPoint(X: 19.9938, Y: 0.3703);
             //var actualStationOffset = aSpiral.getStationOffsetElevation(testPoint);
         }
+
+        [TestMethod]
+        public void HorizontalAlignments_fromDXF_LoadCorrectly()
+        {
+            var directory = new DirectoryManager();
+            directory.CdUp(2).CdDown("CogoTests");
+            string testFile = directory.GetPathAndAppendFilename("SmallLidar_StreamAlignment.dxf");
+
+            IList<rm21HorizontalAlignment> PerryCreekAlignments = 
+                rm21HorizontalAlignment.createFromDXFfile(testFile);
+            Assert.IsNotNull(PerryCreekAlignments);
+            Assert.AreEqual(expected: 2, actual: PerryCreekAlignments.Count);
+
+        }
     }
 
 
