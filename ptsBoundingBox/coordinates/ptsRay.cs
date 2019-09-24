@@ -24,6 +24,15 @@ namespace ptsCogo.coordinates
 
         }
 
+        public ptsRay(double startX, double startY, double endX, double endY, Slope slope=null)
+        {
+            this.StartPoint = new ptsPoint(startX, startY);
+            var endPoint = new ptsPoint(endX, endY);
+            this.HorizontalDirection = new Azimuth(this.StartPoint, endPoint);
+            this.advanceDirection = 1;
+            this.Slope = slope;
+        }
+
         public ptsRay(string x, string y, string z=null, string azimuth=null, string slope=null)
         {
             this.StartPoint = new ptsPoint(x, y, z);

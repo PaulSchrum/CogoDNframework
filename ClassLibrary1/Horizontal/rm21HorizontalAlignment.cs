@@ -44,6 +44,39 @@ namespace ptsCogo.Horizontal
             restationAlignment();
         }
 
+        public static IList<rm21HorizontalAlignment> createFromDXFfile(string dxfFileName)
+        {
+            DxfDocument dxf = DxfDocument.Load(dxfFileName);
+            var lines = dxf.Lines;
+            var arcs = dxf.Arcs;
+            var chains = dxf.LwPolylines;
+
+            List<rm21HorizontalAlignment> returnList = new List<rm21HorizontalAlignment>();
+            foreach(var dxfLine in dxf.Lines)
+            {
+                var startPt = dxfLine.StartPoint;
+                var endPt = dxfLine.EndPoint;
+                ptsRay inRay = new ptsRay(startPt.X, startPt.Y, endPt.X, endPt.Y);
+                var dx = endPt.X - startPt.X;
+                var dy = endPt.Y - startPt.Y;
+                var length = Math.Sqrt(dx * dx + dy * dy);
+                var onlySegment = newSegment(inRay, 0.0, length, 0.0);
+                rm21HorizontalAlignment anAlignment = new rm21HorizontalAlignment();
+                anAlignment.allChildSegments.Add(onlySegment);
+                anAlignment.BeginStation = 0.0;
+                anAlignment.BeginAzimuth = onlySegment.BeginAzimuth;
+                anAlignment.BeginDegreeOfCurve = onlySegment.BeginDegreeOfCurve;
+                anAlignment.BeginPoint = onlySegment.BeginPoint;
+
+                anAlignment.EndAzimuth = onlySegment.EndAzimuth;
+                anAlignment.EndDegreeOfCurve = onlySegment.EndDegreeOfCurve;
+                anAlignment.EndPoint = onlySegment.EndPoint; anAlignment.restationAlignment();
+                returnList.Add(anAlignment);
+            }
+
+            return returnList;
+        }
+
         public static rm21HorizontalAlignment createFromCsvFile(string csvFileName)
         {
             rm21HorizontalAlignment retAlign = new rm21HorizontalAlignment();
