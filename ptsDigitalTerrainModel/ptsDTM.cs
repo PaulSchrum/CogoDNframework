@@ -272,6 +272,14 @@ namespace ptsDigitalTerrainModel
                 .Select(line => line.oneTriangle);
         }
 
+        /// <summary>
+        /// Marks triangles invalid at the outside edge if they 
+        /// meet certain geometric criteria. This is to avoid artifacts
+        /// like a false sump filling in a stream where it crosses a
+        /// tin boundary.
+        /// </summary>
+        /// <param name="maxInternalAngle"></param>
+        /// <param name="maxSlopeDegrees"></param>
         internal void pruneTinHull(double maxInternalAngle=157.0, 
             double maxSlopeDegrees=79.5)
         {
