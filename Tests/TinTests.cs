@@ -151,10 +151,10 @@ namespace Tests
 
             Assert.AreEqual(expected: 517, actual: diff);
 
-            var outDirectory = new DirectoryManager();
-            outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
-            outDirectory.EnsureExists();
-            string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Triangles.dxf");
+            //var outDirectory = new DirectoryManager();
+            //outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
+            //outDirectory.EnsureExists();
+            //string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Triangles.dxf");
 
             //aTin.WriteTinToDxf(outFile);
 

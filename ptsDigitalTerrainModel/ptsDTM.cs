@@ -32,7 +32,11 @@ namespace ptsDigitalTerrainModel
         private LasFile lasFile { get; set; } = null;
         public int TriangleCount
         {
-            get { return this.allTriangles.Where(t => t.isValid).Count(); }
+            get { return ValidTriangles.Count(); }
+        }
+        internal IEnumerable<ptsDTMtriangle> ValidTriangles
+        {
+            get { return this.allTriangles.Where(t => t.isValid); }
         }
 
         public static ptsDTM CreateFromLAS(string lidarFileName)
