@@ -130,6 +130,36 @@ namespace ptsCogo.Horizontal
             return Create(inRay.StartPoint, endPt, inRay.HorizontalDirection, radius);
         }
 
+        /// <summary>
+        /// Factory method for use when accepting arcs from dxf polylines.
+        /// </summary>
+        /// <param name="begPt">Arc Begin Point</param>
+        /// <param name="endPt">Arc End Point</param>
+        /// <param name="bulge">Bulge from dxf lwpolyline data</param>
+        /// <returns></returns>
+        public static rm21HorArc Create(ptsPoint begPt, ptsPoint endPt, double bulge)
+        {
+            double deflectionDelta = 4.0 * Math.Atan(Math.Abs(bulge));
+
+            // alpha here is angle between long chord and a tangent.
+            Deflection alpha = new Deflection(deflectionDelta / 2.0);
+
+            Azimuth longChordDirection = new Azimuth(begPt, endPt);
+            if (bulge < 0.0) alpha *= -1.0;
+            else deflectionDelta *= -1.0;
+            var incomingDirection = longChordDirection + alpha;
+            
+            double radius = 0.0;
+            var outgoingDirection = incomingDirection + deflectionDelta;
+            var startRadialDirection = incomingDirection + Deflection.QUARTERCIRCLE;
+            var startRadialRay = new ptsRay(begPt, startRadialDirection);
+            var endRadialDirection = incomingDirection + Deflection.QUARTERCIRCLE;
+            var endRadialRay = new ptsRay(begPt, startRadialDirection);
+            //startRadialRay
+
+            return Create(begPt, endPt, incomingDirection, radius);
+        }
+
         private void computeDeflectionForOutsideSolutionCurve()
         {
             Double radVector1Az = this.BeginRadiusVector.Azimuth.getAsDegreesDouble();

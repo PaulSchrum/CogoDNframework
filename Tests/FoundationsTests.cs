@@ -6,6 +6,7 @@ using System.Text;
 using ptsCogo;
 using ptsCogo.Angle;
 using ptsCogo.Utils;
+using ptsCogo.coordinates;
 
 namespace Tests
 {
@@ -327,6 +328,21 @@ namespace Tests
             Azimuth Az2 = new Azimuth(); Az2.setFromDegreesDouble(247);
             var defl = Az2.minus(Az1);  //start here. This value is wrong.
             Assert.AreEqual(expected: -52.0, actual: defl.getAsDegreesDouble(), delta: 0.001);
+        }
+
+        [TestMethod]
+        public void RayRay_Intersect_ReturnsCorrectPoint()
+        {
+            ptsPoint pt1 = new ptsPoint(0d, 0d);
+            ptsRay ray1 = new ptsRay(pt1.x, pt1.y, 30.0);
+            ptsRay ray2 = new ptsRay(3d, 11d, 120.0);
+            ptsPoint resultingPoint = ray1.IntersectWith_2D(ray2);
+            double expectedX = 5.5131;
+            double expectedY = 9.5490;
+            Assert.AreEqual(expected: expectedX, actual: resultingPoint.x, 0.0002);
+            Assert.AreEqual(expected: expectedY, actual: resultingPoint.y, 0.0002);
+
+            ptsPoint ptOnRay1 = pt1 + new ptsVector(ray1, 100.0);
         }
 
     }

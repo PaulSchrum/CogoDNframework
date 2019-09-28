@@ -79,6 +79,44 @@ namespace ptsCogo.coordinates
             return this.StartPoint.z - (StartPoint.x * Slope.getAsSlope() * this.advanceDirection);
         }
 
+        public ptsPoint IntersectWith_2D(ptsRay otherRay)
+        {
+            if(this.HorizontalDirection == otherRay.HorizontalDirection)
+            {
+                if (this.getOffset(otherRay.StartPoint) == 0.0)
+                    throw new Exception(
+                        "Two rays are colinear. They intersect at all points.");
+                else
+                    throw new Exception(
+                        "Two rays with identical horizontal direction never intersect.");
+            }
+
+            // Solution is from https://stackoverflow.com/a/2932601/1339950 .
+            // But he refers to this: https://stackoverflow.com/a/2931703/1339950
+            var ad = this.HorizontalDirection.AsUnitVector;
+            var bd = otherRay.HorizontalDirection.AsUnitVector;
+            var As = this.StartPoint;
+            var bs = otherRay.StartPoint;
+
+            // Transform points to small values.
+            var transformDist = Math.Min(As.x, bs.x);
+            As.x -= transformDist;  bs.x -= transformDist;
+            transformDist = Math.Min(As.y, bs.y);
+            As.y -= transformDist; bs.y -= transformDist;
+
+            var dx = bs.x - As.x;
+            var dy = bs.y - As.y;
+            var determinate = bd.x * ad.y - bd.y * ad.x;
+            var U = (dy * bd.x - dx * bd.y) / determinate;
+            var V = (dy * ad.x - dx * ad.y) / determinate;
+
+            var newX = As.x + ad.x * U;
+            var newY = As.y + ad.y * U;
+
+            // start here Sept 29 2019
+            return new ptsPoint(newX, newY);
+        }
+
         public bool isWithinDomain(double testX)
         {
             if(true == Slope.isVertical())

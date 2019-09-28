@@ -11,6 +11,11 @@ namespace ptsCogo
     {
         protected double angle__;
 
+        public static ptsAngle QUARTERCIRCLE
+        {
+            get { return new ptsAngle(Math.PI / 2.0); }
+        }
+
         public static ptsAngle HALFCIRCLE
         {
             get { return new ptsAngle(Math.PI); }

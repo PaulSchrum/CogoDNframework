@@ -110,6 +110,14 @@ namespace ptsCogo.Angle
             return (int)Math.Round((angleDegrees / 90.0) + 0.5);
         }
 
+        public ptsVector AsUnitVector
+        {
+            get
+            {
+                return new ptsVector(this, 1.0);
+            }
+        }
+
         //to do:
         //setAsAzimuth
         //getAsDegreeMinuteSecond
@@ -147,6 +155,12 @@ namespace ptsCogo.Angle
             return new Azimuth(anAz.getAsRadians() - anAngle.getAsRadians());  // Note: Subtraction is intentional since azimuths are clockwise
         }
 
+        /// <summary>
+        /// Gets the difference between two directions accounting for crossing 360.
+        /// </summary>
+        /// <param name="Az1"></param>
+        /// <param name="Az2"></param>
+        /// <returns>Difference in radians.</returns>
         public static double operator -(Azimuth Az1, Azimuth Az2)
         {
             return Az2.minus(Az1).getAsRadians();

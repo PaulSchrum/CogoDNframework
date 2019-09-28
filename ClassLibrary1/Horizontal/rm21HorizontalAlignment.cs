@@ -49,18 +49,40 @@ namespace ptsCogo.Horizontal
             DxfDocument dxf = DxfDocument.Load(dxfFileName);
             var lines = dxf.Lines;
             var arcs = dxf.Arcs;
-            var chains = dxf.LwPolylines;
+
+            HorizontalAlignmentBase createLineSegment(
+                double startX, double startY, double endX, double endY)
+            {
+                ptsRay inRay = new ptsRay(startX, startY, endX, endY);
+                var dx = endX - startX;
+                var dy = endY - startY;
+                var length = Math.Sqrt(dx * dx + dy * dy);
+                return newSegment(inRay, 0.0, length, 0.0);
+            }
+
+            HorizontalAlignmentBase createArcSegment(
+                double startX, double startY, double endX, double endY,
+                double bulge)
+            {
+
+                // From Autocad docs, bulge is the tangent of 1/4 of the included angle 
+                //  for the arc
+                // see https://forums.autodesk.com/t5/visual-basic-customization/the-bulge-is-the-tangent-of-1-4/td-p/337786
+                // or https://www.afralisp.net/archive/lisp/Bulges1.htm
+                ptsPoint startPt = new ptsPoint(startX, startY);
+                ptsPoint endPt = new ptsPoint(endX, endY);
+
+
+                return rm21HorArc.Create(startPt, endPt, bulge);
+            }
 
             List<rm21HorizontalAlignment> returnList = new List<rm21HorizontalAlignment>();
             foreach(var dxfLine in dxf.Lines)
             {
                 var startPt = dxfLine.StartPoint;
                 var endPt = dxfLine.EndPoint;
-                ptsRay inRay = new ptsRay(startPt.X, startPt.Y, endPt.X, endPt.Y);
-                var dx = endPt.X - startPt.X;
-                var dy = endPt.Y - startPt.Y;
-                var length = Math.Sqrt(dx * dx + dy * dy);
-                var onlySegment = newSegment(inRay, 0.0, length, 0.0);
+                var onlySegment = createLineSegment(startPt.X, startPt.Y, endPt.X, endPt.Y);
+                
                 rm21HorizontalAlignment anAlignment = new rm21HorizontalAlignment();
                 anAlignment.allChildSegments.Add(onlySegment);
                 anAlignment.BeginStation = 0.0;
@@ -71,6 +93,30 @@ namespace ptsCogo.Horizontal
                 anAlignment.EndAzimuth = onlySegment.EndAzimuth;
                 anAlignment.EndDegreeOfCurve = onlySegment.EndDegreeOfCurve;
                 anAlignment.EndPoint = onlySegment.EndPoint; anAlignment.restationAlignment();
+                returnList.Add(anAlignment);
+            }
+
+            foreach(var chain in dxf.LwPolylines)
+            {
+                rm21HorizontalAlignment anAlignment = new rm21HorizontalAlignment();
+                for(int i=1; i < chain.Vertexes.Count; i++)
+                {
+                    HorizontalAlignmentBase newSegment = null;
+                    var thisElement = chain.Vertexes[i-1];
+                    var nextElement = chain.Vertexes[i];
+                    var startPt = thisElement.Position;
+                    var endPt = nextElement.Position;
+                    if (thisElement.Bulge == 0.0)
+                    { // It's a line
+                        newSegment = createLineSegment(startPt.X, startPt.Y, endPt.X, endPt.Y);
+                    }
+                    else
+                    { // It's an arc segment
+                        newSegment = createArcSegment(
+                            startPt.X, startPt.Y, endPt.X, endPt.Y, thisElement.Bulge);
+                    }
+                    anAlignment.allChildSegments.Add(newSegment);
+                }
                 returnList.Add(anAlignment);
             }
 
