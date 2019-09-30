@@ -343,6 +343,31 @@ namespace Tests
             Assert.AreEqual(expected: expectedY, actual: resultingPoint.y, 0.0002);
 
             ptsPoint ptOnRay1 = pt1 + new ptsVector(ray1, 100.0);
+            ptsRay ray1identical = new ptsRay(ptOnRay1, 30.0);
+
+            Exception except = null;
+            resultingPoint = null;
+            try { resultingPoint = ray1.IntersectWith_2D(ray1identical); }
+            catch (Exception e)
+            { except = e; }
+            if(!(except is null))
+            {
+                if (except.Message != "Two rays are colinear. They intersect at all points.")
+                    throw new Exception
+                        ("Wrong kind of exception thrown. Should have been colinear.");
+            }
+
+            ptsRay ray1ParallelButOff = new ptsRay(3d, 11d, 30.0);
+            try { resultingPoint = ray1.IntersectWith_2D(ray1ParallelButOff); }
+            catch (Exception e)
+            { except = e; }
+            if (!(except is null))
+            {
+                if (except.Message != "Two rays with identical horizontal direction never intersect.")
+                    throw new Exception
+                        ("Wrong kind of exception thrown. Should have been parallel but not colinear.");
+            }
+
         }
 
     }
