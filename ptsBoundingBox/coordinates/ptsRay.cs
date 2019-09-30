@@ -83,7 +83,8 @@ namespace ptsCogo.coordinates
         {
             if(this.HorizontalDirection == otherRay.HorizontalDirection)
             {
-                if (this.getOffset(otherRay.StartPoint) == 0.0)
+                double offset = this.getOffset(otherRay.StartPoint);
+                if (offset.tolerantEquals(0.0, 0.00001))
                     throw new Exception(
                         "Two rays are colinear. They intersect at all points.");
                 else
