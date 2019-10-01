@@ -1484,7 +1484,15 @@ namespace Tests
                 rm21HorizontalAlignment.createFromDXFfile(testFile);
             Assert.IsNotNull(PerryCreekAlignments);
             Assert.AreEqual(expected: 2, actual: PerryCreekAlignments.Count);
+            var secondAlignment = PerryCreekAlignments[1];
+            var lastCurve = secondAlignment.getChildBySequenceNumber(7);
 
+            Assert.AreEqual(expected: 83.2166, actual: lastCurve.Length, delta: 0.001);
+            Assert.AreEqual(expected: 292.8904, actual: lastCurve.Radius, delta: 0.001);
+
+            // start here: debug this exception. It ought not throw.
+            //Assert.AreEqual(expected: 61.26707, 
+            //    actual: secondAlignment.EndAzimuth.getAsDegreesDouble(), delta: 0.001);
         }
     }
 

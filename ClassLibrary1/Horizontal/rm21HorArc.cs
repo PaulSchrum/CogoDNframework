@@ -149,13 +149,15 @@ namespace ptsCogo.Horizontal
             else deflectionDelta *= -1.0;
             var incomingDirection = longChordDirection + alpha;
             
-            double radius = 0.0;
             var outgoingDirection = incomingDirection + deflectionDelta;
             var startRadialDirection = incomingDirection + Deflection.QUARTERCIRCLE;
             var startRadialRay = new ptsRay(begPt, startRadialDirection);
-            var endRadialDirection = incomingDirection + Deflection.QUARTERCIRCLE;
-            var endRadialRay = new ptsRay(begPt, startRadialDirection);
-            //startRadialRay
+            var endRadialDirection = outgoingDirection + Deflection.QUARTERCIRCLE;
+            var endRadialRay = new ptsRay(endPt, endRadialDirection);
+            var arcCenterPt = startRadialRay.IntersectWith_2D(endRadialRay);
+            var radius = (arcCenterPt - begPt).Length;
+
+            var sumpin = Create(begPt, endPt, incomingDirection, radius);
 
             return Create(begPt, endPt, incomingDirection, radius);
         }

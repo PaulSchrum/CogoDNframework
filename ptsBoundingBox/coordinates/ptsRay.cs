@@ -96,26 +96,26 @@ namespace ptsCogo.coordinates
             // But he refers to this: https://stackoverflow.com/a/2931703/1339950
             var ad = this.HorizontalDirection.AsUnitVector;
             var bd = otherRay.HorizontalDirection.AsUnitVector;
-            var As = this.StartPoint;
-            var bs = otherRay.StartPoint;
+            var as_x = this.StartPoint.x; var as_y = this.StartPoint.y;
+            var bs_x = otherRay.StartPoint.x; var bs_y = otherRay.StartPoint.y;
 
             // Transform points to small values.
-            var transformDist = Math.Min(As.x, bs.x);
-            As.x -= transformDist;  bs.x -= transformDist;
-            transformDist = Math.Min(As.y, bs.y);
-            As.y -= transformDist; bs.y -= transformDist;
+            var xTransform = Math.Min(as_x, bs_x);
+            as_x -= xTransform;  bs_x -= xTransform;
+            var yTransform = Math.Min(as_y, bs_y);
+            as_y -= yTransform; bs_y -= yTransform;
 
-            var dx = bs.x - As.x;
-            var dy = bs.y - As.y;
+            var dx = bs_x - as_x;
+            var dy = bs_y - as_y;
             var determinate = bd.x * ad.y - bd.y * ad.x;
             var U = (dy * bd.x - dx * bd.y) / determinate;
             var V = (dy * ad.x - dx * ad.y) / determinate;
 
-            var newX = As.x + ad.x * U;
-            var newY = As.y + ad.y * U;
+            var newX = as_x + ad.x * U;
+            var newY = as_y + ad.y * U;
 
             // start here Sept 29 2019
-            return new ptsPoint(newX, newY);
+            return new ptsPoint(newX + xTransform, newY + yTransform);
         }
 
         public bool isWithinDomain(double testX)
