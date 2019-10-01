@@ -27,6 +27,18 @@ namespace ptsCogo.Horizontal
         // scratch pad member for re-use.  Not part of the data structure.
         List<ptsPoint> ptList = null;
 
+        public new double EndStation
+        { get { return this.allChildSegments.Last().EndStation; } }
+
+        public new Azimuth EndAzimuth
+        { get { return this.allChildSegments.Last().EndAzimuth; } }
+
+        public new ptsAngle EndDegreeOfCurve
+        { get { return this.allChildSegments.Last().EndDegreeOfCurve; } }
+
+        public new ptsPoint EndPoint
+        { get { return this.allChildSegments.Last().EndPoint; } }
+
         public rm21HorizontalAlignment() { }
 
         public rm21HorizontalAlignment(List<IRM21fundamentalGeometry> fundamentalGeometryList,
@@ -90,9 +102,6 @@ namespace ptsCogo.Horizontal
                 anAlignment.BeginDegreeOfCurve = onlySegment.BeginDegreeOfCurve;
                 anAlignment.BeginPoint = onlySegment.BeginPoint;
 
-                anAlignment.EndAzimuth = onlySegment.EndAzimuth;
-                anAlignment.EndDegreeOfCurve = onlySegment.EndDegreeOfCurve;
-                anAlignment.EndPoint = onlySegment.EndPoint; anAlignment.restationAlignment();
                 returnList.Add(anAlignment);
             }
 
@@ -117,6 +126,7 @@ namespace ptsCogo.Horizontal
                     }
                     anAlignment.allChildSegments.Add(newSegment);
                 }
+                anAlignment.restationAlignment();
                 returnList.Add(anAlignment);
             }
 
@@ -185,9 +195,6 @@ namespace ptsCogo.Horizontal
             retAlign.BeginPoint = firstItem.BeginPoint;
             
             var lastItem = retAlign.allChildSegments.Last();
-            retAlign.EndAzimuth = lastItem.EndAzimuth;
-            retAlign.EndDegreeOfCurve = lastItem.EndDegreeOfCurve;
-            retAlign.EndPoint = lastItem.EndPoint;
             // end of "Fill in essential properties;
 
             // validate the alignment ends on the last point
@@ -357,7 +364,6 @@ namespace ptsCogo.Horizontal
                 segment.BeginStation = runningTrueStation;
                 runningTrueStation += segment.Length;
                 segment.EndStation = runningTrueStation;
-                this.EndStation = runningTrueStation;
                 segment.restationFollowOnOperation();
             }
         }
@@ -536,13 +542,10 @@ namespace ptsCogo.Horizontal
             allChildSegments = new List<HorizontalAlignmentBase>();
             allChildSegments.Add(lineSeg);
             this.BeginStation = 0.0;
-            this.EndStation = lineSeg.EndStation;
             this.Length = this.EndStation - this.BeginStation;
             this.BeginAzimuth = lineSeg.BeginAzimuth;
-            this.EndAzimuth = lineSeg.EndAzimuth;
-            this.BeginDegreeOfCurve = this.EndDegreeOfCurve = 0.0;
+            this.BeginDegreeOfCurve = 0.0;
             this.BeginPoint = lineSeg.BeginPoint;
-            this.EndPoint = lineSeg.EndPoint;
             restationAlignment();
 
             alignmentData = new List<alignmentDataPacket>();
@@ -558,8 +561,6 @@ namespace ptsCogo.Horizontal
             newArc.Parent = this;
             this.allChildSegments.Add(newArc);
 
-            this.EndAzimuth = this.BeginAzimuth + newArc.Deflection;
-            this.EndPoint = newArc.EndPoint;
             restationAlignment();
 
             alignmentData.Add(new alignmentDataPacket(alignmentData.Count, newArc));
@@ -604,8 +605,6 @@ namespace ptsCogo.Horizontal
             appendedLineSegment.Parent = this;
             allChildSegments.Add(appendedLineSegment);
 
-            this.EndAzimuth = appendedLineSegment.EndAzimuth;
-            this.EndPoint = appendedLineSegment.EndPoint;
             restationAlignment();
 
             if(alignmentData.Count > 0)
@@ -644,10 +643,6 @@ namespace ptsCogo.Horizontal
         {
             allChildSegments.RemoveAt(allChildSegments.Count - 1);
             var newLastElement = allChildSegments[allChildSegments.Count - 1];
-            this.EndAzimuth = newLastElement.EndAzimuth;
-            this.EndDegreeOfCurve = newLastElement.EndDegreeOfCurve;
-            this.EndPoint = newLastElement.EndPoint;
-            this.EndStation = newLastElement.EndStation;
             alignmentData.RemoveAt(alignmentData.Count - 1);
         }
 
