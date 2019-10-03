@@ -68,6 +68,7 @@ namespace TinTests
                 @"D:\SourceModules\CSharp\CogoDN\ptsDigitalTerrainModel\Testing\XYZinput\TinTests\data\GPEtin.xml");
         }
 
+        [Ignore]
         [TestMethod]
         public void Test_VerifyKeyLocation_InGardenParkway_LandXMLfile()
         {

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ptsDigitalTerrainModel;
 using System.IO;
+using ptsCogo.Horizontal;
 
 namespace Tests
 {
@@ -134,6 +135,26 @@ namespace Tests
 
             bool fileExists = File.Exists(outFile);
             Assert.IsTrue(fileExists);
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void TinFromLidar_IntersectsAlignment_CreatesProfile()
+        {
+            var aTin = ptsDTM.CreateFromLAS(lidarFileName);
+            aTin.pruneTinHull();
+
+            var directory = new DirectoryManager();
+            directory.CdUp(2).CdDown("CogoTests");
+            string testFile = directory.GetPathAndAppendFilename("SmallLidar_StreamAlignment.dxf");
+
+            IList<rm21HorizontalAlignment> PerryCreekAlignments =
+                rm21HorizontalAlignment.createFromDXFfile(testFile);
+            Assert.IsNotNull(PerryCreekAlignments);
+            Assert.AreEqual(expected: 2, actual: PerryCreekAlignments.Count);
+            var secondAlignment = PerryCreekAlignments[1];
+
+            ptsCogo.Profile groundProfile = secondAlignment.ProfileFromSurface(aTin);
         }
 
         //[Ignore]

@@ -205,6 +205,18 @@ namespace ptsCogo.Angle
             private set { }
         }
 
+        public static Azimuth NORTH
+        { get { return Azimuth.fromDegreesDouble(0d); } }
+
+        public static Azimuth EAST
+        { get { return Azimuth.fromDegreesDouble(90d); } }
+
+        public static Azimuth SOUTH
+        { get { return Azimuth.fromDegreesDouble(180d); } }
+
+        public static Azimuth WEST
+        { get { return Azimuth.fromDegreesDouble(270d); } }
+
     }
 
     public static class extendDoubleForAzimuth

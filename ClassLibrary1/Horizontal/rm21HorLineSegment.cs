@@ -71,6 +71,19 @@ namespace ptsCogo.Horizontal
             return returnSB;
         }
 
+        public override ptsBoundingBox2d BoundingBox
+        {
+            get
+            {
+                if(base.boundingBox_ is null)
+                {
+                    boundingBox_ = new ptsBoundingBox2d(this.BeginPoint);
+                    boundingBox_.expandByPoint(this.EndPoint);
+                }
+                return boundingBox_;
+            }
+        }
+
         public override List<StationOffsetElevation> getStationOffsetElevation(ptsPoint interestPoint)
         {
             ptsVector BeginToInterestPtVector = new ptsVector(this.BeginPoint, interestPoint);

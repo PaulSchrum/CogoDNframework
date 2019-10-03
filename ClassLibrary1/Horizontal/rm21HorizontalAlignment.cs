@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using netDxf;
+using ptsDigitalTerrainModel;
 
 [assembly: InternalsVisibleToAttribute("Tests")]
 
@@ -26,6 +27,18 @@ namespace ptsCogo.Horizontal
 
         // scratch pad member for re-use.  Not part of the data structure.
         List<ptsPoint> ptList = null;
+
+        public new double BeginStation
+        { get { return this.allChildSegments.First().BeginStation; } }
+
+        public new Azimuth BeginAzimuth
+        { get { return this.allChildSegments.First().BeginAzimuth; } }
+
+        public new ptsAngle BeginDegreeOfCurve
+        { get { return this.allChildSegments.First().BeginDegreeOfCurve; } }
+
+        public new ptsPoint BeginPoint
+        { get { return this.allChildSegments.First().BeginPoint; } }
 
         public new double EndStation
         { get { return this.allChildSegments.Last().EndStation; } }
@@ -97,10 +110,6 @@ namespace ptsCogo.Horizontal
                 
                 rm21HorizontalAlignment anAlignment = new rm21HorizontalAlignment();
                 anAlignment.allChildSegments.Add(onlySegment);
-                anAlignment.BeginStation = 0.0;
-                anAlignment.BeginAzimuth = onlySegment.BeginAzimuth;
-                anAlignment.BeginDegreeOfCurve = onlySegment.BeginDegreeOfCurve;
-                anAlignment.BeginPoint = onlySegment.BeginPoint;
 
                 returnList.Add(anAlignment);
             }
@@ -154,7 +163,6 @@ namespace ptsCogo.Horizontal
 
             double startStation = Convert.ToDouble(startRayRow[2]);
             int startRegion = Convert.ToInt32(startRayRow[3]);
-            retAlign.BeginStation = startStation;
             // end "process start point, direction, and station"
 
             int lineCount = 0;
@@ -182,6 +190,7 @@ namespace ptsCogo.Horizontal
             //string begSta_ = allLines[tableStartLines["Regions"] + 2].Split(',').FirstOrDefault();
 
             //double begSta = String.IsNullOrEmpty(begSta_) ? 0.0 : Convert.ToDouble(begSta_);
+            retAlign.getChildBySequenceNumber(0).BeginStation = startStation;
             retAlign.restationAlignment();
             // "set up stations and regions"
 
@@ -190,9 +199,6 @@ namespace ptsCogo.Horizontal
             retAlign.Radius = 0.0;
 
             var firstItem = retAlign.allChildSegments.First();
-            retAlign.BeginAzimuth = firstItem.BeginAzimuth;
-            retAlign.BeginDegreeOfCurve = firstItem.BeginDegreeOfCurve;
-            retAlign.BeginPoint = firstItem.BeginPoint;
             
             var lastItem = retAlign.allChildSegments.Last();
             // end of "Fill in essential properties;
@@ -203,6 +209,12 @@ namespace ptsCogo.Horizontal
 
             
             return retAlign;
+        }
+
+        public Profile ProfileFromSurface(ptsDTM aTin)
+        {
+            var elementBoundingBoxes = this.allChildSegments.Select(c => c);
+            throw new NotImplementedException();
         }
 
         internal static HorizontalAlignmentBase newSegment(ptsRay inRay, double degreeIn, double length,
@@ -541,11 +553,7 @@ namespace ptsCogo.Horizontal
             lineSeg.Parent = this;
             allChildSegments = new List<HorizontalAlignmentBase>();
             allChildSegments.Add(lineSeg);
-            this.BeginStation = 0.0;
             this.Length = this.EndStation - this.BeginStation;
-            this.BeginAzimuth = lineSeg.BeginAzimuth;
-            this.BeginDegreeOfCurve = 0.0;
-            this.BeginPoint = lineSeg.BeginPoint;
             restationAlignment();
 
             alignmentData = new List<alignmentDataPacket>();

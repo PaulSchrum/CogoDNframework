@@ -1494,6 +1494,24 @@ namespace Tests
                 actual: secondAlignment.EndAzimuth.getAsDegreesDouble(), delta: 0.001);
             
         }
+
+        [TestMethod]
+        public void Arc_BoundingBox_IsCorrect()
+        {
+            var startPt = new ptsPoint(12.0926, 9.4402);
+            var endPt = new ptsPoint(18.3603, 8.2049);
+            Azimuth azimuth = Azimuth.fromDegreesDouble(63.13259);
+            double radius = 5.1863;
+            rm21HorArc arc = new rm21HorArc(startPt, endPt, azimuth, radius);
+            Assert.AreEqual(expected: 76.03291, 
+                actual: arc.Deflection.getAsDegreesDouble(), delta: 0.001);
+
+            ptsBoundingBox2d bb = arc.BoundingBox;
+            var bbEquality = 
+                bb.lowerLeftPt.GetHorizontalDistanceTo(new ptsPoint(12.0926, 8.2049)) + 
+                bb.upperRightPt.GetHorizontalDistanceTo(new ptsPoint(18.3603, 10.0));
+            Assert.AreEqual(expected: 0d, actual: bbEquality, delta: 0.0025);
+        }
     }
 
 

@@ -162,6 +162,66 @@ namespace ptsCogo.Horizontal
             return Create(begPt, endPt, incomingDirection, radius);
         }
 
+        public override ptsBoundingBox2d BoundingBox
+        {
+            get
+            {
+                if (base.boundingBox_ is null)
+                {
+                    boundingBox_ = new ptsBoundingBox2d(this.BeginPoint);
+                    boundingBox_.expandByPoint(this.EndPoint);
+
+                    var testAz = Azimuth.NORTH;
+                    ptsPoint testPt = null;
+                    if (isInArcSweep(testAz))
+                    {
+                        testPt = this.ArcCenterPt + new ptsVector(testAz, this.Radius);
+                        boundingBox_.expandByPoint(testPt);
+                    }
+
+                    testAz = Azimuth.EAST;
+                    if (isInArcSweep(testAz))
+                    {
+                        testPt = this.ArcCenterPt + new ptsVector(testAz, this.Radius);
+                        boundingBox_.expandByPoint(testPt);
+                    }
+
+                    testAz = Azimuth.SOUTH;
+                    if (isInArcSweep(testAz))
+                    {
+                        testPt = this.ArcCenterPt + new ptsVector(testAz, this.Radius);
+                        boundingBox_.expandByPoint(testPt);
+                    }
+
+                    testAz = Azimuth.WEST;
+                    if (isInArcSweep(testAz))
+                    {
+                        testPt = this.ArcCenterPt + new ptsVector(testAz, this.Radius);
+                        boundingBox_.expandByPoint(testPt);
+                    }
+
+
+                }
+                return boundingBox_;
+            }
+        }
+
+        private bool isInArcSweep(Azimuth testAzimuth)
+        {
+            Deflection testDefl = null;
+            if (deflDirection == 1)
+                testDefl = this.BeginRadiusVector.Azimuth - testAzimuth;
+            else
+                testDefl = this.EndRadiusVector.Azimuth - testAzimuth;
+
+            var testDefDeg = testDefl.getAsDegreesDouble();
+            var actualDefDeg = this.Deflection.getAsDegreesDouble();
+            var ratio = testDefl.getAsRadians() / this.Deflection.getAsRadians();
+            if (ratio <= 1.0 && ratio >= 0.0)
+                return true;
+            return false;
+        }
+
         private void computeDeflectionForOutsideSolutionCurve()
         {
             Double radVector1Az = this.BeginRadiusVector.Azimuth.getAsDegreesDouble();

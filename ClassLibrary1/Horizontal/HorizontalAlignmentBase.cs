@@ -42,6 +42,9 @@ namespace ptsCogo.Horizontal
         protected List<HorizontalAlignmentBase> incomingElements { get; set; }
         protected List<HorizontalAlignmentBase> outgoingElements { get; set; }
 
+        protected ptsBoundingBox2d boundingBox_ = null;
+        public virtual ptsBoundingBox2d BoundingBox { get; }
+
         public ptsRay BeginRay
         {
             get { return new ptsRay(this.BeginPoint, this.BeginAzimuth); }
