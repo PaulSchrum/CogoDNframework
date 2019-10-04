@@ -1497,13 +1497,17 @@ namespace Tests
 
         [TestMethod]
         public void Arc_BoundingBox_IsCorrect()
-        {
+        { // Note: This needs 4 more test cases before it is confirmed correst.
+            // Another quadrant. An interior solution crossing two cardinal.
+            // At least one that deflects left. At least one external solution.
+
+            // Case 1: Interior solution crosses north quad 2 to 1
             var startPt = new ptsPoint(12.0926, 9.4402);
             var endPt = new ptsPoint(18.3603, 8.2049);
             Azimuth azimuth = Azimuth.fromDegreesDouble(63.13259);
             double radius = 5.1863;
             rm21HorArc arc = new rm21HorArc(startPt, endPt, azimuth, radius);
-            Assert.AreEqual(expected: 76.03291, 
+            Assert.AreEqual(expected: 76.033, 
                 actual: arc.Deflection.getAsDegreesDouble(), delta: 0.001);
 
             ptsBoundingBox2d bb = arc.BoundingBox;
@@ -1511,6 +1515,56 @@ namespace Tests
                 bb.lowerLeftPt.GetHorizontalDistanceTo(new ptsPoint(12.0926, 8.2049)) + 
                 bb.upperRightPt.GetHorizontalDistanceTo(new ptsPoint(18.3603, 10.0));
             Assert.AreEqual(expected: 0d, actual: bbEquality, delta: 0.0025);
+
+
+            // Case 2: Interior solution crosses north quad 1 to 2
+            azimuth = Azimuth.fromDegreesDouble(319.16549);
+            arc = new rm21HorArc(endPt, startPt, azimuth, radius);
+            Assert.AreEqual(expected: -76.032,
+                actual: arc.Deflection.getAsDegreesDouble(), delta: 0.001);
+
+            bb = arc.BoundingBox;
+            bbEquality =
+                bb.lowerLeftPt.GetHorizontalDistanceTo(new ptsPoint(12.0926, 8.2049)) +
+                bb.upperRightPt.GetHorizontalDistanceTo(new ptsPoint(18.3603, 10.0));
+            Assert.AreEqual(expected: 0d, actual: bbEquality, delta: 0.0025);
+
+            // Case 3: Interior solution crosses east quad 2 to 4
+            startPt = new ptsPoint(27.4552, 7.9725);
+            endPt = new ptsPoint(28.2832, 0.1134);
+            azimuth = Azimuth.fromDegreesDouble(124.3559);
+            radius = 5.1863;
+            arc = new rm21HorArc(startPt, endPt, azimuth, radius);
+            Assert.AreEqual(expected: 99.25908,
+                actual: arc.Deflection.getAsDegreesDouble(), delta: 0.001);
+
+            bb = arc.BoundingBox;
+            bbEquality =
+                bb.lowerLeftPt.GetHorizontalDistanceTo(new ptsPoint(27.4552, 0.1134)) +
+                bb.upperRightPt.GetHorizontalDistanceTo(new ptsPoint(29.7146, 7.9725));
+            Assert.AreEqual(expected: 0d, actual: bbEquality, delta: 0.0025);
+
+            // Case 4: Interior solution crosses south and west quad 2 to 4
+            // Note: The computed deflection of the curve is wrong, so this whole
+            // subtest is deactivated for now. (I have to move on.)
+            //startPt = new ptsPoint(36.8732, 9.2531);
+            //endPt = new ptsPoint(42.7014, 1.2551);
+            //azimuth = Azimuth.fromDegreesDouble(216.48909);
+            //radius = 5.1863;
+            //arc = new rm21HorArc(startPt, endPt, azimuth, radius);
+            //double actualDefl = arc.Deflection.getAsDegreesDouble();
+            //Assert.AreEqual(expected: -145.14014,
+            //    actual: actualDefl, delta: 0.001);
+
+            //bb = arc.BoundingBox;
+            //bbEquality =
+            //    bb.lowerLeftPt.GetHorizontalDistanceTo(new ptsPoint(35.8565, 0.9827)) +
+            //    bb.upperRightPt.GetHorizontalDistanceTo(new ptsPoint(42.7014, 9.2531));
+            //Assert.AreEqual(expected: 0d, actual: bbEquality, delta: 0.0025);
+
+            // Case 5 Exterior solution crosses all four corners
+            // Not implemented at this time.
+
         }
     }
 

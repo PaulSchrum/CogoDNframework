@@ -166,7 +166,8 @@ namespace ptsCogo.Horizontal
         {
             get
             {
-                if (base.boundingBox_ is null)
+                //if (base.boundingBox_ is null)
+                if (true) // for debugging.
                 {
                     boundingBox_ = new ptsBoundingBox2d(this.BeginPoint);
                     boundingBox_.expandByPoint(this.EndPoint);
@@ -216,7 +217,7 @@ namespace ptsCogo.Horizontal
 
             var testDefDeg = testDefl.getAsDegreesDouble();
             var actualDefDeg = this.Deflection.getAsDegreesDouble();
-            var ratio = testDefl.getAsRadians() / this.Deflection.getAsRadians();
+            var ratio = deflDirection * testDefl.getAsRadians() / this.Deflection.getAsRadians();
             if (ratio <= 1.0 && ratio >= 0.0)
                 return true;
             return false;
