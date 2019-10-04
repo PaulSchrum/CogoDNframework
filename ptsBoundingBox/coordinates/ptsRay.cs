@@ -114,7 +114,6 @@ namespace ptsCogo.coordinates
             var newX = as_x + ad.x * U;
             var newY = as_y + ad.y * U;
 
-            // start here Sept 29 2019
             return new ptsPoint(newX + xTransform, newY + yTransform);
         }
 
