@@ -36,7 +36,19 @@ namespace ptsDigitalTerrainModel
         }
         internal IEnumerable<ptsDTMtriangle> ValidTriangles
         {
-            get { return this.allTriangles.Where(t => t.isValid); }
+            get { return this.allTriangles.Where(t => t.IsValid); }
+        }
+
+        public IReadOnlyCollection<ptsDTMtriangleLine> ValidLines
+        {
+            get
+            {
+                return allLines.Values
+                    .Where(line => !(line.theOtherTriangle is null) &&
+                        (line.oneTriangle.IsValid ||
+                        line.theOtherTriangle.IsValid) )
+                    .ToList();
+            }
         }
 
         public static ptsDTM CreateFromLAS(string lidarFileName)
@@ -293,7 +305,7 @@ namespace ptsDigitalTerrainModel
 
             foreach (var triangle in markNotValid)
             {
-                triangle.isValid = false;
+                triangle.IsValid = false;
                 triangle.walkNetwork();
             }
 
@@ -321,9 +333,9 @@ namespace ptsDigitalTerrainModel
                 aFace.SecondVertex = new Vector3(triangle.point2.x, triangle.point2.y, triangle.point2.z);
                 aFace.ThirdVertex = new Vector3(triangle.point3.x, triangle.point3.y, triangle.point3.z);
                 aFace.FourthVertex = new Vector3(triangle.point1.x, triangle.point1.y, triangle.point1.z);
-                if (!triangle.isValid)
+                if (!triangle.IsValid)
                     aFace.Color = AciColor.Red;
-                if(triangle.isValid)
+                if(triangle.IsValid)
                     dxf.AddEntity(aFace);
             }
 

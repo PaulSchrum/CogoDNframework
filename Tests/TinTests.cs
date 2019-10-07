@@ -137,7 +137,6 @@ namespace Tests
             Assert.IsTrue(fileExists);
         }
 
-        [Ignore]
         [TestMethod]
         public void TinFromLidar_IntersectsAlignment_CreatesProfile()
         {

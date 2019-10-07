@@ -75,5 +75,11 @@ namespace ptsDigitalTerrainModel
             var pt = new netDxf.Entities.Point(new Vector3(this.x, this.y, this.z));
             dxf.AddEntity(pt);
         }
+
+        public static implicit operator ptsPoint(ptsDTMpoint aPt)
+        {
+            return new ptsPoint(aPt.x, aPt.y, aPt.z);
+        }
+
     }
 }

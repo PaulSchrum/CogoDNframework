@@ -2,6 +2,7 @@
 using ptsCogo.Angle;
 using ptsCogo.coordinates;
 using ptsCogo.coordinates.CurvilinearCoordinates;
+using ptsDigitalTerrainModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,6 +153,12 @@ namespace ptsCogo.Horizontal
         {
             this.BeginPoint = this.BeginPoint + moveDistance;
             this.EndPoint = this.EndPoint + moveDistance;
+        }
+
+        internal virtual (ptsPoint point, StationOffsetElevation soe) LineIntersectSOE(
+            ptsPoint firstPoint, ptsPoint secondPoint, double offset=0d)
+        {
+            throw new NotImplementedException();
         }
     }
 }

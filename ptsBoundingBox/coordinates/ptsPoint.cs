@@ -47,6 +47,11 @@ namespace ptsCogo
 
         }
 
+        public ptsVector minus2d(ptsPoint p1)
+        {
+            return new ptsVector(p1.x - this.x, p1.y - this.y);
+        }
+
         public static ptsVector operator -(ptsPoint p1, ptsPoint p2)
         {
             return new ptsVector(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
@@ -132,5 +137,6 @@ namespace ptsCogo
                 == 0;
 
         }
+
     }
 }

@@ -154,7 +154,15 @@ namespace ptsCogo.Horizontal
             var startRadialRay = new ptsRay(begPt, startRadialDirection);
             var endRadialDirection = outgoingDirection + Deflection.QUARTERCIRCLE;
             var endRadialRay = new ptsRay(endPt, endRadialDirection);
-            var arcCenterPt = startRadialRay.IntersectWith_2D(endRadialRay);
+            ptsPoint arcCenterPt = null;
+            try
+            {
+                arcCenterPt = startRadialRay.IntersectWith_2D(endRadialRay);
+            }
+            catch(IsOnBackSideOfRayException getItAnyway)
+            {
+                arcCenterPt = getItAnyway.resultingPoint;
+            }
             var radius = (arcCenterPt - begPt).Length;
 
             var sumpin = Create(begPt, endPt, incomingDirection, radius);
@@ -221,6 +229,12 @@ namespace ptsCogo.Horizontal
             if (ratio <= 1.0 && ratio >= 0.0)
                 return true;
             return false;
+        }
+
+        internal override (ptsPoint point, StationOffsetElevation soe) LineIntersectSOE(
+                    ptsPoint firstPoint, ptsPoint secondPoint, double offset = 0d)
+        {
+            return (null, null);
         }
 
         private void computeDeflectionForOutsideSolutionCurve()

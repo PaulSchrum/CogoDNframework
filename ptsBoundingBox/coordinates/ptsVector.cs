@@ -24,7 +24,7 @@ namespace ptsCogo
         {
             x = endPoint.x - beginPt.x;
             y = endPoint.y - beginPt.y;
-            z = endPoint.z - endPoint.z;
+            z = endPoint.z - beginPt.z;
         }
 
         public ptsVector(Azimuth direction, Double length)

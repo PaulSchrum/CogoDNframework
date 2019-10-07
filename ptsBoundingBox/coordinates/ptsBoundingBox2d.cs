@@ -73,6 +73,20 @@ namespace ptsCogo
             return true;
         }
 
+        public bool Overlaps(ptsBoundingBox2d otherBB)
+        { // from https://stackoverflow.com/a/20925869/1339950
+
+            if (!(this.upperRightPt.x >= otherBB.lowerLeftPt.x
+                && otherBB.upperRightPt.x >= this.lowerLeftPt.x))
+                return false;
+
+            if (!(this.upperRightPt.y >= otherBB.lowerLeftPt.y
+                && otherBB.upperRightPt.y >= this.lowerLeftPt.y))
+                return false;
+
+            return true;
+        }
+
         public bool isPointInsideBB2d(ptsPoint testPoint)
         {
             if (testPoint.x < lowerLeftPt.x)

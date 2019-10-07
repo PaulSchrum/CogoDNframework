@@ -33,6 +33,16 @@ namespace ptsCogo.coordinates
             this.Slope = slope;
         }
 
+        public ptsRay(ptsPoint startPt, ptsPoint secondPt, Slope slope=null) :
+            this(startPt.x, startPt.y, secondPt.x, secondPt.y, slope)
+        {
+            var dx = secondPt.x - startPt.x;
+            var dy = secondPt.y - startPt.y;
+            var run = Math.Sqrt(dx * dx + dy * dy);
+            this.Slope = new Slope(run: run, rise: dy);
+        }
+
+
         public ptsRay(string x, string y, string z=null, string azimuth=null, string slope=null)
         {
             this.StartPoint = new ptsPoint(x, y, z);
@@ -53,6 +63,7 @@ namespace ptsCogo.coordinates
                 if(0 == value) advanceDirection_ = 1;
             }
         }
+
         public Azimuth HorizontalDirection { get; set; }
 
         public double? getElevationAlong(double X)
@@ -114,7 +125,14 @@ namespace ptsCogo.coordinates
             var newX = as_x + ad.x * U;
             var newY = as_y + ad.y * U;
 
-            return new ptsPoint(newX + xTransform, newY + yTransform);
+            var newPt = new ptsPoint(newX + xTransform, newY + yTransform);
+            Azimuth directionStartToNewPt = (this.StartPoint - newPt).Azimuth;
+            Deflection defl = this.HorizontalDirection - directionStartToNewPt;
+            if (Math.Abs(defl.getAsRadians()) > 0.001)
+                throw new IsOnBackSideOfRayException(newPt);  
+                // intersection is off the ray, opposite direction.
+
+            return newPt;
         }
 
         public bool isWithinDomain(double testX)
@@ -161,6 +179,18 @@ namespace ptsCogo.coordinates
         public override string ToString()
         {
             return this.StartPoint.ToString() + " " + this.HorizontalDirection.ToString();
+        }
+    }
+
+    public class IsOnBackSideOfRayException : Exception
+    {
+        public ptsPoint resultingPoint { get; set; } = null;
+
+        private IsOnBackSideOfRayException() { }
+
+        public IsOnBackSideOfRayException(ptsPoint thePoint)
+        {
+            resultingPoint = thePoint;
         }
     }
 }

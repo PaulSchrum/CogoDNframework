@@ -213,7 +213,32 @@ namespace ptsCogo.Horizontal
 
         public Profile ProfileFromSurface(ptsDTM aTin)
         {
-            var elementBoundingBoxes = this.allChildSegments.Select(c => c);
+            var findBox = new ptsBoundingBox2d(2133858.64, 775391.34, 2133860.49, 775391.91);
+            var stationsAndElevations = new List<StationOffsetElevation>();
+            var validTinLines = aTin.ValidLines;
+            foreach (var haElement in this.allChildSegments)
+            {
+                var lineListInBox = aTin.ValidLines
+                    .Where(line => line.BoundingBox.Overlaps(haElement.BoundingBox));
+                foreach(var tinLine in lineListInBox)
+                {
+                    //if (tinLine.isSameAs(2133855.68, 775393.86, 2133862.02)) // intersects first segment
+                    if (tinLine.isSameAs(2133872.85, 775400.01, 2133876.06))  // misses first segment
+                    {
+                        int i = 0;
+                    }
+                    (ptsPoint intersectionPoint,
+                    StationOffsetElevation intersectStaOE) =
+                        haElement.LineIntersectSOE(
+                            tinLine.firstPoint, tinLine.secondPoint, 0d);
+                    if (!(intersectStaOE is null))
+                    {
+                        stationsAndElevations.Add(intersectStaOE);
+                    }
+                }  // start here. There's wayyy too many false positives. Got to figure out how to eliminate.
+                stationsAndElevations = stationsAndElevations.OrderBy(s => s.station).ToList();
+            }
+
             throw new NotImplementedException();
         }
 

@@ -25,7 +25,7 @@ namespace ptsDigitalTerrainModel
         private ptsVector normalVec_;
         public ptsVector normalVec { get { return normalVec_; } }
 
-        public bool isValid { get; set; } = true;
+        public bool IsValid { get; set; } = true;
 
         private List<ptsDTMtriangleLine> lines { get; set; } =
             new List<ptsDTMtriangleLine>() { null, null, null };
@@ -294,7 +294,7 @@ namespace ptsDigitalTerrainModel
                 {
                     if (neighborTri.shouldRemove())
                     {
-                        neighborTri.isValid = false;
+                        neighborTri.IsValid = false;
                         neighborTri.walkNetwork();
                     }
                 }

@@ -121,6 +121,43 @@ namespace ptsCogo.Horizontal
             return returnPoint;
         }
 
+        internal override (ptsPoint point, StationOffsetElevation soe) LineIntersectSOE(
+                    ptsPoint firstPoint, ptsPoint secondPoint, double offset = 0d)
+        {
+            ptsPoint candidatePoint = null;
+            var crossLine = new rm21HorLineSegment(firstPoint, secondPoint);
+            try
+            {
+                candidatePoint = this.BeginRay.IntersectWith_2D(crossLine.BeginRay);
+            }
+            catch (Exception e)
+            {
+                return (null, null);
+            }
+            var distanceFirstToCandidate = (candidatePoint.minus2d(firstPoint)).Length;
+            if (distanceFirstToCandidate < 0.0 || distanceFirstToCandidate > crossLine.Length)
+                return (null, null);
+            
+            // Get the station of intersection point.
+            var newStation = this.BeginStation + distanceFirstToCandidate;
+
+            // Get the elevation at the intersection point.
+            ptsVector lineAsVec = null;
+            rm21HorLineSegment segmentToUse = null;
+            if (this.BeginPoint.z > 0d || this.EndPoint.z > 0d)
+                segmentToUse = this;
+            else
+                segmentToUse = crossLine;
+            var dx = segmentToUse.Length;
+            var dy = segmentToUse.EndPoint.z - segmentToUse.BeginPoint.z;
+            Slope slope = new Slope(run: dx, rise: dy);
+            var shortSegmentDx = (candidatePoint.minus2d(segmentToUse.BeginPoint)).Length;
+            var elevation = segmentToUse.BeginPoint.z + shortSegmentDx * (Double) slope;
+
+            return (point: candidatePoint, 
+                soe: new StationOffsetElevation(newStation, 0d, elevation));
+        }
+
         public override void drawHorizontalByOffset
            (IPersistantDrawer_Cogo drawer, StationOffsetElevation soe1, StationOffsetElevation soe2)
         {

@@ -24,8 +24,8 @@ namespace ptsCogo.Angle
 
         public Slope(double run, double rise)
         {
-            double ratio = run / rise;
-            setFromXY(rise, run);
+            double ratio = rise / run;
+            setFromXY(run, rise);
         }
 
         /* */
