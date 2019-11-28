@@ -56,6 +56,40 @@ namespace ptsCogo
                 if (z > upperRightPt.z)
                     upperRightPt.z = z;
             }
+            this.dimensions_ = null;
+            this.center_ = null;
+        }
+
+        private ptsVector dimensions_ = null;
+        private ptsVector Dimensions
+        {
+            get
+            {
+                if(dimensions_ is null)
+                {
+                    var dx = this.upperRightPt.x - this.lowerLeftPt.x;
+                    var dy = this.upperRightPt.y - this.lowerLeftPt.y;
+                    var dz = this.upperRightPt.z - this.lowerLeftPt.z;
+                    this.dimensions_ = new ptsVector(dx, dy, dz);
+                }
+                return dimensions_;
+            }
+        }
+
+        private ptsPoint center_ = null;
+        public ptsPoint Center
+        {
+            get
+            {
+                if(center_ is null)
+                {
+                    var x2 = this.Dimensions.x / 2.0;
+                    var y2 = this.Dimensions.y / 2.0;
+                    var z2 = this.Dimensions.z / 2.0;
+                    center_ = new ptsPoint(x2, y2, z2);
+                }
+                return center_;
+            }
         }
 
         public bool isPointInsideBB2d(Double x, Double y)
