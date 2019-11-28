@@ -12,6 +12,7 @@ using ptsCogo;
 using ptsCogo.Angle;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using MathNet.Numerics.LinearAlgebra;
 using netDxf;
 using netDxf.Entities;
 using netDxf.Tables;
@@ -353,6 +354,63 @@ namespace ptsDigitalTerrainModel
             }
 
             dxf.Save(outFile);
+        }
+
+        protected Matrix<double> setAffineTransformToZeroCenter(bool translateTo0=false)
+        {
+            double[,] m = {{ 1.0, 0.0, 0.0, -1.0 * this.myBoundingBox.Center.x},
+                           { 0.0, 1.0, 0.0, -1.0 * this.myBoundingBox.Center.y},
+                           { 0.0, 0.0, 1.0, -1.0 * this.myBoundingBox.Center.z},
+                           { 0.0, 0.0, 0.0, 1.0}};
+
+
+            return Matrix<double>.Build.DenseOfArray(m);
+        }
+
+        protected StringBuilder convertArrayToString(double [,] array, int colCount, int rowCount)
+        {
+            var str = new StringBuilder();
+            int cols = colCount - 1;
+            int rows = rowCount - 1;
+            for(int row = 0; row <= rows; row++)
+            {
+                var s = new StringBuilder("# ");
+                for(int col = 0; col <= cols; col++)
+                {
+                    s.Append(string.Format("{0:0.0######}", array[row, col]));
+                    if (col < cols)
+                        s.Append(", ");
+                }
+                str.Append(s.AppendLine());
+            }
+            return str;
+        }
+
+        public void WriteToWaveFront(string outfile, bool translateTo0=true)
+        {
+            var pointIndices = new Dictionary<ptsDTMpoint, int>();
+
+            int idx = 0;
+            foreach (var aPt in this.allPoints)
+            {
+                pointIndices[aPt] = idx;
+                idx++;
+            }
+
+            var affineXform = setAffineTransformToZeroCenter();
+            var aString = convertArrayToString(affineXform.ToArray(), 4, 4);
+            //using (System.IO.StreamWriter file = new System.IO.StreamWriter(outfile))
+            //{
+            //    file.WriteLine("# Created by CogoDN: Tin Mesh");
+            //    file.WriteLine(aString.ToString());
+                foreach (var aPt in this.allPoints)
+                {
+                    var str = "v " + aPt.ToString(affineXform);
+                int i = 0;
+                    //file.WriteLine(str);
+                }
+            //}
+
         }
 
         private ptsDTMtriangle convertLineOfDataToTriangle(string line)

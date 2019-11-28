@@ -5,6 +5,7 @@ using System.Text;
 using ptsCogo;
 using MIConvexHull;
 using netDxf;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace ptsDigitalTerrainModel
 {
@@ -81,5 +82,26 @@ namespace ptsDigitalTerrainModel
             return new ptsPoint(aPt.x, aPt.y, aPt.z);
         }
 
+        private Vector<double> MathNetVector
+        {
+            get
+            {
+                double[] vec = { this.x, this.y, this.z, 1.0 };
+                return Vector<double>.Build.DenseOfArray(vec);
+            }
+        }
+
+        internal string ToString(Matrix<double> affineXform)
+        {
+            var thisAsMathNecVector = this.MathNetVector;
+            var transformedPoint = thisAsMathNecVector;
+            //var thisAsMathNecVector = this.MathNetVector;
+            //var transformedPoint = affineXform.Multiply(thisAsMathNecVector);
+
+            var x = transformedPoint[0];
+            var y = transformedPoint[1];
+            var z = transformedPoint[2];
+            return $"{x} {y} {z}";
+        }
     }
 }

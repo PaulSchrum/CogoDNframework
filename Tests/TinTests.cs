@@ -45,7 +45,7 @@ namespace Tests
     [TestClass]
     public class TinTests
     {
-        string lidarFileName = @"D:\SourceModules\CSharp\CogoDN\ptsDigital" +
+        string lidarFileName = @"E:\SourceModules\CSharp\CogoDN\ptsDigital" +
             @"TerrainModel\Testing\NC Lidar\Raleigh WRAL Soccer.las";
 
         ptsDTM tinFromLidar = null;
@@ -111,9 +111,27 @@ namespace Tests
             var outDirectory = new DirectoryManager();
             outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
             outDirectory.EnsureExists();
+            string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Points.obj");
+
+            this.tinFromLidar.WriteToWaveFront(outFile);
+
+            bool fileExists = File.Exists(outFile);
+            Assert.IsTrue(fileExists);
+        }
+
+        [Ignore]
+        [TestMethod]
+        public void TinFromLidar_SaveAsWavefrontObj()
+        {
+            this.Initialize();
+            TinFromLidar_isNotNull();
+
+            var outDirectory = new DirectoryManager();
+            outDirectory.CdUp(2).CdDown("CogoTests").CdDown("outputs");
+            outDirectory.EnsureExists();
             string outFile = outDirectory.GetPathAndAppendFilename("SmallLidar_Points.dxf");
 
-            this.tinFromLidar.WritePointsToDxf(outFile);
+            this.tinFromLidar.WriteToWaveFront(outFile);
 
             bool fileExists = File.Exists(outFile);
             Assert.IsTrue(fileExists);
@@ -137,6 +155,7 @@ namespace Tests
             Assert.IsTrue(fileExists);
         }
 
+        [Ignore]
         [TestMethod]
         public void TinFromLidar_IntersectsAlignment_CreatesProfile()
         {
@@ -156,7 +175,7 @@ namespace Tests
             ptsCogo.Profile groundProfile = secondAlignment.ProfileFromSurface(aTin);
         }
 
-        //[Ignore]
+        [Ignore]
         [TestMethod]
         public void TinFromLidar_CompareTriangleCount()
         {
