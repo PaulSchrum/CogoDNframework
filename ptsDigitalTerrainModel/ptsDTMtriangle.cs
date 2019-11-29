@@ -301,6 +301,10 @@ namespace ptsDigitalTerrainModel
             }
         }
 
+        internal string IndicesToString()
+        {
+            return $"{this.point1.myIndex} {this.point2.myIndex} {this.point3.myIndex}";
+        }
     }
 
     internal class ConvexFaceTriangle : MIConvexHull.TriangulationCell<ptsDTMpoint, ConvexFaceTriangle>

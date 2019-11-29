@@ -63,21 +63,17 @@ namespace ptsDigitalTerrainModel
                 if(returnObject.allPoints == null)
                 {
                     returnObject.createAllpointsCollection();
-                    returnObject.myBoundingBox = 
-                        new ptsBoundingBox2d(
-                            point.x, point.y, 
-                            point.x, point.y,
-                            point.z, point.z);
                 }
-                else
-                    returnObject
-                        .myBoundingBox.expandByPoint(point.x, point.y, point.z);
                 returnObject.allPoints.Add(point);
                 // Note this approach will occasionally skip over points that 
                 // are double-stamps. I am fine with that for now.
                 gridIndexer[point.GridCoordinates] = indexCount;
                 indexCount++;
             }
+            returnObject.myBoundingBox =
+                        new ptsBoundingBox2d(
+                            lasFile.MinX, lasFile.MinY, lasFile.MaxX,
+                            lasFile.MaxY, lasFile.MinZ, lasFile.MaxZ);
             lasFile.ClearAllPoints();  // Because I have them now.
 
             for(indexCount=0; indexCount < returnObject.allPoints.Count; indexCount++)
@@ -98,7 +94,6 @@ namespace ptsDigitalTerrainModel
                 var point3 = gridIndexer[vTriangle.Vertices[2].GridCoordinates];
                 returnObject.allTriangles.Add(new ptsDTMtriangle(
                     returnObject.allPoints, point1, point2, point3));
-                returnObject.myBoundingBox.expandByPoint(point1, point2, point3);
             }
             
             return returnObject;
@@ -362,7 +357,8 @@ namespace ptsDigitalTerrainModel
                            { 0.0, 1.0, 0.0, -1.0 * this.myBoundingBox.Center.y},
                            { 0.0, 0.0, 1.0, -1.0 * this.myBoundingBox.Center.z},
                            { 0.0, 0.0, 0.0, 1.0}};
-
+            var M = Matrix<double>.Build.DenseOfArray(m);
+            var mstr = M.ToMatrixString();
 
             return Matrix<double>.Build.DenseOfArray(m);
         }
@@ -388,29 +384,18 @@ namespace ptsDigitalTerrainModel
 
         public void WriteToWaveFront(string outfile, bool translateTo0=true)
         {
-            var pointIndices = new Dictionary<ptsDTMpoint, int>();
-
-            int idx = 0;
-            foreach (var aPt in this.allPoints)
-            {
-                pointIndices[aPt] = idx;
-                idx++;
-            }
-
             var affineXform = setAffineTransformToZeroCenter();
             var aString = convertArrayToString(affineXform.ToArray(), 4, 4);
-            //using (System.IO.StreamWriter file = new System.IO.StreamWriter(outfile))
-            //{
-            //    file.WriteLine("# Created by CogoDN: Tin Mesh");
-            //    file.WriteLine(aString.ToString());
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(outfile))
+            {
+                file.WriteLine("# Created by CogoDN: Tin Mesh");
+                file.WriteLine(aString.ToString());
                 foreach (var aPt in this.allPoints)
-                {
-                    var str = "v " + aPt.ToString(affineXform);
-                int i = 0;
-                    //file.WriteLine(str);
-                }
-            //}
+                    file.WriteLine("v " + aPt.ToString(affineXform));
 
+                foreach (var aTriangle in this.allTriangles)
+                    file.WriteLine("f " + aTriangle.IndicesToString());
+            }
         }
 
         private ptsDTMtriangle convertLineOfDataToTriangle(string line)

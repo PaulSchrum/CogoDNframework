@@ -93,10 +93,20 @@ namespace ptsDigitalTerrainModel
 
         internal string ToString(Matrix<double> affineXform)
         {
-            var thisAsMathNecVector = this.MathNetVector;
-            var transformedPoint = thisAsMathNecVector;
+            //double[] vec = { 5.0, 6.0, 1.0, 1.0 };
+            //var v = Vector<double>.Build.DenseOfArray(vec);
+            //double[,] matr = { { 1.0, 0.0, 0.0, -4.0},
+            //                   { 0.0, 1.0, 0.0, -5.0 },
+            //                   { 0.0, 0.0, 1.0, 0.0},
+            //                   { 0.0, 0.0, 0.0, 1.0} };
+            //var matrix = Matrix<double>.Build.DenseOfArray(matr);
+            //var xformd = matrix.Multiply(v);
+
+
             //var thisAsMathNecVector = this.MathNetVector;
-            //var transformedPoint = affineXform.Multiply(thisAsMathNecVector);
+            //var transformedPoint = thisAsMathNecVector;
+            var thisAsMathNecVector = this.MathNetVector;
+            var transformedPoint = affineXform.Multiply(thisAsMathNecVector);
 
             var x = transformedPoint[0];
             var y = transformedPoint[1];
