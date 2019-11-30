@@ -10,7 +10,7 @@ using MathNet.Numerics.LinearAlgebra;
 namespace ptsDigitalTerrainModel
 {
     [Serializable]
-    public struct ptsDTMpoint : IVertex //: ptsCogo.ptsPoint
+    public struct ptsDTMpoint : IVertex
     {
         public Double x { get; set; }
         public Double y { get; set; }
@@ -93,25 +93,12 @@ namespace ptsDigitalTerrainModel
 
         internal string ToString(Matrix<double> affineXform)
         {
-            //double[] vec = { 5.0, 6.0, 1.0, 1.0 };
-            //var v = Vector<double>.Build.DenseOfArray(vec);
-            //double[,] matr = { { 1.0, 0.0, 0.0, -4.0},
-            //                   { 0.0, 1.0, 0.0, -5.0 },
-            //                   { 0.0, 0.0, 1.0, 0.0},
-            //                   { 0.0, 0.0, 0.0, 1.0} };
-            //var matrix = Matrix<double>.Build.DenseOfArray(matr);
-            //var xformd = matrix.Multiply(v);
-
-
-            //var thisAsMathNecVector = this.MathNetVector;
-            //var transformedPoint = thisAsMathNecVector;
-            var thisAsMathNecVector = this.MathNetVector;
-            var transformedPoint = affineXform.Multiply(thisAsMathNecVector);
+            var transformedPoint = affineXform.Multiply(this.MathNetVector);
 
             var x = transformedPoint[0];
             var y = transformedPoint[1];
             var z = transformedPoint[2];
-            return $"{x} {y} {z}";
+            return $"{x:0.000} {y:0.000} {z:0.000}";
         }
     }
 }

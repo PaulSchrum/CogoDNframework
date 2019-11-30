@@ -52,6 +52,21 @@ namespace ptsDigitalTerrainModel
             }
         }
 
+        private static void setBoundingBox(ptsDTM tin)
+        {
+            var points = tin.allPoints;
+            var minX = points.Select(p => p.x).Min();
+            var maxX = points.Select(p => p.x).Max();
+            var minY = points.Select(p => p.y).Min();
+            var maxY = points.Select(p => p.y).Max();
+            var minZ = points.Select(p => p.z).Min();
+            var maxZ = points.Select(p => p.z).Max();
+            tin.myBoundingBox = new ptsBoundingBox2d
+                (minX, minY, maxX, maxY, minZ, maxZ);
+
+            return;
+        }
+
         public static ptsDTM CreateFromLAS(string lidarFileName)
         {
             LasFile lasFile = new LasFile(lidarFileName);
@@ -70,10 +85,8 @@ namespace ptsDigitalTerrainModel
                 gridIndexer[point.GridCoordinates] = indexCount;
                 indexCount++;
             }
-            returnObject.myBoundingBox =
-                        new ptsBoundingBox2d(
-                            lasFile.MinX, lasFile.MinY, lasFile.MaxX,
-                            lasFile.MaxY, lasFile.MinZ, lasFile.MaxZ);
+
+            setBoundingBox(returnObject);
             lasFile.ClearAllPoints();  // Because I have them now.
 
             for(indexCount=0; indexCount < returnObject.allPoints.Count; indexCount++)
@@ -353,10 +366,24 @@ namespace ptsDigitalTerrainModel
 
         protected Matrix<double> setAffineTransformToZeroCenter(bool translateTo0=false)
         {
-            double[,] m = {{ 1.0, 0.0, 0.0, -1.0 * this.myBoundingBox.Center.x},
+            double[,] m;
+            if (translateTo0)
+            {
+                double[,] m1 = {{ 1.0, 0.0, 0.0, -1.0 * this.myBoundingBox.Center.x},
                            { 0.0, 1.0, 0.0, -1.0 * this.myBoundingBox.Center.y},
                            { 0.0, 0.0, 1.0, -1.0 * this.myBoundingBox.Center.z},
+                           //{ 0.0, 0.0, 1.0, 1.0},
                            { 0.0, 0.0, 0.0, 1.0}};
+                m = m1;
+            }
+            else
+            {
+                double[,] m2 = {{ 1.0, 0.0, 0.0, 0.0},
+                           { 0.0, 1.0, 0.0, 0.0},
+                           { 0.0, 0.0, 1.0, 0.0},
+                           { 0.0, 0.0, 0.0, 1.0}};
+                m = m2;
+            }
             var M = Matrix<double>.Build.DenseOfArray(m);
             var mstr = M.ToMatrixString();
 
@@ -384,7 +411,7 @@ namespace ptsDigitalTerrainModel
 
         public void WriteToWaveFront(string outfile, bool translateTo0=true)
         {
-            var affineXform = setAffineTransformToZeroCenter();
+            var affineXform = setAffineTransformToZeroCenter(translateTo0);
             var aString = convertArrayToString(affineXform.ToArray(), 4, 4);
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(outfile))
             {

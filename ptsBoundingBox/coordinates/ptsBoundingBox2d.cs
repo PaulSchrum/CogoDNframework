@@ -83,9 +83,9 @@ namespace ptsCogo
             {
                 if(center_ is null)
                 {
-                    var x2 = this.Dimensions.x / 2.0;
-                    var y2 = this.Dimensions.y / 2.0;
-                    var z2 = this.Dimensions.z / 2.0;
+                    var x2 = this.Dimensions.x / 2.0 + this.lowerLeftPt.x;
+                    var y2 = this.Dimensions.y / 2.0 + this.lowerLeftPt.y;
+                    var z2 = this.Dimensions.z / 2.0 + this.lowerLeftPt.z;
                     center_ = new ptsPoint(x2, y2, z2);
                 }
                 return center_;
