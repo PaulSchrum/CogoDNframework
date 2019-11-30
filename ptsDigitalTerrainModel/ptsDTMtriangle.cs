@@ -301,9 +301,9 @@ namespace ptsDigitalTerrainModel
             }
         }
 
-        internal string IndicesToString()
+        internal string IndicesToWavefrontString()
         {
-            return $"{this.point1.myIndex} {this.point2.myIndex} {this.point3.myIndex}";
+            return $"f {this.point1.myIndex+1} {this.point2.myIndex+1} {this.point3.myIndex+1}";
         }
     }
 

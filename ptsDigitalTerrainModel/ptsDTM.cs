@@ -394,7 +394,7 @@ namespace ptsDigitalTerrainModel
                     file.WriteLine("v " + aPt.ToString(affineXform));
 
                 foreach (var aTriangle in this.allTriangles)
-                    file.WriteLine("f " + aTriangle.IndicesToString());
+                    file.WriteLine(aTriangle.IndicesToWavefrontString());
             }
         }
 
