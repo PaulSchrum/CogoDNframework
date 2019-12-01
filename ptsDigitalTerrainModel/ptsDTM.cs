@@ -813,6 +813,11 @@ namespace ptsDigitalTerrainModel
             return theTriangle;
         }
 
+        public double? getElevation(double x, double y)
+        {
+            return getElevation(new ptsDTMpoint(x, y));
+        }
+
         public double? getElevation(ptsPoint aPoint)
         {
             return getElevation((ptsDTMpoint)aPoint);
