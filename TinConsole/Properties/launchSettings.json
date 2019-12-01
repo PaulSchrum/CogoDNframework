@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TinConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\SourceModules\\CSharp\\CogoDN\\ptsDigitalTerrainModel\\Testing\\NC Lidar\\Raleigh WRAL Soccer.las\" to_obj \"D:\\SourceModules\\CSharp\\CogoDN\\CogoTests\\outputs\\testout.dxf\""
+    }
+  }
+}
