@@ -101,6 +101,22 @@ namespace Tests
         }
 
         [TestMethod]
+        public void TinFromLidar_Decimation_WorksCorrectly()
+        {
+            getPrunedTin();
+            var undecimatedStats = this.aTin.Statistics;
+
+            var decimatedTin = ptsDTM.CreateFromLAS(lidarFileName, skipPointCount: 2);
+            decimatedTin.pruneTinHull();
+            var decimatedSt = decimatedTin.Statistics;
+
+            var halfUndicimated = undecimatedStats.PointCount / 2;
+            var nearness = Math.Abs(decimatedSt.PointCount - halfUndicimated);
+            Assert.IsTrue(nearness < 5);
+
+        }
+
+        [TestMethod]
         public void TinFromLidar_ElevationSlopeAspect_OnSameTriangleOfAbridgeEndBentSlope()
         {
             this.Initialize();
