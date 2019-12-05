@@ -89,11 +89,15 @@ namespace Tests
 
         [TestMethod]
         public void TinFromLidar_Statistics_AreCorrect()
-        {
-            this.Initialize();
-            TinFromLidar_isNotNull();
-            var stats = this.tinFromLidar.Statistics;
+        {  // To do: complete this. It is currently not really checking anything.
+            getPrunedTin();
+            var stats = this.aTin.Statistics;
             Assert.IsNotNull(stats);
+
+            var pointCount = stats.PointCount;
+            var expected = this.aTin.allPoints.Count();
+            Assert.AreEqual(expected: expected, actual: pointCount);
+
         }
 
         [TestMethod]
@@ -184,16 +188,26 @@ namespace Tests
             ptsCogo.Profile groundProfile = secondAlignment.ProfileFromSurface(aTin);
         }
 
+        private ptsDTM aTin = null;
+        private void getPrunedTin()
+        {
+            if(null == aTin)
+            {
+                this.aTin = ptsDTM.CreateFromLAS(lidarFileName);
+                this.aTin.pruneTinHull();
+            }
+        }
+
         [Ignore]
         [TestMethod]
         public void TinFromLidar_CompareTriangleCount()
         {
-            var aTin = ptsDTM.CreateFromLAS(lidarFileName);
-            var triangleCount = aTin.TriangleCount;
+            this.Initialize();
+            getPrunedTin();
+            var aTin = this.aTin;
+            var triangleCount = this.tinFromLidar.TriangleCount;
             int expected = 150781;
             Assert.AreEqual(expected: expected, actual: triangleCount);
-
-            aTin.pruneTinHull();
             //triangleCount = aTin.TriangleCount;
             var diff = triangleCount - aTin.TriangleCount;
 
