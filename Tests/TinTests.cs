@@ -88,6 +88,15 @@ namespace Tests
         }
 
         [TestMethod]
+        public void TinFromLidar_Statistics_AreCorrect()
+        {
+            this.Initialize();
+            TinFromLidar_isNotNull();
+            var stats = this.tinFromLidar.Statistics;
+            Assert.IsNotNull(stats);
+        }
+
+        [TestMethod]
         public void TinFromLidar_ElevationSlopeAspect_OnSameTriangleOfAbridgeEndBentSlope()
         {
             this.Initialize();

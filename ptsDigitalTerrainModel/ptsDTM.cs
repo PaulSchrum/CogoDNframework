@@ -40,6 +40,17 @@ namespace ptsDigitalTerrainModel
             get { return this.allTriangles.Where(t => t.IsValid); }
         }
 
+        private DTMstatistics statistics_ = null;
+        public DTMstatistics Statistics
+        {
+            get
+            {
+                if (null == this.statistics_)
+                    this.statistics_ = new DTMstatistics(this);
+                return this.statistics_;
+            }
+        }
+
         public IReadOnlyCollection<ptsDTMtriangleLine> ValidLines
         {
             get
@@ -67,15 +78,26 @@ namespace ptsDigitalTerrainModel
             return;
         }
 
-        public static ptsDTM CreateFromLAS(string lidarFileName)
+        public static ptsDTM CreateFromLAS(string lidarFileName, int skipPointCount=0, int skipStartPosition=0)
         {
             LasFile lasFile = new LasFile(lidarFileName);
             ptsDTM returnObject = new ptsDTM();
+            int pointCounter = -1;
+            int runningPointCount = -1;
             int indexCount = 0;
             var gridIndexer = new Dictionary<Tuple<int, int>, int>();
             foreach(var point in lasFile.AllPoints)
             {
-                if(returnObject.allPoints == null)
+                pointCounter++;
+                if (pointCounter <= skipStartPosition-1) continue;
+                runningPointCount++;
+                if(skipPointCount > 0)
+                {
+                    if (runningPointCount % skipPointCount != 0)
+                        continue;
+                }
+
+                if (returnObject.allPoints == null)
                 {
                     returnObject.createAllpointsCollection();
                 }
@@ -1012,6 +1034,111 @@ namespace ptsDigitalTerrainModel
             if(diff > tolerance || diff < ntolerance)
                 throw new Exception("Aspect values differ.");
 
+        }
+    }
+
+    public class DTMstatistics
+    {
+
+        public DTMstatistics(ptsDTM dtm)
+        {
+            PointCount = dtm.allPoints.Count;
+
+            var sortedInX = dtm.allPoints.OrderBy(pt => pt.x);
+            MinX = sortedInX.First().x;
+            MaxX = sortedInX.Last().x;
+            WidthX = MaxX - MinX;
+            CenterX = MinX + WidthX / 2.0;
+            MedianX = Median(sortedInX.Select(pt => pt.x));
+            sortedInX = null;
+            AverageX = dtm.allPoints.Average(pt => pt.x);
+
+            var sortedInY = dtm.allPoints.OrderBy(pt => pt.y);
+            MinY = sortedInY.First().y;
+            MaxY = sortedInY.Last().y;
+            WidthY = MaxY - MinY;
+            CenterY = MinY + WidthY / 2.0;
+            MedianY = Median(sortedInY.Select(pt => pt.y));
+            sortedInY = null;
+            AverageY = dtm.allPoints.Average(pt => pt.y);
+
+            var sortedInZ = dtm.allPoints.OrderBy(pt => pt.y);
+            MinZ = sortedInZ.First().x;
+            MaxZ = sortedInZ.Last().x;
+            HeightZ = MaxZ - MinZ;
+            CenterZ = MinZ + HeightZ / 2.0;
+            MedianZ = Median(sortedInZ.Select(pt => pt.z));
+            sortedInZ = null;
+            AverageZ = dtm.allPoints.Average(pt => pt.z);
+
+            var lines = dtm.ValidLines;
+            LineCount = lines.Count;
+
+            // To do: Everything else
+
+        }
+
+        public int PointCount { get; set; }
+        public double WidthX { get; set; }
+        public double WidthY { get; set; }
+        public double HeightZ { get; set; }
+        public double MinX { get; set; }
+        public double MinY { get; set; }
+        public double MinZ { get; set; }
+        public double MaxX { get; set; }
+        public double MaxY { get; set; }
+        public double MaxZ { get; set; }
+        public double CenterX { get; set; }
+        public double CenterY { get; set; }
+        public double CenterZ { get; set; }
+        public double AverageX { get; set; }
+        public double AverageY { get; set; }
+        public double AverageZ { get; set; }
+        public double MedianX { get; set; }
+        public double MedianY { get; set; }
+        public double MedianZ { get; set; }
+        public int LineCount { get; set; }
+        public double ShortestLinePlane { get; set; }
+        public double LongestLinePlane { get; set; }
+        public double AverageLinePlane { get; set; }
+        public double MedianLinePlane { get; set; }
+        public double ShortestLine3d { get; set; }
+        public double LongestLine3d { get; set; }
+        public double AverageLine3d { get; set; }
+        public double MedianLine3d { get; set; }
+        public double SmallestTriangleAreaPlane { get; set; }
+        public double LargestTriangleAreaPlane { get; set; }
+        public double AverageTriangleAreaPlane { get; set; }
+        public double MedianTriangleAreaPlane { get; set; }
+        public double SmallestTriangleArea3d { get; set; }
+        public double LargestTriangleArea3d { get; set; }
+        public double AverageTriangleArea3d { get; set; }
+        public double MedianTriangleArea3d { get; set; }
+        public double MinTriangleSlope { get; set; }
+        public double MaxTriangleSlope { get; set; }
+        public double AverageTriangleSlopeWeighted { get; set; }
+        public double MedianTriangleSlope { get; set; }
+        public ptsVector AverageTriangleAspectWeighted { get; set; }
+
+        protected double Median(IEnumerable<double> values)
+        {
+            int midIndex = (values.Count() - 1) / 2;
+            if (values.Count() % 2 == 0) // Even Number of items
+            {
+                var loc1 = values.Skip(midIndex);
+                var loc2 = loc1.Skip(1);
+                return (loc1.First() + loc2.First()) / 2.0;
+            }
+            else // Odd number of items
+            {
+                return values.Skip((midIndex)).First();
+            }
+        }
+
+        public override string ToString()
+        {
+            // To Do:
+            return "ToString() not yet implemented.";
         }
     }
 
