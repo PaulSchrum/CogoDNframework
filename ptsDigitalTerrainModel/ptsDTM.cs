@@ -78,7 +78,14 @@ namespace ptsDigitalTerrainModel
             return;
         }
 
-        public static ptsDTM CreateFromLAS(string lidarFileName, int skipPointCount=0, int skipStartPosition=0)
+        public static ptsDTM CreateFromLAS(string lidarFileName, double minX, double maxX, double minY, double maxY, 
+            int skipPointCount = 0, int skipStartPosition = 0)
+        {
+            var bb = new ptsBoundingBox2d(minX, minY, maxX, maxY);
+            return CreateFromLAS(lidarFileName, skipPointCount, skipStartPosition, bb);
+        }
+
+        public static ptsDTM CreateFromLAS(string lidarFileName, int skipPointCount=0, int skipStartPosition=0, ptsBoundingBox2d trimBB=null)
         {
             LasFile lasFile = new LasFile(lidarFileName);
             ptsDTM returnObject = new ptsDTM();
@@ -88,6 +95,9 @@ namespace ptsDigitalTerrainModel
             var gridIndexer = new Dictionary<Tuple<int, int>, int>();
             foreach(var point in lasFile.AllPoints)
             {
+                if (null != trimBB && !trimBB.isPointInsideBB2d(point))
+                    continue;
+                
                 pointCounter++;
                 if (pointCounter <= skipStartPosition-1) continue;
                 runningPointCount++;
