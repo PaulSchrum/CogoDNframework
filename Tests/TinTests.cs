@@ -45,7 +45,7 @@ namespace Tests
     [TestClass]
     public class TinTests
     {
-        string lidarFileName = @"E:\SourceModules\CSharp\CogoDN\ptsDigital" +
+        string lidarFileName = @"D:\SourceModules\CSharp\CogoDN\ptsDigital" +
             @"TerrainModel\Testing\NC Lidar\Raleigh WRAL Soccer.las";
 
         ptsDTM tinFromLidar = null;
