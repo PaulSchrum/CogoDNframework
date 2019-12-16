@@ -106,7 +106,7 @@ namespace Tests
             getPrunedTin();
             var undecimatedStats = this.aTin.Statistics;
 
-            var decimatedTin = ptsDTM.CreateFromLAS(lidarFileName, skipPointCount: 2);
+            var decimatedTin = ptsDTM.CreateFromLAS(lidarFileName, skipPoints: 1);
             decimatedTin.pruneTinHull();
             var decimatedSt = decimatedTin.Statistics;
 

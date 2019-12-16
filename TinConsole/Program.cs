@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ptsDigitalTerrainModel;
 
 namespace TinConsole
@@ -7,9 +8,9 @@ namespace TinConsole
     {
         static void Main(string[] args)
         {
-            foreach (var thing in args)
-                Console.WriteLine(thing);
-            var tinModel = ptsDTM.CreateFromLAS(args[0]);
+            var tinModel = ptsDTM.CreateFromLAS(args[0],
+                skipPoints: 2,
+                classificationFilter: new List<int> { 2, 13 });  // Add 6 to get roofs.
             var pointCount = tinModel.allPoints.Count;
             var triangleCount = tinModel.TriangleCount;
             Console.Write($"Successfully loaded tin Model: {pointCount} points and ");
@@ -17,7 +18,7 @@ namespace TinConsole
 
             if (args.Length == 1) return;
 
-            
+
             if (args[1].ToLower() == "get_elevation")
             { // inputfile get_elevation 2133966 775569
                 var x = Double.Parse(args[2]);
@@ -25,7 +26,7 @@ namespace TinConsole
                 var z = tinModel.getElevation(x, y);
                 Console.WriteLine($"Elevation: {z}");
             }
-            else if(args[1].ToLower() == "to_obj")
+            else if (args[1].ToLower() == "to_obj")
             { // inputfile to_obj outputfile
                 var outfileName = args[2];
                 tinModel.WriteToWaveFront(outfileName);

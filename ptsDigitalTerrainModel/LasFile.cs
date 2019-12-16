@@ -37,8 +37,15 @@ namespace ptsDigitalTerrainModel
         public double MinZ { get; private set; } = 0;
         public int NumberOfPointRecords { get; private set; } = 0;
 
-        public LasFile(string LasFilename)
+        public LasFile(string LasFilename,
+            int skipPoints = 0,
+            List<int> classificationFilter = null)
         {
+            this.skipPoints = skipPoints;
+            this.classificationFilter = new List<int> { 2, 13 };
+            if (null != classificationFilter)
+                this.classificationFilter = classificationFilter;
+            
             int hdrLen = 375;
             using(BinaryReader reader = new BinaryReader(File.Open(LasFilename, FileMode.Open)))
             {
@@ -90,21 +97,25 @@ namespace ptsDigitalTerrainModel
         {
             this.AllPoints = null;
         }
-
+        private int skipPoints { get; set; }
         private void populateAllPoints(BinaryReader reader)
         {
+            int pointCounter = 0;
             this.AllPoints = new List<ptsDTMpoint>();
-            foreach(int recNo in Enumerable.Range(1, this.NumberOfPointRecords))
+            foreach (int recNo in Enumerable.Range(1, this.NumberOfPointRecords))
             {
                 int offset = recNo * this.PointDataRecordLength;
                 int address = offset + this.OffsetToPointData;
                 ptsDTMpoint aPoint = this.readPoint(reader, address);
-                if(aPoint.x < 0.01)   // It is not classification 2 or 13
+                if (aPoint.x < 0.01)   // It is not classification 2 or 13
                     continue;
-                this.AllPoints.Add(aPoint);
+                pointCounter++;
+                if (pointCounter % (skipPoints + 1) == 0)
+                    this.AllPoints.Add(aPoint);
             }
         }
 
+        private List<int> classificationFilter { get; set; }
         private ptsDTMpoint readPoint(BinaryReader reader, int address)
         {
             byte[] pointData = new byte[this.PointDataRecordLength];
@@ -113,7 +124,7 @@ namespace ptsDigitalTerrainModel
             int classification = pointData.getChar(16);
 
             var retPoint = new ptsDTMpoint();
-            if(!(classification == 2 || classification == 13))
+            if(!(this.classificationFilter.Contains(classification)))
                 return retPoint;
 
             int xCoord = (int)pointData.getLong(0);

@@ -79,15 +79,20 @@ namespace ptsDigitalTerrainModel
         }
 
         public static ptsDTM CreateFromLAS(string lidarFileName, double minX, double maxX, double minY, double maxY, 
-            int skipPointCount = 0, int skipStartPosition = 0)
+            int skipPoints = 0, List<int> classificationFilter = null)
         {
             var bb = new ptsBoundingBox2d(minX, minY, maxX, maxY);
-            return CreateFromLAS(lidarFileName, skipPointCount, skipStartPosition, bb);
+            return CreateFromLAS(lidarFileName, skipPoints, bb, classificationFilter);
         }
 
-        public static ptsDTM CreateFromLAS(string lidarFileName, int skipPointCount=0, int skipStartPosition=0, ptsBoundingBox2d trimBB=null)
+        public static ptsDTM CreateFromLAS(string lidarFileName, 
+            int skipPoints = 0, 
+            ptsBoundingBox2d trimBB=null,
+            List<int> classificationFilter = null)
         {
-            LasFile lasFile = new LasFile(lidarFileName);
+            LasFile lasFile = new LasFile(lidarFileName,
+                skipPoints: skipPoints,
+                classificationFilter: classificationFilter);
             ptsDTM returnObject = new ptsDTM();
             int pointCounter = -1;
             int runningPointCount = -1;
@@ -99,11 +104,10 @@ namespace ptsDigitalTerrainModel
                     continue;
                 
                 pointCounter++;
-                if (pointCounter <= skipStartPosition-1) continue;
                 runningPointCount++;
-                if(skipPointCount > 0)
+                if(skipPoints > 0)
                 {
-                    if (runningPointCount % skipPointCount != 0)
+                    if (runningPointCount % skipPoints != 0)
                         continue;
                 }
 
