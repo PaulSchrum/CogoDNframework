@@ -107,9 +107,10 @@ namespace ptsDigitalTerrainModel
                 int offset = recNo * this.PointDataRecordLength;
                 int address = offset + this.OffsetToPointData;
                 ptsDTMpoint aPoint = this.readPoint(reader, address);
-                if (aPoint.x < 0.01)   // It is not classification 2 or 13
+                if (!this.classificationFilter.Contains(aPoint.lidarClassification))
                     continue;
                 pointCounter++;
+
                 if (pointCounter % (skipPoints + 1) == 0)
                     this.AllPoints.Add(aPoint);
             }
@@ -121,10 +122,12 @@ namespace ptsDigitalTerrainModel
             byte[] pointData = new byte[this.PointDataRecordLength];
             reader.Read(pointData, 0, this.PointDataRecordLength);
 
-            int classification = pointData.getChar(16);
+            
 
             var retPoint = new ptsDTMpoint();
-            if(!(this.classificationFilter.Contains(classification)))
+            retPoint.lidarClassification = pointData.getChar(16);
+
+            if (!(this.classificationFilter.Contains(retPoint.lidarClassification)))
                 return retPoint;
 
             int xCoord = (int)pointData.getLong(0);

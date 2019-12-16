@@ -16,6 +16,7 @@ namespace ptsDigitalTerrainModel
         public Double y { get; set; }
         public Double z { get; set; }
 
+        public int lidarClassification { get; set; }
         public int myIndex { get; internal set; }
         public double[] Position
         {

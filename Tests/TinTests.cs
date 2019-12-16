@@ -238,5 +238,15 @@ namespace Tests
 
         }
 
+        //[TestMethod]
+        public void temp_createObjForTilleyCreek()
+        {
+            var LiFile = @"D:\Research\Datasets\LiDAR\Tilley Creek\TilleyCreek.las";
+            var aTin = ptsDTM.CreateFromLAS(LiFile, 745000, 746800, 577800, 579300, skipPoints: 3, 
+                new List<int> { 2, 6, 13 });
+            aTin.pruneTinHull();
+            aTin.WriteToWaveFront(@"D:\Research\Datasets\LiDAR\Tilley Creek\TilleyCreek.obj");
+        }
+
     }
 }
